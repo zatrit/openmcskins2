@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'net.zatrit'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    compileOnly 'org.jetbrains:annotations:16.0.2'
+    compileOnly 'com.google.code.gson:gson:2.10.1'
+
+    compileOnly 'com.google.guava:guava:31.1-jre'
+}
