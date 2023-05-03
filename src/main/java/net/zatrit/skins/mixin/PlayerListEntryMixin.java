@@ -28,14 +28,19 @@ import java.util.Map;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin {
-    @Shadow private boolean texturesLoaded;
+    @Shadow
+    private boolean texturesLoaded;
 
     @Shadow
     public abstract GameProfile getProfile();
 
-    @Shadow @Final private Map<MinecraftProfileTexture.Type, Identifier> textures;
+    @Shadow
+    @Final
+    private Map<MinecraftProfileTexture.Type, Identifier> textures;
 
-    @Shadow @Nullable private String model;
+    @Shadow
+    @Nullable
+    private String model;
 
     @SneakyThrows
     @Inject(method = "loadTextures", at = @At("HEAD"), cancellable = true)
@@ -55,11 +60,10 @@ public abstract class PlayerListEntryMixin {
             skins.getSkinLoader().fetchAsync(resolvers, profile, textureResult -> {
                 final var texture = textureResult.getTexture();
                 try {
-                    final var image = NativeImage.read(new ByteArrayInputStream(
-                            texture.getContent()));
+                    final var image =
+                            NativeImage.read(new ByteArrayInputStream(texture.getContent()));
                     final var playerTexture = new NativeImageBackedTexture(image);
-                    final var id = MinecraftClient.getInstance()
-                            .getTextureManager()
+                    final var id = MinecraftClient.getInstance().getTextureManager()
                             .registerDynamicTexture("skins", playerTexture);
 
                     final var type = TextureTypeUtil.toAuthlibType(textureResult.getType());

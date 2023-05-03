@@ -19,7 +19,8 @@ classes/
 # vscode
 
 .settings/
-.vscode/
+.vscode/**
+!.vscode/settings.template.json
 bin/
 .classpath
 .project

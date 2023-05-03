@@ -18,36 +18,28 @@ import java.util.function.Consumer;
 public class SkinLoader {
     private final Executor executor = new ScheduledThreadPoolExecutor(127);
 
-    public void fetchAsync(
-            @NotNull List<Resolver> resolvers,
-            Profile profile,
-            Consumer<TextureResult> success,
-            Consumer<Throwable> error) {
+    public void fetchAsync(@NotNull List<Resolver> resolvers, Profile profile,
+            Consumer<TextureResult> success, Consumer<Throwable> error) {
         final var handlers = new LinkedList<Numbered<Resolver.PlayerHandler>>();
 
-        var futures = Numbered.enumerate(resolvers)
-                .stream()
+        var futures = Numbered.enumerate(resolvers).stream()
                 .map(pair -> CompletableFuture.supplyAsync(() -> {
-                            final var resolver = pair.getValue();
-                            Resolver.PlayerHandler handler = null;
-                            try {
-                                handler = resolver.resolve(profile);
-                            } catch (IOException e) {
-                                error.accept(e);
-                            }
-                            return pair.withValue(handler);
-                        }, executor)
-                        .thenAccept(handlers::add)
-                        .orTimeout(5, TimeUnit.SECONDS))
+                    final var resolver = pair.getValue();
+                    Resolver.PlayerHandler handler = null;
+                    try {
+                        handler = resolver.resolve(profile);
+                    } catch (IOException e) {
+                        error.accept(e);
+                    }
+                    return pair.withValue(handler);
+                }, executor).thenAccept(handlers::add).orTimeout(5, TimeUnit.SECONDS))
                 .toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(futures).whenComplete((unused, throwable) -> {
             for (var type : TextureType.values()) {
                 handlers.stream()
-                        .filter(pair -> pair.getValue() != null &&
-                                pair.getValue().hasTexture(type))
-                        .min(Comparator.comparingInt(Numbered::getIndex))
-                        .ifPresent(pair -> {
+                        .filter(pair -> pair.getValue() != null && pair.getValue().hasTexture(type))
+                        .min(Comparator.comparingInt(Numbered::getIndex)).ifPresent(pair -> {
                             final var handler = pair.getValue();
                             try {
                                 var texture = handler.download(type);

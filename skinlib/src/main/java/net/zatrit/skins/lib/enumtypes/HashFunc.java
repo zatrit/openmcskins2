@@ -9,10 +9,8 @@ import static com.google.common.hash.Hashing.*;
 @SuppressWarnings("unused")
 @AllArgsConstructor
 public enum HashFunc {
-    CRC32(crc32()),
-    @Deprecated SHA1(sha1()),
-    MURMUR3(murmur3_128()),
-    SHA384(sha384());
+    CRC32(crc32()), @Deprecated
+    SHA1(sha1()), MURMUR3(murmur3_128()), SHA384(sha384());
 
     private final @Getter HashFunction function;
 }

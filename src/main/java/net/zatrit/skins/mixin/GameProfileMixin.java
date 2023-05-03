@@ -30,17 +30,15 @@ public abstract class GameProfileMixin implements Profile {
     @Override
     @SneakyThrows
     public void refreshUuid() {
-        final var url = new URL("https://api.mojang.com/users/profiles/minecraft/" +
-                this.getName());
+        final var url =
+                new URL("https://api.mojang.com/users/profiles/minecraft/" + this.getName());
 
-        final var map = SkinsClient.getSkins()
-                .getGson()
+        final var map = SkinsClient.getSkins().getGson()
                 .fromJson(new InputStreamReader(url.openStream()), Map.class);
 
         if (map != null) {
             final var id = UUID.fromString(String.valueOf(map.get("id"))
-                    .replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                            "$1-$2-$3-$4-$5"));
+                    .replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
 
             this.setId(id);
         }

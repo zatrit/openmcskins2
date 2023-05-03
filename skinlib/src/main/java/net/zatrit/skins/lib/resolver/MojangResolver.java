@@ -20,31 +20,28 @@ import java.util.Base64;
 @AllArgsConstructor
 // https://wiki.vg/Mojang_API
 public final class MojangResolver implements Resolver {
-    private final @Getter(AccessLevel.PROTECTED) Skins skins;
+        private final @Getter(AccessLevel.PROTECTED) Skins skins;
 
-    @Contract("_ -> new")
-    @Override
-    public @NotNull PlayerHandler resolve(@NotNull Profile profile)
-            throws IOException {
-        final var gson = getSkins().getGson();
-        final var url =
-                "https://sessionserver.mojang.com/session/minecraft/profile/" +
-                        profile.getId().toString().replaceAll("-", "");
+        @Contract("_ -> new")
+        @Override
+        public @NotNull PlayerHandler resolve(@NotNull Profile profile) throws IOException {
+                final var gson = getSkins().getGson();
+                final var url = "https://sessionserver.mojang.com/session/minecraft/profile/"
+                                + profile.getId().toString().replaceAll("-", "");
 
-        MojangResponse response;
-        try (var stream = new URL(url).openStream()) {
-            response = gson.fromJson(new InputStreamReader(stream),
-                    MojangResponse.class);
+                MojangResponse response;
+                try (var stream = new URL(url).openStream()) {
+                        response = gson.fromJson(new InputStreamReader(stream),
+                                        MojangResponse.class);
+                }
+
+                final var decoder = Base64.getDecoder();
+                final var textureData = decoder.decode(response.getProperties().get(0).getValue());
+
+                final var textures = gson.fromJson(
+                                new InputStreamReader(new ByteArrayInputStream(textureData)),
+                                Textures.class);
+
+                return new TexturesPlayerHandler(getSkins(), textures, this);
         }
-
-        final var decoder = Base64.getDecoder();
-        final var textureData = decoder.decode(response.getProperties()
-                .get(0)
-                .getValue());
-
-        final var textures = gson.fromJson(new InputStreamReader(new ByteArrayInputStream(
-                textureData)), Textures.class);
-
-        return new TexturesPlayerHandler(getSkins(), textures, this);
-    }
 }

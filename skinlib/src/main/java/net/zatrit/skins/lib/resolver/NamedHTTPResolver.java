@@ -29,16 +29,12 @@ public class NamedHTTPResolver implements Resolver {
     }
 
     @Override
-    public @NotNull PlayerHandler resolve(@NotNull Profile profile)
-            throws IOException {
-        final var url = new URL(this.getBaseUrl() +
-                "/textures/" +
-                profile.getName());
+    public @NotNull PlayerHandler resolve(@NotNull Profile profile) throws IOException {
+        final var url = new URL(this.getBaseUrl() + "/textures/" + profile.getName());
 
-        final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {
-        }.getType();
-        final var textures = new Textures(getSkins().getGson()
-                .fromJson(new InputStreamReader(url.openStream()), type));
+        final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
+        final var textures = new Textures(
+                getSkins().getGson().fromJson(new InputStreamReader(url.openStream()), type));
 
         return new TexturesPlayerHandler(getSkins(), textures, this);
     }

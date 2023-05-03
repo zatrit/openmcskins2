@@ -17,11 +17,13 @@ public interface Resolver {
         return true;
     }
 
-    @NotNull PlayerHandler resolve(Profile profile) throws IOException;
+    @NotNull
+    PlayerHandler resolve(Profile profile) throws IOException;
 
     interface PlayerHandler {
         boolean hasTexture(TextureType type);
 
-        @Nullable Texture download(TextureType type) throws IOException;
+        @Nullable
+        Texture download(TextureType type) throws IOException;
     }
 }

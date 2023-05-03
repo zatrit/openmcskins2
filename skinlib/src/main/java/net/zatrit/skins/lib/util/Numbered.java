@@ -3,7 +3,6 @@ package net.zatrit.skins.lib.util;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

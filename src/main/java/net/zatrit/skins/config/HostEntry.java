@@ -14,7 +14,6 @@ public class HostEntry {
     private final Map<String, Object> properties;
 
     public enum HostType {
-        MOJANG,
-        NAMED_HTTP
+        MOJANG, NAMED_HTTP
     }
 }

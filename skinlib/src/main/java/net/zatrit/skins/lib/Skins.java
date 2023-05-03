@@ -24,19 +24,17 @@ public final class Skins {
     private final @Nullable CacheProvider cacheProvider;
     private @Setter HashFunc hashFunc;
 
-    public @NotNull Texture fetchTextureData(
-            Textures.@NotNull TextureData textureData, boolean cache)
-            throws IOException {
+    public @NotNull Texture fetchTextureData(Textures.@NotNull TextureData textureData,
+            boolean cache) throws IOException {
         final Cache.LoadFunction function = () -> {
             try (var stream = new URL(textureData.getUrl()).openStream()) {
                 return stream.readAllBytes();
             }
         };
 
-        final byte[] buffer = cache && getCacheProvider() != null ?
-                getCacheProvider().getSkinCache()
-                        .get(textureData.getUrl(), function) :
-                function.load();
+        final byte[] buffer = cache && getCacheProvider() != null
+                ? getCacheProvider().getSkinCache().get(textureData.getUrl(), function)
+                : function.load();
 
         return new Texture(buffer, textureData.getMetadata());
     }

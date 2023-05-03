@@ -8,4 +8,3 @@ public @Data class Texture {
     final byte[] content;
     final Map<String, String> metadata;
 }
-

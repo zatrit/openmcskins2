@@ -13,6 +13,9 @@ import net.zatrit.skins.lib.enumtypes.HashFunc;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import net.zatrit.skins.lib.resolver.Resolver;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,16 +32,11 @@ public final class SkinsClient implements ModInitializer {
         final var config = configHolder.get();
         final var path = ((HasPath) client);
 
-        skins = Skins.builder()
-                .hashFunc(HashFunc.MURMUR3)
-                .cacheProvider(config.cacheTextures ?
-                        new AssetCacheProvider(path) :
-                        null)
-                .build();
+        skins = Skins.builder().hashFunc(HashFunc.MURMUR3)
+                .cacheProvider(config.cacheTextures ? new AssetCacheProvider(path) : null).build();
 
-        final var resolvers = config.hosts.stream()
-                .map(this::resolverFromEntry)
-                .toList();
+        final var resolvers = config.hosts.stream().map(this::resolverFromEntry)
+                .filter(Objects::nonNull).toList();
 
         for (var resolver : resolvers) {
             System.out.println(resolver);
@@ -51,8 +49,7 @@ public final class SkinsClient implements ModInitializer {
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(getSkins());
-                case NAMED_HTTP -> new NamedHTTPResolver(getSkins(),
-                        (String) props.get("baseUrl"));
+                case NAMED_HTTP -> new NamedHTTPResolver(getSkins(), (String) props.get("baseUrl"));
             };
         } catch (Exception ex) {
             ex.printStackTrace();
