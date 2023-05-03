@@ -1,6 +1,6 @@
 # HTTP server
 
-This is a Flask HTTP server for OpenMCSkins. It has an API similar
+This is a Flask read-only HTTP server for OpenMCSkins. It has an API similar
 to [ely.by API](https://docs.ely.by/en/skins-system.html). You can use the server directory as local storage instead of
 running it because it has the same filesystem structure as the local skins store.
 

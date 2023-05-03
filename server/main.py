@@ -1,5 +1,5 @@
 import json
-import flask
+from flask import Flask, Response, request, send_file
 import os
 import argparse
 import mmh3
@@ -10,7 +10,7 @@ parser.add_argument("--assets-path", type=str, default=".")
 
 args = parser.parse_args()
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 cache = {}
 
@@ -34,7 +34,7 @@ def list_textures(name):
         _type = _type.upper()
         if _type not in result:
             result[_type] = {}
-        base_url = "/".join(flask.request.base_url.split("/")[:3])
+        base_url = "/".join(request.base_url.split("/")[:3])
         _hash = get_texture(data_path)
         result[_type]["url"] = f"{base_url}/assets/{_hash}"
 
@@ -69,14 +69,14 @@ def textures(name):
 @app.route("/assets/<int:_hash>")
 def assets(_hash):
     if _hash not in cache:
-        flask.abort(404)
+        return Response(status=404)
 
     path = cache[_hash]
 
     if not os.path.exists(path):
-        flask.abort(404)
+        return Response(status=404)
 
-    return flask.send_file(path)
+    return send_file(path)
 
 
 if __name__ == "__main__":
