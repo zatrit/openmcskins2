@@ -1,8 +1,7 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.Data;
-
 import java.util.Map;
+import lombok.Data;
 
 public @Data class Texture {
     final byte[] content;

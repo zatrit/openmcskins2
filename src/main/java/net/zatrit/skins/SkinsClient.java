@@ -1,5 +1,8 @@
 package net.zatrit.skins;
 
+import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -13,11 +16,6 @@ import net.zatrit.skins.lib.enumtypes.HashFunc;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import net.zatrit.skins.lib.resolver.Resolver;
-
-import java.util.Objects;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class SkinsClient implements ModInitializer {
     static @Getter Skins skins;
@@ -49,7 +47,8 @@ public final class SkinsClient implements ModInitializer {
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(getSkins());
-                case NAMED_HTTP -> new NamedHTTPResolver(getSkins(), (String) props.get("baseUrl"));
+                case NAMED_HTTP -> new NamedHTTPResolver(getSkins(),
+                        (String) props.get("base_url"));
             };
         } catch (Exception ex) {
             ex.printStackTrace();

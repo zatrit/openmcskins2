@@ -1,15 +1,13 @@
 package net.zatrit.skins.cache;
 
-import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import net.zatrit.skins.SkinsClient;
-import net.zatrit.skins.lib.cache.Cache;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import net.zatrit.skins.HasPath;
+import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.lib.cache.Cache;
 
 @AllArgsConstructor
 public class AssetCache implements Cache {

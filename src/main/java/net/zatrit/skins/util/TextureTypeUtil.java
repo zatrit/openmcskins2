@@ -1,10 +1,10 @@
 package net.zatrit.skins.util;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import net.zatrit.skins.lib.TextureType;
 
 public class TextureTypeUtil {
     @Contract(pure = true)

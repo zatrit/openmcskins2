@@ -1,10 +1,9 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.Data;
-import net.zatrit.skins.lib.TextureType;
-
 import java.util.EnumMap;
 import java.util.Map;
+import lombok.Data;
+import net.zatrit.skins.lib.TextureType;
 
 public @Data class Textures {
     private final EnumMap<TextureType, TextureData> textures;

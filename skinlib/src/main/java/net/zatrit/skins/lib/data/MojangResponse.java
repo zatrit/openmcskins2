@@ -1,8 +1,7 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 public @Data class MojangResponse {
     private String id;

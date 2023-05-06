@@ -1,10 +1,9 @@
 package net.zatrit.skins.cache;
 
 import lombok.Getter;
+import net.zatrit.skins.HasPath;
 import net.zatrit.skins.lib.cache.Cache;
 import net.zatrit.skins.lib.cache.CacheProvider;
-
-import net.zatrit.skins.HasPath;
 
 @Getter
 public class AssetCacheProvider implements CacheProvider {

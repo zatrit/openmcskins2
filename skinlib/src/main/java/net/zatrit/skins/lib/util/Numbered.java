@@ -11,10 +11,6 @@ public @Data class Numbered<T> {
     private final int index;
     private final T value;
 
-    public <R> Numbered<R> withValue(R newValue) {
-        return new Numbered<>(this.getIndex(), newValue);
-    }
-
     public static <T> @NotNull Collection<Numbered<T>> enumerate(@NotNull List<T> list) {
         List<Numbered<T>> list2 = new LinkedList<>();
 
@@ -23,5 +19,9 @@ public @Data class Numbered<T> {
         }
 
         return list2;
+    }
+
+    public <R> Numbered<R> withValue(R newValue) {
+        return new Numbered<>(this.getIndex(), newValue);
     }
 }

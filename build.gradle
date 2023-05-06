@@ -21,7 +21,9 @@ dependencies {
 
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
 
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
@@ -35,6 +37,8 @@ dependencies {
 }
 
 processResources {
+	inputs.property "version", project.version
+
     filesMatching('fabric.mod.json') {
         expand 'version': project.version
     }

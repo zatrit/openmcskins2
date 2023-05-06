@@ -18,7 +18,7 @@ classes/
 
 # vscode
 
-.settings/
+.settings
 .vscode/**
 !.vscode/settings.template.json
 bin/

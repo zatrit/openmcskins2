@@ -1,10 +1,9 @@
 package net.zatrit.skins.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-
 import java.util.ArrayList;
 import java.util.List;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
 
 @Config(name = "openmcskins")
 public class SkinsConfig implements ConfigData {

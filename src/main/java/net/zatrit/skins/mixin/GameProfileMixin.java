@@ -1,19 +1,18 @@
 package net.zatrit.skins.mixin;
 
-import com.mojang.authlib.GameProfile;
-import lombok.SneakyThrows;
-import net.zatrit.skins.SkinsClient;
-import net.zatrit.skins.lib.Profile;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Map;
+import java.util.UUID;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
-
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Map;
-import java.util.UUID;
+import com.mojang.authlib.GameProfile;
+import lombok.SneakyThrows;
+import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.lib.Profile;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile {
