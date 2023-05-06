@@ -1,11 +1,12 @@
 package net.zatrit.skins.config;
 
-import java.util.Map;
-import org.jetbrains.annotations.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,8 @@ public class HostEntry {
     @NoArgsConstructor
     @AllArgsConstructor
     public enum HostType {
-        MOJANG, NAMED_HTTP(new String[] {"base_url"});
+        MOJANG,
+        NAMED_HTTP(new String[]{"base_url"});
 
         @Getter
         private String[] params = new String[0];

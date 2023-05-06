@@ -1,8 +1,5 @@
 package net.zatrit.skins;
 
-import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -11,14 +8,20 @@ import net.minecraft.client.MinecraftClient;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
-import net.zatrit.skins.lib.Skins;
+import net.zatrit.skins.lib.Config;
+import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.enumtypes.HashFunc;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import net.zatrit.skins.lib.resolver.Resolver;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public final class SkinsClient implements ModInitializer {
-    static @Getter Skins skins;
+    static @Getter Config skinsConfig;
+    static @Getter SkinLoader skinLoader;
 
     @Override
     public void onInitialize() {
@@ -30,11 +33,14 @@ public final class SkinsClient implements ModInitializer {
         final var config = configHolder.get();
         final var path = ((HasPath) client);
 
-        skins = Skins.builder().hashFunc(HashFunc.MURMUR3)
-                .cacheProvider(config.cacheTextures ? new AssetCacheProvider(path) : null).build();
+        skinsConfig = Config.builder().hashFunc(HashFunc.MURMUR3)
+                              .cacheProvider(config.cacheTextures ?
+                                                     new AssetCacheProvider(path) :
+                                                     null).build();
+        skinLoader = new SkinLoader(skinsConfig);
 
         final var resolvers = config.hosts.stream().map(this::resolverFromEntry)
-                .filter(Objects::nonNull).toList();
+                                      .filter(Objects::nonNull).toList();
 
         for (var resolver : resolvers) {
             System.out.println(resolver);
@@ -46,9 +52,11 @@ public final class SkinsClient implements ModInitializer {
 
         try {
             return switch (entry.getType()) {
-                case MOJANG -> new MojangResolver(getSkins());
-                case NAMED_HTTP -> new NamedHTTPResolver(getSkins(),
-                        (String) props.get("base_url"));
+                case MOJANG -> new MojangResolver(getSkinsConfig());
+                case NAMED_HTTP -> new NamedHTTPResolver(
+                        getSkinsConfig(),
+                        (String) props.get("base_url")
+                );
             };
         } catch (Exception ex) {
             ex.printStackTrace();

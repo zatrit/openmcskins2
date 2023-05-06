@@ -12,6 +12,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.Profile;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
+import net.zatrit.skins.lib.resolver.Resolver;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,23 +25,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin {
-    @Shadow
-    private boolean texturesLoaded;
+    private static final List<Resolver> resolvers = Arrays.asList(new MojangResolver(
+                    SkinsClient.getSkinsConfig()),
+            new NamedHTTPResolver(SkinsClient.getSkinsConfig(),
+                    "http://skinsystem.ely.by/"
+            )
+    );
+    @Shadow private boolean texturesLoaded;
+    @Shadow @Final private Map<MinecraftProfileTexture.Type, Identifier> textures;
+    @Shadow @Nullable private String model;
 
-    @Shadow
-    public abstract GameProfile getProfile();
-
-    @Shadow
-    @Final
-    private Map<MinecraftProfileTexture.Type, Identifier> textures;
-
-    @Shadow
-    @Nullable
-    private String model;
+    @Shadow public abstract GameProfile getProfile();
 
     @SneakyThrows
     @Inject(method = "loadTextures", at = @At("HEAD"), cancellable = true)
@@ -50,21 +50,25 @@ public abstract class PlayerListEntryMixin {
         if (!this.texturesLoaded) {
             this.texturesLoaded = true;
 
-            final var skins = SkinsClient.getSkins();
-            final var resolvers = Arrays.asList(new MojangResolver(skins),
-                    new NamedHTTPResolver(skins, "http://skinsystem.ely.by/"));
-
             final var profile = (Profile) getProfile();
-            profile.refreshUuid();
 
-            skins.getSkinLoader().fetchAsync(resolvers, profile, textureResult -> {
+            if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
+                profile.refreshUuid();
+            }
+
+            final var skinLoader = SkinsClient.getSkinLoader();
+
+            skinLoader.fetchAsync(resolvers, profile, textureResult -> {
                 final var texture = textureResult.getTexture();
                 try {
-                    final var image =
-                            NativeImage.read(new ByteArrayInputStream(texture.getContent()));
+                    final var image = NativeImage.read(new ByteArrayInputStream(
+                            texture.getContent()));
                     final var playerTexture = new NativeImageBackedTexture(image);
-                    final var id = MinecraftClient.getInstance().getTextureManager()
-                            .registerDynamicTexture("skins", playerTexture);
+                    final var id = MinecraftClient.getInstance()
+                                           .getTextureManager()
+                                           .registerDynamicTexture("skins",
+                                                   playerTexture
+                                           );
 
                     final var type = TextureTypeUtil.toAuthlibType(textureResult.getType());
                     this.textures.put(type, id);

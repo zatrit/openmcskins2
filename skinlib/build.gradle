@@ -4,6 +4,8 @@ plugins {
 
 group 'net.zatrit'
 
+version = "1.0"
+
 repositories {
     mavenCentral()
 }

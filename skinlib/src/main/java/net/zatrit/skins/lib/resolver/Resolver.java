@@ -1,11 +1,12 @@
 package net.zatrit.skins.lib.resolver;
 
-import java.io.IOException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import net.zatrit.skins.lib.Profile;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.data.Texture;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
 
 public interface Resolver {
     default boolean requiresUuid() {

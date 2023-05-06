@@ -1,12 +1,10 @@
 package net.zatrit.skins.lib.enumtypes;
 
-import static com.google.common.hash.Hashing.crc32;
-import static com.google.common.hash.Hashing.murmur3_128;
-import static com.google.common.hash.Hashing.sha1;
-import static com.google.common.hash.Hashing.sha384;
 import com.google.common.hash.HashFunction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import static com.google.common.hash.Hashing.*;
 
 @AllArgsConstructor
 public enum HashFunc {
