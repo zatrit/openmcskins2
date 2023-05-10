@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib;
+package net.zatrit.skins.lib.api;
 
 import java.util.UUID;
 

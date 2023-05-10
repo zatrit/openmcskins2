@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.cache;
+package net.zatrit.skins.lib.api.cache;
 
 import org.jetbrains.annotations.NotNull;
 

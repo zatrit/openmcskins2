@@ -2,18 +2,13 @@ package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.zatrit.skins.lib.cache.Cache;
-import net.zatrit.skins.lib.cache.CacheProvider;
-import net.zatrit.skins.lib.data.Texture;
+import net.zatrit.skins.lib.api.Profile;
+import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
-import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.resolver.Resolver;
 import net.zatrit.skins.lib.util.Numbered;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +17,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static net.zatrit.skins.lib.util.SneakyLambda.function;
+import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @AllArgsConstructor
 public class SkinLoader {
@@ -36,27 +34,27 @@ public class SkinLoader {
             Consumer<Throwable> error) {
         final var handlers = new LinkedList<Numbered<Resolver.PlayerHandler>>();
 
-        var futures = Numbered.enumerate(resolvers)
-                              .stream()
-                              .map(pair -> CompletableFuture.supplyAsync(() -> {
-                                          final var resolver = pair.getValue();
-                                          Resolver.PlayerHandler handler = null;
-                                          try {
-                                              handler = resolver.resolve(profile);
-                                          } catch (IOException e) {
-                                              error.accept(e);
-                                          }
-                                          return pair.withValue(handler);
-                                      }, executor)
-                                                   .thenAccept(handlers::add)
-                                                   .orTimeout(5, TimeUnit.SECONDS))
-                              .toArray(CompletableFuture[]::new);
+        final var futures = Numbered.enumerate(resolvers).stream()
+                                    .map(pair -> CompletableFuture.supplyAsync(
+                                            sneaky(() -> {
+                                                final var resolver = pair.getValue();
+                                                final var handler = resolver.resolve(
+                                                        profile);
+
+                                                return pair.withValue(handler);
+                                            }),
+                                            executor
+                                    ).thenAccept(handlers::add).exceptionally(
+                                            function(error)).orTimeout(
+                                            5,
+                                            TimeUnit.SECONDS
+                                    )).toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(futures).whenComplete((unused, throwable) -> {
-            for (var type : TextureType.values()) {
-                handlers.stream()
-                        .filter(pair -> pair.getValue() != null &&
-                                                pair.getValue().hasTexture(type))
+            for (final var type : TextureType.values()) {
+                handlers.stream().filter(pair -> pair.getValue() != null &&
+                                                         pair.getValue()
+                                                             .hasTexture(type))
                         .min(Comparator.comparingInt(Numbered::getIndex))
                         .ifPresent(pair -> {
                             final var handler = pair.getValue();
@@ -69,6 +67,6 @@ public class SkinLoader {
                             }
                         });
             }
-        });
+        }).exceptionally(function(error));
     }
 }

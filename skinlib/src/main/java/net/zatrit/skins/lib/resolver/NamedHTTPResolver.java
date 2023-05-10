@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.Profile;
+import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.TexturesPlayerHandler;
+import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,11 +24,13 @@ public class NamedHTTPResolver implements Resolver {
     private final transient @Getter(AccessLevel.PROTECTED) Config skinsConfig;
     private final @Getter String baseUrl;
 
-    @Override public boolean requiresUuid() {
+    @Override
+    public boolean requiresUuid() {
         return false;
     }
 
-    @Override public @NotNull PlayerHandler resolve(@NotNull Profile profile)
+    @Override
+    public @NotNull PlayerHandler resolve(@NotNull Profile profile)
             throws IOException {
         final var url = new URL(this.getBaseUrl() +
                                         "/textures/" +
@@ -36,10 +39,11 @@ public class NamedHTTPResolver implements Resolver {
         final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {
         }.getType();
         final var textures = new Textures(getSkinsConfig().getGson()
-                                                  .fromJson(
-                                                          new InputStreamReader(url.openStream()),
-                                                          type
-                                                  ));
+                                                          .fromJson(
+                                                                  new InputStreamReader(
+                                                                          url.openStream()),
+                                                                  type
+                                                          ));
 
         return new TexturesPlayerHandler(getSkinsConfig(), textures, this);
     }

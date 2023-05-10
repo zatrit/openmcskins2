@@ -1,6 +1,5 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.api;
 
-import net.zatrit.skins.lib.Profile;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.data.Texture;
 import org.jetbrains.annotations.NotNull;

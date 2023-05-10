@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.zatrit.skins.lib.cache.CacheProvider;
+import net.zatrit.skins.lib.api.cache.CacheProvider;
 import net.zatrit.skins.lib.enumtypes.HashFunc;
 import org.jetbrains.annotations.Nullable;
 
-@SuperBuilder
 @Getter
+@SuperBuilder
 public final class Config {
     private final Gson gson = new GsonBuilder().create();
     private final @Nullable CacheProvider cacheProvider;
