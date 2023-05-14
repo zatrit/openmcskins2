@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.TexturesPlayerHandler;
+import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
 import org.jetbrains.annotations.NotNull;
@@ -35,16 +35,14 @@ public class NamedHTTPResolver implements Resolver {
         final var url = new URL(this.getBaseUrl() +
                                         "/textures/" +
                                         profile.getName());
+        final var config = getSkinsConfig();
 
         final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {
         }.getType();
-        final var textures = new Textures(getSkinsConfig().getGson()
-                                                          .fromJson(
-                                                                  new InputStreamReader(
-                                                                          url.openStream()),
-                                                                  type
-                                                          ));
+        final var textures = new Textures(config.getGson()
+                                                .fromJson(new InputStreamReader(
+                                                        url.openStream()), type));
 
-        return new TexturesPlayerHandler(getSkinsConfig(), textures, this);
+        return new TexturesPlayerHandler(config, textures, this);
     }
 }

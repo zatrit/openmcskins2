@@ -10,9 +10,9 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
+import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
-import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
@@ -39,7 +40,8 @@ public abstract class PlayerListEntryMixin {
             )
     );
     @Shadow private boolean texturesLoaded;
-    @Shadow @Final private Map<MinecraftProfileTexture.Type, Identifier> textures;
+    @Shadow @Final
+    private Map<MinecraftProfileTexture.Type, Identifier> textures;
     @Shadow @Nullable private String model;
 
     @Shadow
@@ -54,36 +56,55 @@ public abstract class PlayerListEntryMixin {
             this.texturesLoaded = true;
 
             final var profile = (Profile) getProfile();
-
-            if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
-                profile.refreshUuid();
-            }
-
             final var skinLoader = SkinsClient.getSkinLoader();
 
-            skinLoader.fetchAsync(resolvers, profile, sneaky(textureResult -> {
-                final var texture = textureResult.getTexture();
-                final var image = NativeImage.read(new ByteArrayInputStream(
-                        texture.getContent()));
-                final var playerTexture = new NativeImageBackedTexture(image);
-                final var id = MinecraftClient.getInstance().getTextureManager()
-                                              .registerDynamicTexture("skins",
-                                                      playerTexture
-                                              );
+            CompletableFuture<Profile> profileTask;
+            if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
+                profileTask = profile.refreshUuidAsync()
+                                      .exceptionallyComposeAsync(error -> {
+                                          // If UUID refresh failed
+                                          System.out.println("Fallback: " +
+                                                                     profile.getName());
+                                          error.printStackTrace();
+                                          return CompletableFuture.completedStage(
+                                                  profile);
+                                      });
+            } else {
+                profileTask = CompletableFuture.completedFuture(profile);
+            }
 
-                final var type = TextureTypeUtil.toAuthlibType(textureResult.getType());
-                this.textures.put(type, id);
+            profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
+                    profile1
+            ).join()).whenCompleteAsync(sneaky((result, error) -> {
+                for (final var textureResult : result) {
+                    final var texture = textureResult.getTexture();
+                    final var image = NativeImage.read(new ByteArrayInputStream(
+                            texture.getContent()));
+                    final var playerTexture = new NativeImageBackedTexture(image);
+                    final var id = MinecraftClient.getInstance()
+                                           .getTextureManager()
+                                           .registerDynamicTexture(
+                                                   "skins",
+                                                   playerTexture
+                                           );
 
-                final var metadata = texture.getMetadata();
+                    final var type = TextureTypeUtil.toAuthlibType(textureResult.getType());
+                    this.textures.put(type, id);
 
-                if (metadata == null) {
-                    return;
+                    final var metadata = texture.getMetadata();
+
+                    if (metadata == null) {
+                        return;
+                    }
+
+                    if (texture.getMetadata().containsKey("model")) {
+                        this.model = texture.getMetadata().get("model");
+                    }
+
+                    System.out.println("Finished: " +
+                                               profile.getName());
                 }
-
-                if (texture.getMetadata().containsKey("model")) {
-                    this.model = texture.getMetadata().get("model");
-                }
-            }), Throwable::printStackTrace);
+            }));
         }
     }
 }

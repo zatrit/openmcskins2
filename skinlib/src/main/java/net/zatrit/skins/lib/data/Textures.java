@@ -6,6 +6,7 @@ import net.zatrit.skins.lib.TextureType;
 import java.util.EnumMap;
 import java.util.Map;
 
+@SuppressWarnings("ClassCanBeRecord")
 public @Data class Textures {
     private final EnumMap<TextureType, TextureData> textures;
 

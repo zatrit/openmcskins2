@@ -4,14 +4,17 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Similar to {@link lombok.SneakyThrows} wrapper for lambdas
+ */
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Supplier<T> sneaky(ThrowableSupplier<T> supplier) {
-        return new Supplier<T>() {
+        return new Supplier<>() {
             @Override
             @SneakyThrows
             public T get() {
@@ -22,21 +25,25 @@ public class SneakyLambda {
 
 
     @Contract(value = "_ -> new", pure = true)
-    public static <T> @NotNull Consumer<T> sneaky(ThrowableConsumer<T> consumer) {
-        return new Consumer<T>() {
+    public static <T, R> @NotNull Function<T, R> sneaky(ThrowableFunction<T, R> function) {
+        return new Function<>() {
             @Override
             @SneakyThrows
-            public void accept(T t) {
-                consumer.accept(t);
+            public R apply(T t) {
+                return function.apply(t);
             }
         };
     }
 
-    @Contract(pure = true)
-    public static <T> @NotNull Function<T, Void> function(Consumer<T> consumer) {
-        return v -> {
-            consumer.accept(v);
-            return null;
+    @Contract(value = "_ -> new", pure = true)
+    public static <T, U> @NotNull BiConsumer<T, U> sneaky(
+            ThrowableBiConsumer<T, U> consumer) {
+        return new BiConsumer<>() {
+            @Override
+            @SneakyThrows
+            public void accept(T t, U u) {
+                consumer.accept(t, u);
+            }
         };
     }
 
@@ -44,7 +51,11 @@ public class SneakyLambda {
         T get() throws Throwable;
     }
 
-    public interface ThrowableConsumer<T> {
-        void accept(T t) throws Throwable;
+    public interface ThrowableFunction<T, R> {
+        R apply(T t) throws Throwable;
+    }
+
+    public interface ThrowableBiConsumer<T, U> {
+        void accept(T t, U u) throws Throwable;
     }
 }

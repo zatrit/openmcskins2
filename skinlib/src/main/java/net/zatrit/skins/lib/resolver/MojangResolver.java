@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.TexturesPlayerHandler;
+import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
 import net.zatrit.skins.lib.data.Textures;
@@ -29,27 +29,22 @@ public final class MojangResolver implements Resolver {
             throws IOException {
         final var gson = getSkins().getGson();
         final var url =
-                "https://sessionserver.mojang.com/session/minecraft/profile/"
-                        +
+                "https://sessionserver.mojang.com/session/minecraft/profile/" +
                         profile.getId().toString().replaceAll("-", "");
 
         MojangResponse response;
         try (var stream = new URL(url).openStream()) {
-            response = gson.fromJson(
-                    new InputStreamReader(stream),
-                    MojangResponse.class
-            );
+            response = gson.fromJson(new InputStreamReader(stream),
+                    MojangResponse.class);
         }
 
         final var decoder = Base64.getDecoder();
-        final var textureData = decoder.decode(response.getProperties()
-                                                       .get(0)
+        final var textureData = decoder.decode(response.getProperties().get(0)
                                                        .getValue());
 
         final var textures = gson.fromJson(
                 new InputStreamReader(new ByteArrayInputStream(textureData)),
-                Textures.class
-        );
+                Textures.class);
 
         return new TexturesPlayerHandler(getSkins(), textures, this);
     }

@@ -10,18 +10,20 @@ import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
+import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.enumtypes.HashFunc;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
-import net.zatrit.skins.lib.api.Resolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.http.HttpClient;
 import java.util.Objects;
 
 public final class SkinsClient implements ModInitializer {
     static @Getter Config skinsConfig;
     static @Getter SkinLoader skinLoader;
+    static @Getter HttpClient httpClient;
 
     @Override
     public void onInitialize() {
@@ -34,13 +36,18 @@ public final class SkinsClient implements ModInitializer {
         final var path = ((AssetPathProvider) client);
 
         skinsConfig = Config.builder().hashFunc(HashFunc.MURMUR3)
-                            .cacheProvider(config.cacheTextures ?
-                                                   new AssetCacheProvider(path) :
-                                                   null).build();
+                              .cacheProvider(config.cacheTextures ?
+                                                     new AssetCacheProvider(
+                                                             path) :
+                                                     null).build();
         skinLoader = new SkinLoader(skinsConfig);
 
-        final var resolvers = config.hosts.stream().map(this::resolverFromEntry)
-                                          .filter(Objects::nonNull).toList();
+        httpClient = HttpClient.newBuilder()
+                             .executor(skinsConfig.getExecutor()).build();
+
+        final var resolvers = config.hosts.stream()
+                                      .map(this::resolverFromEntry)
+                                      .filter(Objects::nonNull).toList();
 
         for (var resolver : resolvers) {
             System.out.println(resolver);
@@ -53,8 +60,7 @@ public final class SkinsClient implements ModInitializer {
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(getSkinsConfig());
-                case NAMED_HTTP -> new NamedHTTPResolver(
-                        getSkinsConfig(),
+                case NAMED_HTTP -> new NamedHTTPResolver(getSkinsConfig(),
                         (String) props.get("base_url")
                 );
             };
