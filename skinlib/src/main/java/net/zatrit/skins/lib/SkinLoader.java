@@ -13,8 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.stream;
@@ -30,43 +28,41 @@ public class SkinLoader {
         final var handlers = new LinkedList<Numbered<Resolver.PlayerHandler>>();
 
         final var futures = Numbered.enumerate(resolvers).stream()
-                                    .map(pair -> CompletableFuture.supplyAsync(
-                                            sneaky(() -> {
+                                    .map(pair -> CompletableFuture.supplyAsync(sneaky(() -> {
                                                 final var resolver = pair.getValue();
                                                 final var handler = resolver.resolve(
                                                         profile);
 
-                                                return pair.withValue(
-                                                        handler);
+                                                return pair.withValue(handler);
                                             }),
                                             this.skinsConfig.getExecutor()
                                     ).thenAccept(handlers::add).orTimeout(5,
                                             TimeUnit.SECONDS
                                     )).toArray(CompletableFuture[]::new);
 
-        return CompletableFuture.allOf(futures)
-                       .thenApplyAsync(unused -> stream(TextureType.values()).map(
-                                       type -> handlers.stream().parallel()
-                                                       .filter(pair -> pair.getValue() !=
-                                                                               null &&
-                                                                               pair.getValue()
-                                                                                       .hasTexture(
-                                                                                               type))
-                                                       .min(Comparator.comparingInt(
-                                                               Numbered::getIndex))
-                                                       .map(sneaky(pair -> {
-                                                           final var handler = pair.getValue();
+        return CompletableFuture.allOf(futures).thenApplyAsync(unused -> stream(
+                TextureType.values()).map(type -> handlers.stream().parallel()
+                                                          .filter(pair -> pair.getValue() !=
+                                                                                  null &&
+                                                                                  pair.getValue()
+                                                                                          .hasTexture(
+                                                                                                  type))
+                                                          .min(Comparator.comparingInt(
+                                                                  Numbered::getIndex))
+                                                          .map(sneaky(pair -> {
+                                                              final var handler = pair.getValue();
 
-                                                           var texture = handler.download(
-                                                                   type);
+                                                              var texture = handler.download(
+                                                                      type);
 
-                                                           return new TextureResult(texture,
-                                                                   type
-                                                           );
-                                                       })))
-                                                         .filter(Optional::isPresent)
-                                                         .map(Optional::get)
-                                                         .toArray(
-                                                                 TextureResult[]::new));
+                                                              return new TextureResult(
+                                                                      texture,
+                                                                      type
+                                                              );
+                                                          })))
+                                                                                 .filter(Optional::isPresent)
+                                                                                 .map(Optional::get)
+                                                                                 .toArray(
+                                                                                         TextureResult[]::new));
     }
 }

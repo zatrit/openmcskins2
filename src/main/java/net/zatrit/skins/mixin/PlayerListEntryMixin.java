@@ -47,7 +47,6 @@ public abstract class PlayerListEntryMixin {
     @Shadow
     public abstract GameProfile getProfile();
 
-    @SneakyThrows
     @Inject(method = "loadTextures", at = @At("HEAD"), cancellable = true)
     public void loadTextures(@NotNull CallbackInfo ci) {
         ci.cancel();
@@ -60,15 +59,12 @@ public abstract class PlayerListEntryMixin {
 
             CompletableFuture<Profile> profileTask;
             if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
-                profileTask = profile.refreshUuidAsync()
-                                      .exceptionallyComposeAsync(error -> {
-                                          // If UUID refresh failed
-                                          System.out.println("Fallback: " +
-                                                                     profile.getName());
-                                          error.printStackTrace();
-                                          return CompletableFuture.completedStage(
-                                                  profile);
-                                      });
+                profileTask = profile.refreshUuidAsync().exceptionallyAsync(
+                        error -> {
+                            // If UUID refresh failed
+                            error.printStackTrace();
+                            return profile;
+                        });
             } else {
                 profileTask = CompletableFuture.completedFuture(profile);
             }
@@ -76,6 +72,10 @@ public abstract class PlayerListEntryMixin {
             profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
                     profile1
             ).join()).whenCompleteAsync(sneaky((result, error) -> {
+                if (error != null) {
+                    error.printStackTrace();
+                }
+
                 for (final var textureResult : result) {
                     final var texture = textureResult.getTexture();
                     final var image = NativeImage.read(new ByteArrayInputStream(
@@ -100,9 +100,6 @@ public abstract class PlayerListEntryMixin {
                     if (texture.getMetadata().containsKey("model")) {
                         this.model = texture.getMetadata().get("model");
                     }
-
-                    System.out.println("Finished: " +
-                                               profile.getName());
                 }
             }));
         }
