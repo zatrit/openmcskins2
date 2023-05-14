@@ -1,6 +1,7 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'maven-publish'
 }
 
 archivesBaseName = project.archives_base_name
@@ -73,8 +74,25 @@ shadowJar {
 }
 
 allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+
     java {
         sourceCompatibility = JavaVersion.VERSION_16
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url = layout.buildDirectory.dir('repo')
+            }
+        }
+
+        publications {
+            java(MavenPublication) {
+                from components.java
+            }
+        }
     }
 }
