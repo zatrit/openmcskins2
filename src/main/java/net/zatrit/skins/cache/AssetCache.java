@@ -17,17 +17,14 @@ public class AssetCache implements Cache {
 
     @Override
     @SneakyThrows
-    public byte[] get(String id, LoadFunction load) {
+    public byte[] getOrLoad(String id, LoadFunction load) {
         final var path = Paths.get(this.pathProvider.getAssetPath(), type);
 
-        final var function = SkinsClient.getSkinsConfig()
-                                        .getHashFunc()
-                                        .getFunction();
+        final var function = SkinsClient.getSkinsConfig().getHashFunction();
 
         final var hash = function.hashUnencodedChars(id).toString();
 
-        final var cacheFile = Paths.get(
-                path.toString(),
+        final var cacheFile = Paths.get(path.toString(),
                 hash.substring(0, 2),
                 hash
         );

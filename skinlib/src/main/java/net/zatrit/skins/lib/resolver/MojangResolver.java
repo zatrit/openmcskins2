@@ -18,13 +18,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
 
+/** <a href="https://wiki.vg/Mojang_API">Mojang API</a> implementation
+ * for OpenMCSkins. */
 @AllArgsConstructor
-// https://wiki.vg/Mojang_API
 public final class MojangResolver implements Resolver {
     private final @Getter(AccessLevel.PROTECTED) Config skins;
 
-    @Contract("_ -> new")
     @Override
+    @Contract("_ -> new")
     public @NotNull PlayerHandler resolve(@NotNull Profile profile)
             throws IOException {
         final var gson = getSkins().getGson();

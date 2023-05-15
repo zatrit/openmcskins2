@@ -2,7 +2,6 @@ package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import lombok.SneakyThrows;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.texture.NativeImage;
@@ -33,9 +32,11 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin {
-    private static final List<Resolver> resolvers = Arrays.asList(new MojangResolver(
+    private static final List<Resolver> resolvers = Arrays.asList(
+            new MojangResolver(
                     SkinsClient.getSkinsConfig()),
-            new NamedHTTPResolver(SkinsClient.getSkinsConfig(),
+            new NamedHTTPResolver(
+                    SkinsClient.getSkinsConfig(),
                     "http://skinsystem.ely.by/"
             )
     );
@@ -59,19 +60,20 @@ public abstract class PlayerListEntryMixin {
 
             CompletableFuture<Profile> profileTask;
             if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
-                profileTask = profile.refreshUuidAsync().exceptionallyAsync(
-                        error -> {
-                            // If UUID refresh failed
-                            error.printStackTrace();
-                            return profile;
-                        });
+                profileTask = profile.refreshUuidAsync()
+                                      .exceptionallyAsync(error -> {
+                                          // If UUID refresh failed
+                                          error.printStackTrace();
+                                          return profile;
+                                      });
             } else {
                 profileTask = CompletableFuture.completedFuture(profile);
             }
 
-            profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
+            profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
+                    resolvers,
                     profile1
-            ).join()).whenCompleteAsync(sneaky((result, error) -> {
+            ).join()).whenComplete(sneaky((result, error) -> {
                 if (error != null) {
                     error.printStackTrace();
                 }

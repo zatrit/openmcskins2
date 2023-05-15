@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Similar to {@link lombok.SneakyThrows} wrapper for lambdas
+ * Similar to {@link lombok.SneakyThrows} wrapper for lambdas.
  */
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)

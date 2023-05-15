@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "net.zatrit.skins.SkinsClient"
+    ],
+    "modmenu": [
+      "net.zatrit.skins.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -25,6 +28,7 @@
     "fabric-resource-loader-v0": "*",
     "fabricloader": ">=0.14.11",
     "minecraft": ">1.19",
-    "java": ">=17"
+    "java": ">=17",
+    "cloth-config": ">=9.0.0"
   }
 }

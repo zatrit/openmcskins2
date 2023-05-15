@@ -1,5 +1,6 @@
 package net.zatrit.skins;
 
+import com.google.common.hash.Hashing;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -11,7 +12,6 @@ import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.enumtypes.HashFunc;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import org.jetbrains.annotations.NotNull;
@@ -35,18 +35,15 @@ public final class SkinsClient implements ModInitializer {
         final var config = configHolder.get();
         final var path = ((AssetPathProvider) client);
 
-        skinsConfig = Config.builder().hashFunc(HashFunc.MURMUR3)
-                              .cacheProvider(config.cacheTextures ?
-                                                     new AssetCacheProvider(
-                                                             path) :
+        skinsConfig = Config.builder().cacheProvider(config.cacheTextures ?
+                                                     new AssetCacheProvider(path) :
                                                      null).build();
         skinLoader = new SkinLoader(skinsConfig);
 
-        httpClient = HttpClient.newBuilder()
-                             .executor(skinsConfig.getExecutor()).build();
+        httpClient = HttpClient.newBuilder().executor(skinsConfig.getExecutor())
+                             .build();
 
-        final var resolvers = config.hosts.stream()
-                                      .map(this::resolverFromEntry)
+        final var resolvers = config.hosts.stream().map(this::resolverFromEntry)
                                       .filter(Objects::nonNull).toList();
 
         for (var resolver : resolvers) {

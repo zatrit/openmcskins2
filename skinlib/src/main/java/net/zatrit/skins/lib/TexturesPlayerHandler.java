@@ -50,7 +50,7 @@ public class TexturesPlayerHandler implements Resolver.PlayerHandler {
 
         final byte[] buffer = cache && cacheProvider != null ?
                                       cacheProvider.getSkinCache()
-                                                   .get(
+                                                   .getOrLoad(
                                                            textureData.getUrl(),
                                                            function
                                                    ) :

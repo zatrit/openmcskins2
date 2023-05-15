@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -13,6 +14,10 @@ public class HostEntry {
     private final @Nullable String tag;
     private final HostType type;
     private final Map<String, Object> properties;
+
+    public HostEntry() {
+        this(null, null, new HashMap<>());
+    }
 
     @AllArgsConstructor
     public enum HostType {

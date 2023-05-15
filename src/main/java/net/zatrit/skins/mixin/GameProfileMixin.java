@@ -32,20 +32,20 @@ public abstract class GameProfileMixin implements Profile {
                                                      .sendAsync(
                                                              request,
                                                              HttpResponse.BodyHandlers.ofInputStream()
-                                                     ).join()).thenApply(
-                        HttpResponse::body).thenApply(stream -> {
+                                                     ).join())
+                       .thenApply(HttpResponse::body).thenApply(stream -> {
                     final var map = SkinsClient.getSkinsConfig().getGson()
                                             .fromJson(
-                                                    new InputStreamReader(stream),
-                                                    Map.class
-                                            );
+                                                    new InputStreamReader(
+                                                            stream), Map.class);
 
                     final var id = String.valueOf(map.get("id")).replaceAll(
                             "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
                             "$1-$2-$3-$4-$5"
                     );
 
-                    return (Profile) new GameProfile(UUID.fromString(id),
+                    return (Profile) new GameProfile(
+                            UUID.fromString(id),
                             this.getName()
                     );
                 });

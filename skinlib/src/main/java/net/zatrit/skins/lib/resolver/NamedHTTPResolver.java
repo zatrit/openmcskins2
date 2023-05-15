@@ -18,6 +18,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.EnumMap;
 
+/**
+ * <a href="https://docs.ely.by/en/skins-system.html">ely.by API</a> implementation
+ * for OpenMCSKins. Works for some other APIs.
+ */
 @ToString
 @AllArgsConstructor
 public class NamedHTTPResolver implements Resolver {
@@ -37,11 +41,12 @@ public class NamedHTTPResolver implements Resolver {
                                         profile.getName());
         final var config = getSkinsConfig();
 
-        final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {
-        }.getType();
+        final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
         final var textures = new Textures(config.getGson()
-                                                .fromJson(new InputStreamReader(
-                                                        url.openStream()), type));
+                                                  .fromJson(new InputStreamReader(
+                                                                  url.openStream()),
+                                                          type
+                                                  ));
 
         return new TexturesPlayerHandler(config, textures, this);
     }
