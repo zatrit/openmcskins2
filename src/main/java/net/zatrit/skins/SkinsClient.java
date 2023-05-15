@@ -17,6 +17,8 @@ import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.net.ssl.SSLContext;
+import java.net.Authenticator;
 import java.net.http.HttpClient;
 import java.util.Objects;
 
@@ -41,6 +43,7 @@ public final class SkinsClient implements ModInitializer {
         skinLoader = new SkinLoader(skinsConfig);
 
         httpClient = HttpClient.newBuilder().executor(skinsConfig.getExecutor())
+                             .followRedirects(HttpClient.Redirect.NEVER)
                              .build();
 
         final var resolvers = config.hosts.stream().map(this::resolverFromEntry)

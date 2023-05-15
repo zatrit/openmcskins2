@@ -10,14 +10,11 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class HostEntry {
     private final @Nullable String tag;
     private final HostType type;
     private final Map<String, Object> properties;
-
-    public HostEntry() {
-        this(null, null, new HashMap<>());
-    }
 
     @AllArgsConstructor
     public enum HostType {
