@@ -23,7 +23,7 @@ Skin metadata is a JSON file, that contains skin model name
 
 ### Example skin metadata for a skin with a slim model:
 
-```json
+```json5
 {
   "model": "slim" // Use slim model for skin
 }
@@ -31,7 +31,7 @@ Skin metadata is a JSON file, that contains skin model name
 
 ### Example animated cape metadata
 
-```json
+```json5
 {
   "animated": true // Mark player cape as animated
 }
