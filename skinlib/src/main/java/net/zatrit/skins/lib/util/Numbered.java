@@ -1,16 +1,23 @@
 package net.zatrit.skins.lib.util;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public @Data class Numbered<T> {
+@Getter
+@AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
+public class Numbered<T> {
     private final int index;
     private final T value;
 
+    /**
+     * @return new list of numbered with values from input list.
+     */
     public static <T> @NotNull Collection<Numbered<T>> enumerate(@NotNull List<T> list) {
         List<Numbered<T>> list2 = new LinkedList<>();
 
@@ -21,6 +28,9 @@ public @Data class Numbered<T> {
         return list2;
     }
 
+    /**
+     * @return new numbered instance with same index, but different value.
+     */
     public <R> Numbered<R> withValue(R newValue) {
         return new Numbered<>(this.getIndex(), newValue);
     }

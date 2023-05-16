@@ -3,11 +3,11 @@ package net.zatrit.skins.lib;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
 import net.zatrit.skins.lib.data.Texture;
 import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.api.Resolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,17 +15,25 @@ import java.io.IOException;
 import java.net.URL;
 
 @AllArgsConstructor
-public class TexturesPlayerHandler implements Resolver.PlayerHandler {
-    private final @Getter(AccessLevel.PROTECTED) Config skinsConfig;
+public class URLPlayerLoader implements Resolver.PlayerLoader {
+    private final @Getter(AccessLevel.PROTECTED) CacheProvider cacheProvider;
     private final @NotNull @Getter Textures textures;
     private final @NotNull @Getter Resolver resolver;
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasTexture(TextureType type) {
-        return this.textures.getTextures().containsKey(type);
+        return this.textures.getTextures().containsKey(type) &&
+                       this.textures.getTextures().get(type).getUrl() != null;
     }
 
+    /**
+     * Download textures from URLs.
+     * {@inheritDoc}
+     */
     @Override
     public @Nullable Texture download(TextureType type) throws IOException {
         if (!this.hasTexture(type)) {
@@ -34,26 +42,25 @@ public class TexturesPlayerHandler implements Resolver.PlayerHandler {
 
         final var textureData = this.textures.getTextures().get(type);
 
-        return fetchTextureData(textureData, this.resolver.cacheable());
+        return fetchTextureData(textureData,
+                this.resolver.cacheable() ? this.getCacheProvider() : null
+        );
     }
 
     public @NotNull Texture fetchTextureData(
-            @NotNull Textures.TextureData textureData, boolean cache)
-            throws IOException {
+            @NotNull Textures.TextureData textureData,
+            @Nullable CacheProvider cacheProvider) throws IOException {
         final Cache.LoadFunction function = () -> {
             try (var stream = new URL(textureData.getUrl()).openStream()) {
                 return stream.readAllBytes();
             }
         };
 
-        final @Nullable CacheProvider cacheProvider = getSkinsConfig().getCacheProvider();
-
-        final byte[] buffer = cache && cacheProvider != null ?
+        final byte[] buffer = cacheProvider != null ?
                                       cacheProvider.getSkinCache()
-                                                   .getOrLoad(
-                                                           textureData.getUrl(),
-                                                           function
-                                                   ) :
+                                              .getOrLoad(textureData.getUrl(),
+                                                      function
+                                              ) :
                                       function.load();
 
         return new Texture(buffer, textureData.getMetadata());

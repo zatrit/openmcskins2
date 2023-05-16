@@ -10,8 +10,6 @@ import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.resolver.MojangResolver;
-import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +21,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,14 +28,6 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin {
-    private static final List<Resolver> resolvers = Arrays.asList(
-            new MojangResolver(
-                    SkinsClient.getSkinsConfig()),
-            new NamedHTTPResolver(
-                    SkinsClient.getSkinsConfig(),
-                    "http://skinsystem.ely.by/"
-            )
-    );
     @Shadow private boolean texturesLoaded;
     @Shadow @Final
     private Map<MinecraftProfileTexture.Type, Identifier> textures;
@@ -57,6 +45,7 @@ public abstract class PlayerListEntryMixin {
 
             final var profile = (Profile) getProfile();
             final var skinLoader = SkinsClient.getSkinLoader();
+            final var resolvers = SkinsClient.getResolvers();
 
             CompletableFuture<Profile> profileTask;
             if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
@@ -71,39 +60,47 @@ public abstract class PlayerListEntryMixin {
             }
 
             profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
-                    resolvers,
-                    profile1
-            ).join()).whenComplete(sneaky((result, error) -> {
-                if (error != null) {
-                    error.printStackTrace();
-                }
+                            resolvers,
+                            profile1
+                    ).join())
+                    .whenComplete(sneaky((result, error) -> {
+                        if (error != null) {
+                            error.printStackTrace();
+                        }
 
-                for (final var textureResult : result) {
-                    final var texture = textureResult.getTexture();
-                    final var image = NativeImage.read(new ByteArrayInputStream(
-                            texture.getContent()));
-                    final var playerTexture = new NativeImageBackedTexture(image);
-                    final var id = MinecraftClient.getInstance()
-                                           .getTextureManager()
-                                           .registerDynamicTexture(
-                                                   "skins",
-                                                   playerTexture
-                                           );
+                        for (final var textureResult : result) {
+                            final var texture = textureResult.getTexture();
+                            final var image = NativeImage.read(new ByteArrayInputStream(
+                                    texture.getContent()));
+                            final var playerTexture = new NativeImageBackedTexture(
+                                    image);
+                            final var id = MinecraftClient.getInstance()
+                                                   .getTextureManager()
+                                                   .registerDynamicTexture(
+                                                           "skins",
+                                                           playerTexture
+                                                   );
 
-                    final var type = TextureTypeUtil.toAuthlibType(textureResult.getType());
-                    this.textures.put(type, id);
+                            final var type = TextureTypeUtil.toAuthlibType(
+                                    textureResult.getType());
 
-                    final var metadata = texture.getMetadata();
+                            if (type == null) {
+                                continue;
+                            }
 
-                    if (metadata == null) {
-                        return;
-                    }
+                            this.textures.put(type, id);
 
-                    if (texture.getMetadata().containsKey("model")) {
-                        this.model = texture.getMetadata().get("model");
-                    }
-                }
-            }));
+                            final var metadata = texture.getMetadata();
+
+                            if (metadata == null) {
+                                continue;
+                            }
+
+                            if (texture.getMetadata().containsKey("model")) {
+                                this.model = texture.getMetadata().get("model");
+                            }
+                        }
+                    }));
         }
     }
 }

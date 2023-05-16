@@ -15,16 +15,20 @@ public class AssetCache implements Cache {
     private final AssetPathProvider pathProvider;
     private final String type;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SneakyThrows
     public byte[] getOrLoad(String id, LoadFunction load) {
         final var path = Paths.get(this.pathProvider.getAssetPath(), type);
 
-        final var function = SkinsClient.getSkinsConfig().getHashFunction();
+        final var function = SkinsClient.getConfig().getHashFunction();
 
         final var hash = function.hashUnencodedChars(id).toString();
 
-        final var cacheFile = Paths.get(path.toString(),
+        final var cacheFile = Paths.get(
+                path.toString(),
                 hash.substring(0, 2),
                 hash
         );

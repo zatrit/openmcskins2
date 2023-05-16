@@ -4,10 +4,9 @@ import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.TexturesPlayerHandler;
+import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
@@ -22,19 +21,25 @@ import java.util.EnumMap;
  * <a href="https://docs.ely.by/en/skins-system.html">ely.by API</a> implementation
  * for OpenMCSKins. Works for some other APIs.
  */
-@ToString
 @AllArgsConstructor
 public class NamedHTTPResolver implements Resolver {
     private final transient @Getter(AccessLevel.PROTECTED) Config skinsConfig;
     private final @Getter String baseUrl;
 
+    /**
+     * Doesn't require UUID, because resolves by name.
+     * {@inheritDoc}
+     */
     @Override
     public boolean requiresUuid() {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public @NotNull PlayerHandler resolve(@NotNull Profile profile)
+    public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         final var url = new URL(this.getBaseUrl() +
                                         "/textures/" +
@@ -43,11 +48,12 @@ public class NamedHTTPResolver implements Resolver {
 
         final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
         final var textures = new Textures(config.getGson()
-                                                  .fromJson(new InputStreamReader(
+                                                  .fromJson(
+                                                          new InputStreamReader(
                                                                   url.openStream()),
                                                           type
                                                   ));
 
-        return new TexturesPlayerHandler(config, textures, this);
+        return new URLPlayerLoader(config.getCacheProvider(), textures, this);
     }
 }

@@ -20,44 +20,65 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public class SkinLoader {
+/**
+ * OpenMCSkins simple loader implementation.
+ */ public class SkinLoader {
     private final @Getter Config skinsConfig;
 
+    /**
+     * Asynchronously load player skins from specific resolvers.
+     */
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
-        final var handlers = new LinkedList<Numbered<Resolver.PlayerHandler>>();
+        final var loaders = new LinkedList<Numbered<Resolver.PlayerLoader>>();
 
-        final var futures = Numbered.enumerate(resolvers).stream()
+        /* There are more comments than the rest of the code,
+         * because this is a very complex implementation. */
+        final var futures = Numbered.enumerate(resolvers)
+                                    .stream()
                                     .map(pair -> CompletableFuture.supplyAsync(
-                                            sneaky(() -> {
-                                                final var resolver = pair.getValue();
-                                                final var handler = resolver.resolve(
-                                                        profile);
+                                                    /* This function may throw an exception,
+                                                     * but it's a CompletableFuture, so
+                                                     * an exception won't crash the game. */
+                                                    sneaky(() -> {
+                                                        final var resolver = pair.getValue();
+                                                        final var loader = resolver.resolve(
+                                                                profile);
 
-                                                return pair.withValue(handler);
-                                            }),
-                                            this.skinsConfig.getExecutor()
-                                    ).thenAccept(handlers::add).orTimeout(
-                                            5,
-                                            TimeUnit.SECONDS
-                                    )).toArray(CompletableFuture[]::new);
+                                                        return pair.withValue(loader);
+                                                    }), this.skinsConfig.getExecutor())
+                                                         .thenAccept(
+                                                                 /* I don't know, how to pass
+                                                                  * loaders to futures so it just,
+                                                                  * stores them into list. */
+                                                                 loaders::add)
+                                                         .orTimeout(
+                                                                 // TODO: move this into config
+                                                                 5,
+                                                                 TimeUnit.SECONDS
+                                                         ))
+                                    .toArray(CompletableFuture[]::new);
 
         final var allFutures = CompletableFuture.allOf(futures);
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
-                        type -> handlers.stream().parallel()
+                        type -> loaders.stream()
+                                        .parallel()
+                                        // Remains only loaders that has texture
                                         .filter(pair -> pair.getValue() != null &&
                                                                 pair.getValue()
                                                                         .hasTexture(type))
+                                        // Find most prioritized loader and get its value
                                         .min(Comparator.comparingInt(Numbered::getIndex))
                                         .map(sneaky(pair -> {
-                                            final var handler = pair.getValue();
-
-                                            var texture = handler.download(type);
+                                            // Convert texture into TextureResult
+                                            final var loader = pair.getValue();
+                                            final var texture = loader.download(type);
 
                                             return new TextureResult(texture, type);
-                                        }))).filter(Optional::isPresent)
+                                        })))
+                                                      // Filter and unwrap Optionals
+                                                      .filter(Optional::isPresent)
                                                       .map(Optional::get)
-                                                      .toArray(
-                                                              TextureResult[]::new));
+                                                      .toArray(TextureResult[]::new));
     }
 }

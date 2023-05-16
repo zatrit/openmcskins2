@@ -1,14 +1,12 @@
 package net.zatrit.skins.config;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Getter
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
 public class HostEntry {

@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.TexturesPlayerHandler;
+import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
@@ -18,15 +18,20 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
 
-/** <a href="https://wiki.vg/Mojang_API">Mojang API</a> implementation
- * for OpenMCSkins. */
+/**
+ * <a href="https://wiki.vg/Mojang_API">Mojang API</a> implementation
+ * for OpenMCSkins.
+ */
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
     private final @Getter(AccessLevel.PROTECTED) Config skins;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Contract("_ -> new")
-    public @NotNull PlayerHandler resolve(@NotNull Profile profile)
+    public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         final var gson = getSkins().getGson();
         final var url =
@@ -35,18 +40,26 @@ public final class MojangResolver implements Resolver {
 
         MojangResponse response;
         try (var stream = new URL(url).openStream()) {
-            response = gson.fromJson(new InputStreamReader(stream),
-                    MojangResponse.class);
+            response = gson.fromJson(
+                    new InputStreamReader(stream),
+                    MojangResponse.class
+            );
         }
 
         final var decoder = Base64.getDecoder();
-        final var textureData = decoder.decode(response.getProperties().get(0)
+        final var textureData = decoder.decode(response.getProperties()
+                                                       .get(0)
                                                        .getValue());
 
         final var textures = gson.fromJson(
                 new InputStreamReader(new ByteArrayInputStream(textureData)),
-                Textures.class);
+                Textures.class
+        );
 
-        return new TexturesPlayerHandler(getSkins(), textures, this);
+        return new URLPlayerLoader(
+                getSkins().getCacheProvider(),
+                textures,
+                this
+        );
     }
 }

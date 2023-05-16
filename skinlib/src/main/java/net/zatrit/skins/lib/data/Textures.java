@@ -1,16 +1,22 @@
 package net.zatrit.skins.lib.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
 
 import java.util.EnumMap;
 import java.util.Map;
 
+@Getter
+@AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public @Data class Textures {
+public class Textures {
     private final EnumMap<TextureType, TextureData> textures;
 
-    public static @Data class TextureData {
+    @Getter
+    @AllArgsConstructor
+    public static class TextureData {
         private String url;
         private Map<String, String> metadata;
     }

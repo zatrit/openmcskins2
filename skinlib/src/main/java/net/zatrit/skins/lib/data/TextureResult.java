@@ -1,10 +1,13 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
 
+@Getter
+@AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public @Data class TextureResult {
+public class TextureResult {
     final Texture texture;
     final TextureType type;
 }

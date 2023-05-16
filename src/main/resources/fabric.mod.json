@@ -14,7 +14,7 @@
   "icon": "assets/skins/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "net.zatrit.skins.SkinsClient"
     ],
     "modmenu": [

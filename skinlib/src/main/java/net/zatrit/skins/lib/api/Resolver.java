@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+/**
+ * Interface that describes skin resolving mechanism.
+ */
 public interface Resolver {
     /**
      * Used for optimization. If all resolvers don't
@@ -23,9 +26,15 @@ public interface Resolver {
         return true;
     }
 
-    @NotNull PlayerHandler resolve(Profile profile) throws IOException;
+    /**
+     * @return player-specific texture loader.
+     */
+    @NotNull Resolver.PlayerLoader resolve(Profile profile) throws IOException;
 
-    interface PlayerHandler {
+    /**
+     * Player-specific textures loader.
+     */
+    interface PlayerLoader {
         /**
          * @return true, if texture is present.
          */

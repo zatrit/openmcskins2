@@ -37,7 +37,7 @@ dependencies {
     extraModApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
     extraModApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    implementation "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
     shadowImpl "org.apache.commons:commons-text:${project.apache_text_version}"
@@ -67,6 +67,8 @@ shadowJar {
 
     dependencies {
         exclude dependency('org.apache.commons:commons-lang3')
+
+        exclude "META-INF/maven/**"
     }
 
     configurations = [project.configurations.shadow]
@@ -81,19 +83,5 @@ allprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_16
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    publishing {
-        repositories {
-            maven {
-                url = layout.buildDirectory.dir('repo')
-            }
-        }
-
-        publications {
-            java(MavenPublication) {
-                from components.java
-            }
-        }
     }
 }
