@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface CacheProvider {
     /**
-     * @return non-null cache implementation
+     * @return non-null cache implementation.
      */
     @NotNull Cache getSkinCache();
 }

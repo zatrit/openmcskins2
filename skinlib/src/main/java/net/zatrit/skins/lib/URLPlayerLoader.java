@@ -31,7 +31,7 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
     }
 
     /**
-     * Download textures from URLs.
+     * Download texture from its URL, if present.
      * {@inheritDoc}
      */
     @Override

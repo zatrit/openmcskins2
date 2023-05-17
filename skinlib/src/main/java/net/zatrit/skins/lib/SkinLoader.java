@@ -18,11 +18,12 @@ import java.util.concurrent.TimeUnit;
 import static java.util.Arrays.stream;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
-@AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 /**
  * OpenMCSkins simple loader implementation.
- */ public class SkinLoader {
+ */
+@AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
+public class SkinLoader {
     private final @Getter Config skinsConfig;
 
     /**
@@ -31,6 +32,7 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
         final var loaders = new LinkedList<Numbered<Resolver.PlayerLoader>>();
+        final var timeout = getSkinsConfig().getLoaderTimeout();
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
@@ -53,10 +55,10 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
                                                                   * stores them into list. */
                                                                  loaders::add)
                                                          .orTimeout(
-                                                                 // TODO: move this into config
-                                                                 5,
+                                                                 timeout,
                                                                  TimeUnit.SECONDS
-                                                         ))
+                                                         )
+                                                         .exceptionally(e -> null))
                                     .toArray(CompletableFuture[]::new);
 
         final var allFutures = CompletableFuture.allOf(futures);

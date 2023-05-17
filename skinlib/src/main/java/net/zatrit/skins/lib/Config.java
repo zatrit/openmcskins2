@@ -17,8 +17,8 @@ import java.util.concurrent.Executors;
 @Builder
 public final class Config {
     private final Gson gson = new GsonBuilder().create();
-    @Setter
-    private @Nullable CacheProvider cacheProvider;
+    private @Setter @Nullable CacheProvider cacheProvider;
+    private @Setter int loaderTimeout;
     @Setter
     private @Builder.Default HashFunction hashFunction = Hashing.murmur3_128();
     private @Builder.Default Executor executor = Executors.newFixedThreadPool(

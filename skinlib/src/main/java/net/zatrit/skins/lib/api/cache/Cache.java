@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface Cache {
     /**
-     * Loads something from cache if present, else loads using passed function
+     * Loads bytes from cache if present, else loads using passed function.
      */
     byte[] getOrLoad(String id, LoadFunction load) throws IOException;
 

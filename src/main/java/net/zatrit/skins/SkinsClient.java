@@ -36,10 +36,12 @@ public final class SkinsClient implements ClientModInitializer {
                             .filter(Objects::nonNull)
                             .toList();
 
-        SkinsClient.getConfig()
-                .setCacheProvider(config.cacheTextures ?
+        var loaderConfig = getConfig();
+
+        loaderConfig.setCacheProvider(config.cacheTextures ?
                                           new AssetCacheProvider(path) :
                                           null);
+        loaderConfig.setLoaderTimeout(config.loaderTimeout);
 
         return ActionResult.SUCCESS;
     }
