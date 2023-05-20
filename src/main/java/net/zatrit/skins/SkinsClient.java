@@ -1,5 +1,7 @@
 package net.zatrit.skins;
 
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -17,30 +19,33 @@ import net.zatrit.skins.lib.api.Resolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
-    static @Getter Config config;
-    static @Getter SkinLoader skinLoader;
-    static @Getter HttpClient httpClient;
-    static @Getter List<Resolver> resolvers = Collections.emptyList();
+    private static @Getter Config skinsConfig;
+    private static @Getter SkinLoader skinLoader;
+    private static @Getter HttpClient httpClient;
+    private static @Getter List<Resolver> resolvers = new ArrayList<>();
+    private static @Getter HashFunction hashFunction = Hashing.murmur3_128();
 
     public ActionResult updateConfig(
             ConfigHolder<SkinsConfig> holder, @NotNull SkinsConfig config) {
-        var path = (AssetPathProvider) MinecraftClient.getInstance();
+        final var path = (AssetPathProvider) MinecraftClient.getInstance();
 
-        resolvers = config.hosts.stream()
-                            .map(Resolvers::resolverFromEntry)
-                            .filter(Objects::nonNull)
-                            .toList();
+        resolvers.clear();
+        resolvers.addAll(config.hosts.stream()
+                                 .parallel()
+                                 .map(Resolvers::resolverFromEntry)
+                                 .filter(Objects::nonNull)
+                                 .toList());
 
-        var loaderConfig = getConfig();
+        final var loaderConfig = getSkinsConfig();
 
         loaderConfig.setCacheProvider(config.cacheTextures ?
-                                          new AssetCacheProvider(path) :
-                                          null);
+                                              new AssetCacheProvider(path) :
+                                              null);
         loaderConfig.setLoaderTimeout(config.loaderTimeout);
 
         return ActionResult.SUCCESS;
@@ -49,18 +54,17 @@ public final class SkinsClient implements ClientModInitializer {
     @SneakyThrows
     @Override
     public void onInitializeClient() {
-        SkinsClient.config = Config.builder().build();
-        skinLoader = new SkinLoader(SkinsClient.config);
+        SkinsClient.skinsConfig = Config.builder().build();
+        skinLoader = new SkinLoader(SkinsClient.skinsConfig);
 
-        final var configHolder = AutoConfig.register(
-                SkinsConfig.class,
+        final var configHolder = AutoConfig.register(SkinsConfig.class,
                 Toml4jConfigSerializer::new
         );
         configHolder.registerSaveListener(this::updateConfig);
         this.updateConfig(configHolder, configHolder.getConfig());
 
         httpClient = HttpClient.newBuilder()
-                             .executor(SkinsClient.config.getExecutor())
+                             .executor(SkinsClient.skinsConfig.getExecutor())
                              .followRedirects(HttpClient.Redirect.NEVER)
                              .build();
     }

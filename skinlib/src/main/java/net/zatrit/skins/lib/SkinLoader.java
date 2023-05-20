@@ -24,7 +24,7 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
 public class SkinLoader {
-    private final @Getter Config skinsConfig;
+    private final @Getter Config config;
 
     /**
      * Asynchronously load player skins from specific resolvers.
@@ -32,7 +32,7 @@ public class SkinLoader {
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
         final var loaders = new LinkedList<Numbered<Resolver.PlayerLoader>>();
-        final var timeout = getSkinsConfig().getLoaderTimeout();
+        final var timeout = getConfig().getLoaderTimeout();
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
@@ -48,7 +48,7 @@ public class SkinLoader {
                                                                 profile);
 
                                                         return pair.withValue(loader);
-                                                    }), this.skinsConfig.getExecutor())
+                                                    }), this.config.getExecutor())
                                                          .thenAccept(
                                                                  /* I don't know, how to pass
                                                                   * loaders to futures so it just,

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  */
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
-    public static <T> @NotNull Supplier<T> sneaky(ThrowableSupplier<T> supplier) {
+    public static <T> @NotNull Supplier<T> sneaky(SupplierThrows<T> supplier) {
         return new Supplier<>() {
             @Override
             @SneakyThrows
@@ -25,7 +25,7 @@ public class SneakyLambda {
 
 
     @Contract(value = "_ -> new", pure = true)
-    public static <T, R> @NotNull Function<T, R> sneaky(ThrowableFunction<T, R> function) {
+    public static <T, R> @NotNull Function<T, R> sneaky(FunctionThrows<T, R> function) {
         return new Function<>() {
             @Override
             @SneakyThrows
@@ -37,7 +37,7 @@ public class SneakyLambda {
 
     @Contract(value = "_ -> new", pure = true)
     public static <T, U> @NotNull BiConsumer<T, U> sneaky(
-            ThrowableBiConsumer<T, U> consumer) {
+            BiConsumerThrows<T, U> consumer) {
         return new BiConsumer<>() {
             @Override
             @SneakyThrows
@@ -47,15 +47,15 @@ public class SneakyLambda {
         };
     }
 
-    public interface ThrowableSupplier<T> {
+    public interface SupplierThrows<T> {
         T get() throws Throwable;
     }
 
-    public interface ThrowableFunction<T, R> {
+    public interface FunctionThrows<T, R> {
         R apply(T t) throws Throwable;
     }
 
-    public interface ThrowableBiConsumer<T, U> {
+    public interface BiConsumerThrows<T, U> {
         void accept(T t, U u) throws Throwable;
     }
 }

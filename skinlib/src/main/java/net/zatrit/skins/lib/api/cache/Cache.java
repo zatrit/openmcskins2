@@ -2,6 +2,9 @@ package net.zatrit.skins.lib.api.cache;
 
 import java.io.IOException;
 
+/**
+ * @see CacheProvider
+ */
 public interface Cache {
     /**
      * Loads bytes from cache if present, else loads using passed function.

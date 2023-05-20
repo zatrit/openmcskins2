@@ -7,15 +7,17 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@SuppressWarnings("ClassCanBeRecord")
 public class MojangResponse {
-    private String id;
-    private String name;
-    private List<MojangProperty> properties;
+    private final String id;
+    private final String name;
+    private final List<MojangProperty> properties;
 
     @Getter
     @AllArgsConstructor
+    @SuppressWarnings("ClassCanBeRecord")
     public static class MojangProperty {
-        private String name;
-        private String value;
+        private final String name;
+        private final String value;
     }
 }

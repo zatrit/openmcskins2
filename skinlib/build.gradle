@@ -11,11 +11,17 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    compileOnly "org.projectlombok:lombok:${parent.project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${parent.project.lombok_version}"
 
     compileOnly 'org.jetbrains:annotations:16.0.2'
     compileOnly 'com.google.code.gson:gson:2.10.1'
 
     compileOnly 'com.google.guava:guava:31.1-jre'
+}
+
+jar {
+    from("../LICENSE.txt") {
+        rename { 'META-INF/LICENSE.txt' }
+    }
 }

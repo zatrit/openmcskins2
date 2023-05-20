@@ -15,8 +15,8 @@ repositories {
 }
 
 dependencies {
-    // Shadows and implements dependency (D.R.Y.)
     var shadowImpl = { dep ->
+        // Shadows and implements dependency (D.R.Y.)
         implementation dep
         shadow dep
     }
@@ -52,10 +52,6 @@ processResources {
     }
 }
 
-jar {
-    from 'LICENSE'
-}
-
 remapJar {
     dependsOn(shadowJar)
     //noinspection GroovyAssignabilityCheck
@@ -68,7 +64,10 @@ shadowJar {
     dependencies {
         exclude dependency('org.apache.commons:commons-lang3')
 
-        exclude "META-INF/maven/**"
+        exclude 'META-INF/maven/**'
+    }
+    from("LICENSE.txt") {
+        rename { 'META-INF/LICENSE.txt' }
     }
 
     configurations = [project.configurations.shadow]
@@ -83,5 +82,15 @@ allprojects {
     java {
         sourceCompatibility = JavaVersion.VERSION_16
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    publishing {
+        publications {
+            //noinspection GroovyAssignabilityCheck
+            java(MavenPublication) {
+                //noinspection GroovyAssignabilityCheck
+                from components.java
+            }
+        }
     }
 }

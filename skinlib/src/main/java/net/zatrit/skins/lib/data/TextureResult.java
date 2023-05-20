@@ -8,6 +8,6 @@ import net.zatrit.skins.lib.TextureType;
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
 public class TextureResult {
-    final Texture texture;
-    final TextureType type;
+    private final Texture texture;
+    private final TextureType type;
 }

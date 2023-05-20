@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
 

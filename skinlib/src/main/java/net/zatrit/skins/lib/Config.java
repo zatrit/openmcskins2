@@ -1,7 +1,5 @@
 package net.zatrit.skins.lib;
 
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Builder;
@@ -19,8 +17,6 @@ public final class Config {
     private final Gson gson = new GsonBuilder().create();
     private @Setter @Nullable CacheProvider cacheProvider;
     private @Setter int loaderTimeout;
-    @Setter
-    private @Builder.Default HashFunction hashFunction = Hashing.murmur3_128();
     private @Builder.Default Executor executor = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors());
 }

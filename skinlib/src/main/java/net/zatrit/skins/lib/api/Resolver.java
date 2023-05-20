@@ -21,6 +21,7 @@ public interface Resolver {
 
     /**
      * @return true if resolver doesn't fetch remote skins.
+     * @see net.zatrit.skins.lib.api.cache.Cache
      */
     default boolean cacheable() {
         return true;
@@ -41,7 +42,7 @@ public interface Resolver {
         boolean hasTexture(TextureType type);
 
         /**
-         * @return texture of specified type as Texture if
+         * @return texture of specified type if
          * present (check via {@link #hasTexture})).
          */
         @Nullable Texture download(TextureType type) throws IOException;

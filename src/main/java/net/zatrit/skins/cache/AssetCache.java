@@ -22,9 +22,7 @@ public class AssetCache implements Cache {
     @SneakyThrows
     public byte[] getOrLoad(String id, LoadFunction load) {
         final var path = Paths.get(this.pathProvider.getAssetPath(), type);
-
-        final var function = SkinsClient.getConfig().getHashFunction();
-
+        final var function = SkinsClient.getHashFunction();
         final var hash = function.hashUnencodedChars(id).toString();
 
         final var cacheFile = Paths.get(

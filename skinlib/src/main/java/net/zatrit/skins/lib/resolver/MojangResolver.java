@@ -24,7 +24,7 @@ import java.util.Base64;
  */
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
-    private final @Getter(AccessLevel.PROTECTED) Config skins;
+    private final @Getter(AccessLevel.PROTECTED) Config config;
 
     /**
      * {@inheritDoc}
@@ -33,13 +33,13 @@ public final class MojangResolver implements Resolver {
     @Contract("_ -> new")
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        final var gson = getSkins().getGson();
+        final var gson = getConfig().getGson();
         final var url =
                 "https://sessionserver.mojang.com/session/minecraft/profile/" +
                         profile.getId().toString().replaceAll("-", "");
 
         MojangResponse response;
-        try (var stream = new URL(url).openStream()) {
+        try (final var stream = new URL(url).openStream()) {
             response = gson.fromJson(
                     new InputStreamReader(stream),
                     MojangResponse.class
@@ -57,7 +57,7 @@ public final class MojangResolver implements Resolver {
         );
 
         return new URLPlayerLoader(
-                getSkins().getCacheProvider(),
+                getConfig().getCacheProvider(),
                 textures,
                 this
         );

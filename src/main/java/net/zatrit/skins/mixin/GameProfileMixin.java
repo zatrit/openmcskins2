@@ -34,7 +34,7 @@ public abstract class GameProfileMixin implements Profile {
                                                              HttpResponse.BodyHandlers.ofInputStream()
                                                      ).join())
                        .thenApply(HttpResponse::body).thenApply(stream -> {
-                    final var map = SkinsClient.getConfig().getGson()
+                    final var map = SkinsClient.getSkinsConfig().getGson()
                                             .fromJson(
                                                     new InputStreamReader(
                                                             stream), Map.class);

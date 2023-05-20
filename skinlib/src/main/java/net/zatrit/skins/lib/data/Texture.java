@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.Map;
@@ -10,6 +9,6 @@ import java.util.Map;
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
 public class Texture {
-    final byte[] content;
-    final Map<String, String> metadata;
+    private final byte[] content;
+    private final Map<String, String> metadata;
 }

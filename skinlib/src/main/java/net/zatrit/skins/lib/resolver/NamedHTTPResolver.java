@@ -23,7 +23,7 @@ import java.util.EnumMap;
  */
 @AllArgsConstructor
 public class NamedHTTPResolver implements Resolver {
-    private final transient @Getter(AccessLevel.PROTECTED) Config skinsConfig;
+    private final transient @Getter(AccessLevel.PROTECTED) Config config;
     private final @Getter String baseUrl;
 
     /**
@@ -44,7 +44,7 @@ public class NamedHTTPResolver implements Resolver {
         final var url = new URL(this.getBaseUrl() +
                                         "/textures/" +
                                         profile.getName());
-        final var config = getSkinsConfig();
+        final var config = getConfig();
 
         final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
         final var textures = new Textures(config.getGson()

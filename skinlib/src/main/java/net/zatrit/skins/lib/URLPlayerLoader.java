@@ -14,11 +14,12 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.net.URL;
 
+@Getter
 @AllArgsConstructor
 public class URLPlayerLoader implements Resolver.PlayerLoader {
     private final @Getter(AccessLevel.PROTECTED) CacheProvider cacheProvider;
-    private final @NotNull @Getter Textures textures;
-    private final @NotNull @Getter Resolver resolver;
+    private final @NotNull Textures textures;
+    private final @NotNull Resolver resolver;
 
 
     /**
@@ -31,7 +32,7 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
     }
 
     /**
-     * Download texture from its URL, if present.
+     * Download texture from its URL.
      * {@inheritDoc}
      */
     @Override
@@ -42,12 +43,13 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
 
         final var textureData = this.textures.getTextures().get(type);
 
-        return fetchTextureData(textureData,
+        return fetchTextureData(
+                textureData,
                 this.resolver.cacheable() ? this.getCacheProvider() : null
         );
     }
 
-    public @NotNull Texture fetchTextureData(
+    private @NotNull Texture fetchTextureData(
             @NotNull Textures.TextureData textureData,
             @Nullable CacheProvider cacheProvider) throws IOException {
         final Cache.LoadFunction function = () -> {
@@ -58,7 +60,8 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
 
         final byte[] buffer = cacheProvider != null ?
                                       cacheProvider.getSkinCache()
-                                              .getOrLoad(textureData.getUrl(),
+                                              .getOrLoad(
+                                                      textureData.getUrl(),
                                                       function
                                               ) :
                                       function.load();
