@@ -7,6 +7,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
+import net.zatrit.skins.Refreshable;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
@@ -29,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(PlayerListEntry.class)
-public abstract class PlayerListEntryMixin {
+public abstract class PlayerListEntryMixin implements Refreshable {
     @Shadow private boolean texturesLoaded;
     @Shadow @Final
     private Map<MinecraftProfileTexture.Type, Identifier> textures;
@@ -68,17 +69,16 @@ public abstract class PlayerListEntryMixin {
         }
 
         profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
-                        profile1
-                ).join())
-                .whenComplete(sneaky((result, error) -> {
-                    if (error != null) {
-                        error.printStackTrace();
-                    }
+                profile1
+        ).join()).whenComplete(sneaky((result, error) -> {
+            if (error != null) {
+                error.printStackTrace();
+            }
 
-                    for (final var textureResult : result) {
-                        this.loadTextureResult(textureResult);
-                    }
-                }));
+            for (final var textureResult : result) {
+                this.loadTextureResult(textureResult);
+            }
+        }));
     }
 
     private void loadTextureResult(@NotNull TextureResult result)
@@ -93,8 +93,7 @@ public abstract class PlayerListEntryMixin {
         final var texture = result.getTexture();
         final var image = NativeImage.read(new ByteArrayInputStream(texture.getContent()));
         final var playerTexture = new NativeImageBackedTexture(image);
-        final var id = MinecraftClient.getInstance()
-                               .getTextureManager()
+        final var id = MinecraftClient.getInstance().getTextureManager()
                                .registerDynamicTexture("skins", playerTexture);
 
         this.textures.put(type, id);
@@ -106,5 +105,10 @@ public abstract class PlayerListEntryMixin {
         }
 
         this.model = texture.getMetadata().getOrDefault("model", this.model);
+    }
+
+    @Override
+    public void refresh() {
+        this.texturesLoaded = false;
     }
 }

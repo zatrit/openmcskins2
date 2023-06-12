@@ -1,0 +1,10 @@
+{
+  "openmcskins.command.added": "§a+ %s",
+  "openmcskins.command.removed": "§c- %s",
+  "openmcskins.command.list": "Configured hosts:",
+  "openmcskins.command.list_entry": "%d§7. %s",
+  "openmcskins.command.invalid_file_format": "Invalid input file format.",
+  "openmcskins.command.no_world": "Unable to list players.",
+  "openmcskins.command.no_preset": "No preset found.",
+  "openmcskins.command.moved": "A host was moved from %d to %d successfully."
+}

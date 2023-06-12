@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
 import net.zatrit.skins.cache.AssetCacheProvider;
@@ -35,11 +36,9 @@ public final class SkinsClient implements ClientModInitializer {
         final var path = (AssetPathProvider) MinecraftClient.getInstance();
 
         resolvers.clear();
-        resolvers.addAll(config.hosts.stream()
-                                 .parallel()
+        resolvers.addAll(config.hosts.stream().parallel()
                                  .map(Resolvers::resolverFromEntry)
-                                 .filter(Objects::nonNull)
-                                 .toList());
+                                 .filter(Objects::nonNull).toList());
 
         final var loaderConfig = getSkinsConfig();
 
@@ -57,11 +56,19 @@ public final class SkinsClient implements ClientModInitializer {
         SkinsClient.skinsConfig = Config.builder().build();
         skinLoader = new SkinLoader(SkinsClient.skinsConfig);
 
-        final var configHolder = AutoConfig.register(SkinsConfig.class,
+        final var configHolder = AutoConfig.register(
+                SkinsConfig.class,
                 Toml4jConfigSerializer::new
         );
         configHolder.registerSaveListener(this::updateConfig);
         this.updateConfig(configHolder, configHolder.getConfig());
+
+        final var commands = new SkinsCommands(
+                configHolder,
+                MinecraftClient.getInstance()
+        );
+
+        ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
                              .executor(SkinsClient.skinsConfig.getExecutor())

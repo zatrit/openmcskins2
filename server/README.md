@@ -25,7 +25,8 @@ Skin metadata is a JSON file, that contains skin model name
 
 ```json5
 {
-  "model": "slim" // Use slim model for skin
+  "model": "slim"
+  // Use slim model for skin
 }
 ```
 
@@ -33,6 +34,11 @@ Skin metadata is a JSON file, that contains skin model name
 
 ```json5
 {
-  "animated": true // Mark player cape as animated
+  "animated": true
+  // Mark player cape as animated
 }
 ```
+
+### Note:
+
+There's also Ruby implementation created by KerbalNo15: https://github.com/KerbalNo15/mcskinserver-ruby

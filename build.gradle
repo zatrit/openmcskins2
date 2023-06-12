@@ -14,6 +14,11 @@ repositories {
     maven { url 'https://maven.terraformersmc.com/releases/' }
 }
 
+loom {
+    //noinspection GroovyAssignabilityCheck
+    accessWidenerPath = file("src/main/resources/openmcskins.accesswidener")
+}
+
 dependencies {
     var shadowImpl = { dep ->
         // Shadows and implements dependency (D.R.Y.)
@@ -37,10 +42,13 @@ dependencies {
     extraModApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
     extraModApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    implementation "org.projectlombok:lombok:${project.lombok_version}"
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
+    implementation "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
+
     shadowImpl "org.apache.commons:commons-text:${project.apache_text_version}"
+
     shadowImpl project(":skinlib")
 }
 
@@ -63,16 +71,18 @@ shadowJar {
 
     dependencies {
         exclude dependency('org.apache.commons:commons-lang3')
-
         exclude 'META-INF/maven/**'
     }
-    from("LICENSE.txt") {
+
+    from('LICENSE.txt') {
         rename { 'META-INF/LICENSE.txt' }
     }
 
     configurations = [project.configurations.shadow]
     archiveBaseName.set archives_base_name
     archiveClassifier.set 'not-remapped'
+
+    relocate 'com.moandjiezana.toml', 'me.shedaniel.cloth.clothconfig.shadowed.com.moandjiezana.toml'
 }
 
 allprojects {
@@ -94,3 +104,27 @@ allprojects {
         }
     }
 }
+
+// https://stackoverflow.com/a/52976567/12245612
+static createIndex(File path) {
+    def index = path.listFiles().findAll { it.isFile() }.name
+    return index.join('\n')
+}
+
+def indexDir(String resourceDir, String name) {
+    file("$resourceDir/$name").mkdirs()
+    def presetIndexFile = file("$resourceDir/${name}.index")
+    presetIndexFile.delete()
+
+    sourceSets.main.resources.srcDirs.path.forEach {
+        presetIndexFile << createIndex(file("$it/$name"))
+    }
+}
+
+tasks.register('createIndex') {
+    def resourceDir = "$buildDir/resources/main"
+
+    indexDir resourceDir, 'presets'
+}
+
+processResources.dependsOn createIndex
