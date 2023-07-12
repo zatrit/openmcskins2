@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public final class Resolvers {
     public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
         final var props = entry.getProperties();
-        final var config = SkinsClient.getSkinsConfig();
+        final var config = SkinsClient.getLoaderConfig();
 
         try {
             return switch (entry.getType()) {
@@ -27,7 +27,7 @@ public final class Resolvers {
                 }
             };
         } catch (Exception ex) {
-            ex.printStackTrace();
+            SkinsClient.getErrorHandler().accept(ex);
             return null;
         }
     }

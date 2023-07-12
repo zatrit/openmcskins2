@@ -12,11 +12,7 @@ repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/releases/' }
-}
-
-loom {
-    //noinspection GroovyAssignabilityCheck
-    accessWidenerPath = file("src/main/resources/openmcskins.accesswidener")
+    maven { url 'https://maven.isxander.dev/releases' }
 }
 
 dependencies {
@@ -38,16 +34,16 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    extraModApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    extraModApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
     extraModApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
     extraModApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
-    implementation "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-
-    shadowImpl "org.apache.commons:commons-text:${project.apache_text_version}"
+    shadowImpl "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
+    shadowImpl "org.apache.commons:commons-text:${project.commons_text_version}"
+    shadowImpl "commons-io:commons-io:${project.commons_io_version}"
 
     shadowImpl project(":skinlib")
 }

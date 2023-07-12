@@ -3,17 +3,15 @@ package net.zatrit.skins;
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.AllArgsConstructor;
-import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.*;
@@ -29,7 +27,7 @@ import static net.zatrit.skins.util.ConfigUtil.patchConfig;
 
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
-    private final ConfigHolder<SkinsConfig> configHolder;
+    private final ConfigInstance<SkinsConfig> configInstance;
     private final MinecraftClient client;
 
     @Override
@@ -87,7 +85,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }
 
         client.world.getPlayers().stream()
-                .map(AbstractClientPlayerEntity::getPlayerListEntry)
+                .map(t -> ((HasPlayerListEntry) t).getPlayerListEntry())
                 .filter(Objects::nonNull)
                 .forEach(e -> ((Refreshable) e).refresh());
 
@@ -100,8 +98,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
         try {
             id = context.getArgument("id", Integer.class);
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
+        } catch (IllegalArgumentException ignored) {
         }
 
         final int finalId = id;
@@ -114,7 +111,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        patchConfig(this.configHolder, config -> {
+        patchConfig(this.configInstance, config -> {
             config.hosts.add(finalId, entry);
             return null;
         });
@@ -128,7 +125,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     public int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var entries = this.configHolder.get().hosts.stream()
+        final var entries = this.configInstance.getConfig().hosts.stream()
                                     .map(TextUtil::formatObject)
                                     .toArray(MutableText[]::new);
         var result = Text.translatable("openmcskins.command.list");
@@ -150,7 +147,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         final var id = context.getArgument("id", Integer.class);
 
         final var entry = patchConfig(
-                this.configHolder,
+                this.configInstance,
                 config -> config.hosts.remove(id.intValue())
         );
 
@@ -166,7 +163,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         final var from = context.getArgument("from", Integer.class);
         final var to = context.getArgument("to", Integer.class);
 
-        patchConfig(this.configHolder, config -> {
+        patchConfig(this.configInstance, config -> {
             final var entry = config.hosts.remove(from.intValue());
             config.hosts.add(to, entry);
 

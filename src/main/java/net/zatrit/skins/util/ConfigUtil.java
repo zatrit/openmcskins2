@@ -1,22 +1,22 @@
 package net.zatrit.skins.util;
 
+import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.ConfigHolder;
+import net.zatrit.skins.config.SkinsConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConfigUtil {
-    public static <T extends ConfigData, R> R patchConfig(
-            @NotNull ConfigHolder<T> holder,
-            @NotNull Function<T, R> callback) {
-        final var config = holder.get();
+    public static <T, R> R patchConfig(
+            @NotNull ConfigInstance<SkinsConfig> instance,
+            @NotNull Function<SkinsConfig, R> callback) {
+        final var config = instance.getConfig();
         final var result = callback.apply(config);
 
-        holder.save();
+        instance.save();
 
         return result;
     }

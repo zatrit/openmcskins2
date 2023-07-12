@@ -5,7 +5,7 @@ import lombok.Getter;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
-import net.zatrit.skins.lib.util.Numbered;
+import net.zatrit.skins.lib.util.Enumerated;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -31,12 +31,12 @@ public class SkinLoader {
      */
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
-        final var loaders = new LinkedList<Numbered<Resolver.PlayerLoader>>();
+        final var loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
         final var timeout = getConfig().getLoaderTimeout();
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
-        final var futures = Numbered.enumerate(resolvers)
+        final var futures = Enumerated.enumerate(resolvers)
                                     .stream()
                                     .map(pair -> CompletableFuture.supplyAsync(
                                                     /* This function may throw an exception,
@@ -70,7 +70,7 @@ public class SkinLoader {
                                                                 pair.getValue()
                                                                         .hasTexture(type))
                                         // Find most prioritized loader and get its value
-                                        .min(Comparator.comparingInt(Numbered::getIndex))
+                                        .min(Comparator.comparingInt(Enumerated::getIndex))
                                         .map(sneaky(pair -> {
                                             // Convert texture into TextureResult
                                             final var loader = pair.getValue();

@@ -1,16 +1,16 @@
 package net.zatrit.skins.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Config(name = "openmcskins")
-public class SkinsConfig implements ConfigData {
+@Getter
+@Setter
+public class SkinsConfig {
     public boolean cacheTextures = true;
-    @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
     public int loaderTimeout = 5;
-    @ConfigEntry.Gui.Excluded public List<HostEntry> hosts = new ArrayList<>();
+    public List<HostEntry> hosts = new ArrayList<>();
+    public boolean verboseLogs = false;
 }

@@ -1,6 +1,7 @@
 package net.zatrit.skins.util;
 
 import lombok.AllArgsConstructor;
+import net.zatrit.skins.SkinsClient;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +24,7 @@ public class IndexedResourceProvider implements FileProvider {
             try (final var indexFile = url.openStream()) {
                 return IOUtils.readLines(indexFile, Charset.defaultCharset());
             } catch (IOException e) {
-                e.printStackTrace();
+                SkinsClient.getErrorHandler().accept(e);
             }
         }
 
@@ -38,7 +39,7 @@ public class IndexedResourceProvider implements FileProvider {
             try {
                 return url.openStream();
             } catch (IOException e) {
-                e.printStackTrace();
+                SkinsClient.getErrorHandler().accept(e);
             }
         }
 

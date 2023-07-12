@@ -1,6 +1,7 @@
 package net.zatrit.skins.util;
 
 import lombok.AllArgsConstructor;
+import net.zatrit.skins.SkinsClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -34,9 +35,8 @@ public class DirectoryFileProvider implements FileProvider {
         try {
             return new FileInputStream(path.toFile());
         } catch (IOException e) {
-            e.printStackTrace();
+            SkinsClient.getErrorHandler().accept(e);
+            return null;
         }
-
-        return null;
     }
 }

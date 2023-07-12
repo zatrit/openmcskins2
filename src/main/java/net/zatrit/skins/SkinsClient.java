@@ -4,19 +4,19 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.ActionResult;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
+import net.zatrit.skins.config.TomlConfigInstance;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.util.ExceptionConsumer;
+import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
@@ -25,14 +25,15 @@ import java.util.List;
 import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
-    private static @Getter Config skinsConfig;
+    private static @Getter TomlConfigInstance<SkinsConfig> configInstance;
+    private static @Getter Config loaderConfig;
     private static @Getter SkinLoader skinLoader;
     private static @Getter HttpClient httpClient;
-    private static @Getter List<Resolver> resolvers = new ArrayList<>();
-    private static @Getter HashFunction hashFunction = Hashing.murmur3_128();
+    private static @Getter ExceptionConsumer<Void> errorHandler;
+    private static final @Getter List<Resolver> resolvers = new ArrayList<>();
+    private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
 
-    public ActionResult updateConfig(
-            ConfigHolder<SkinsConfig> holder, @NotNull SkinsConfig config) {
+    public void applyConfig(@NotNull SkinsConfig config) {
         final var path = (AssetPathProvider) MinecraftClient.getInstance();
 
         resolvers.clear();
@@ -40,38 +41,43 @@ public final class SkinsClient implements ClientModInitializer {
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
-        final var loaderConfig = getSkinsConfig();
+        errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
+
+        final var loaderConfig = getLoaderConfig();
 
         loaderConfig.setCacheProvider(config.cacheTextures ?
                                               new AssetCacheProvider(path) :
                                               null);
         loaderConfig.setLoaderTimeout(config.loaderTimeout);
-
-        return ActionResult.SUCCESS;
     }
 
     @SneakyThrows
     @Override
     public void onInitializeClient() {
-        SkinsClient.skinsConfig = Config.builder().build();
-        skinLoader = new SkinLoader(SkinsClient.skinsConfig);
+        SkinsClient.loaderConfig = Config.builder().build();
+        skinLoader = new SkinLoader(SkinsClient.loaderConfig);
 
-        final var configHolder = AutoConfig.register(
+        final var configPath = FabricLoader.getInstance().getConfigDir()
+                                       .resolve("openmcskins.toml");
+
+        configInstance = new TomlConfigInstance<>(
+                configPath.toFile(),
                 SkinsConfig.class,
-                Toml4jConfigSerializer::new
+                new SkinsConfig()
         );
-        configHolder.registerSaveListener(this::updateConfig);
-        this.updateConfig(configHolder, configHolder.getConfig());
+
+        configInstance.addUpdateListener(this::applyConfig);
+        configInstance.load();
 
         final var commands = new SkinsCommands(
-                configHolder,
+                configInstance,
                 MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                             .executor(SkinsClient.skinsConfig.getExecutor())
+                             .executor(SkinsClient.loaderConfig.getExecutor())
                              .followRedirects(HttpClient.Redirect.NEVER)
                              .build();
     }

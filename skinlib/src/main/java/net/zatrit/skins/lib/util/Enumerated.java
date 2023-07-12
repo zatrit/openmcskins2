@@ -11,20 +11,20 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
-public class Numbered<T> {
+public class Enumerated<T> {
     private final int index;
     private final T value;
 
     /**
      * @return new list of numbered with values from input list.
      */
-    public static <T> @NotNull Collection<Numbered<T>> enumerate(@NotNull List<T> list) {
+    public static <T> @NotNull Collection<Enumerated<T>> enumerate(@NotNull List<T> list) {
         /* Predetermines the capacity of the list in advance
          * so as not to allocate memory during addition. */
-        List<Numbered<T>> list2 = new ArrayList<>(list.size());
+        List<Enumerated<T>> list2 = new ArrayList<>(list.size());
 
         for (int i = 0; i < list.size(); i++) {
-            list2.add(new Numbered<>(i, list.get(i)));
+            list2.add(new Enumerated<>(i, list.get(i)));
         }
 
         return list2;
@@ -33,7 +33,7 @@ public class Numbered<T> {
     /**
      * @return new numbered instance with same index, but different value.
      */
-    public <R> Numbered<R> withValue(R newValue) {
-        return new Numbered<>(this.getIndex(), newValue);
+    public <R> Enumerated<R> withValue(R newValue) {
+        return new Enumerated<>(this.getIndex(), newValue);
     }
 }

@@ -1,2 +1,0 @@
-accessWidener	v1	named
-accessible  method  net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry  ()Lnet/minecraft/client/network/PlayerListEntry;

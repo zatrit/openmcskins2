@@ -2,16 +2,14 @@ package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.Refreshable;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.texture.TextureLoader;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -59,11 +56,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
             profileTask = profile.refreshUuidAsync()
-                                  .exceptionallyAsync(error -> {
-                                      // If UUID refresh failed
-                                      error.printStackTrace();
-                                      return profile;
-                                  });
+                                  .exceptionallyAsync(SkinsClient.getErrorHandler()
+                                                              .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
@@ -72,34 +66,34 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 profile1
         ).join()).whenComplete(sneaky((result, error) -> {
             if (error != null) {
-                error.printStackTrace();
+                SkinsClient.getErrorHandler().accept(error);
             }
 
             for (final var textureResult : result) {
                 this.loadTextureResult(textureResult);
             }
-        }));
+        })).exceptionallyAsync(SkinsClient.getErrorHandler()
+                                       .andReturn(null));
     }
 
     private void loadTextureResult(@NotNull TextureResult result)
             throws IOException {
         final var type = TextureTypeUtil.toAuthlibType(result.getType());
 
-        // Doesn't create a texture if no matching type is found
+        // Doesn't create a texture if no matching type is found.
         if (type == null) {
             return;
         }
 
         final var texture = result.getTexture();
-        final var image = NativeImage.read(new ByteArrayInputStream(texture.getContent()));
-        final var playerTexture = new NativeImageBackedTexture(image);
-        final var id = MinecraftClient.getInstance().getTextureManager()
-                               .registerDynamicTexture("skins", playerTexture);
+        final var metadata = texture.getMetadata();
+
+        final var id = TextureLoader.fromMetadata(metadata)
+                               .getTexture(texture.getContent());
 
         this.textures.put(type, id);
 
-        final var metadata = texture.getMetadata();
-
+        // Skips the next part if there's no metadata.
         if (metadata == null) {
             return;
         }

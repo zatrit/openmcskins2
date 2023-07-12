@@ -47,6 +47,18 @@ public class SneakyLambda {
         };
     }
 
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull Runnable sneaky(
+            RunnableThrows runnable) {
+        return new Runnable() {
+            @Override
+            @SneakyThrows
+            public void run() {
+                runnable.run();
+            }
+        };
+    }
+
     public interface SupplierThrows<T> {
         T get() throws Throwable;
     }
@@ -57,5 +69,9 @@ public class SneakyLambda {
 
     public interface BiConsumerThrows<T, U> {
         void accept(T t, U u) throws Throwable;
+    }
+
+    public interface RunnableThrows {
+        void run() throws Throwable;
     }
 }
