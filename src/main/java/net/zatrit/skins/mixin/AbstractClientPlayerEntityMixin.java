@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin implements HasPlayerListEntry {
     @Invoker("getPlayerListEntry")
-    public abstract PlayerListEntry getPlayerListEntry();
+    public abstract PlayerListEntry getPlayerInfo();
 }

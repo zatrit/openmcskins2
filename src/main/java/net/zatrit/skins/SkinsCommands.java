@@ -85,7 +85,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }
 
         client.world.getPlayers().stream()
-                .map(t -> ((HasPlayerListEntry) t).getPlayerListEntry())
+                .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
                 .filter(Objects::nonNull)
                 .forEach(e -> ((Refreshable) e).refresh());
 

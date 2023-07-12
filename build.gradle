@@ -43,7 +43,6 @@ dependencies {
 
     shadowImpl "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
     shadowImpl "org.apache.commons:commons-text:${project.commons_text_version}"
-    shadowImpl "commons-io:commons-io:${project.commons_io_version}"
 
     shadowImpl project(":skinlib")
 }
@@ -67,18 +66,25 @@ shadowJar {
 
     dependencies {
         exclude dependency('org.apache.commons:commons-lang3')
+        exclude dependency('com.google.code.gson:gson')
         exclude 'META-INF/maven/**'
     }
 
-    from('LICENSE.txt') {
+    from('license/APACHE.txt') {
         rename { 'META-INF/LICENSE.txt' }
+    }
+
+    from('license/MIT.txt') {
+        rename { 'META-INF/MIT.txt' }
+    }
+
+    from('NOTICE.txt') {
+        rename { 'META-INF/NOTICE.txt' }
     }
 
     configurations = [project.configurations.shadow]
     archiveBaseName.set archives_base_name
     archiveClassifier.set 'not-remapped'
-
-    relocate 'com.moandjiezana.toml', 'me.shedaniel.cloth.clothconfig.shadowed.com.moandjiezana.toml'
 }
 
 allprojects {

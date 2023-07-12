@@ -21,7 +21,7 @@ dependencies {
 }
 
 jar {
-    from("../LICENSE.txt") {
+    from("../license/APACHE.txt") {
         rename { 'META-INF/LICENSE.txt' }
     }
 }
