@@ -6,5 +6,11 @@
   "openmcskins.command.invalid_file_format": "Invalid input file format.",
   "openmcskins.command.no_world": "Unable to list players.",
   "openmcskins.command.no_preset": "No preset found.",
-  "openmcskins.command.moved": "A host was moved from %d to %d successfully."
+  "openmcskins.command.moved": "A host was moved from %d to %d successfully.",
+
+  "openmcskins.options.title": "OpenMCSkins options",
+  "openmcskins.category.general": "General",
+  "openmcskins.option.cacheTextures": "Cache textures",
+  "openmcskins.option.verboseLogs": "Verbose logs",
+  "openmcskins.option.loaderTimeout": "Loader timeout"
 }

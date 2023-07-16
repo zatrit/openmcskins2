@@ -3,7 +3,6 @@ package net.zatrit.skins;
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.AllArgsConstructor;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -13,6 +12,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.zatrit.skins.config.HostEntry;
+import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.*;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ import static net.zatrit.skins.util.ConfigUtil.patchConfig;
 
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
-    private final ConfigInstance<SkinsConfig> configInstance;
+    private final ConfigHolder<SkinsConfig> configInstance;
     private final MinecraftClient client;
 
     @Override
@@ -38,40 +38,36 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                                         .resolve("omcs");
 
         final var presetsType = new FileArgumentType(new FileProvider[]{
-                new IndexedResourceProvider(
-                        "presets",
+                new IndexedResourceProvider("presets",
                         getClass().getClassLoader()
                 ),
                 new DirectoryFileProvider(presetsPath)
-        }, ".toml");
+        }, "toml");
         presetsType.refresh();
 
         var command = literal("openmcskins")
                               // omcs refresh
                               .then(literal("refresh").executes(this::refresh))
                               // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument(
-                                      "preset",
+                              .then(literal("add").then(argument("preset",
                                       presetsType
-                              ).executes(this::addHost).then(argument(
-                                      "id",
+                              ).executes(this::addHost).then(argument("id",
                                       integer(0)
                               ).executes(this::addHost))))
                               // omcs list
                               .then(literal("list").executes(this::listHosts))
                               // omcs remove (id)
-                              .then(literal("remove").then(argument(
-                                      "id",
+                              .then(literal("remove").then(argument("id",
                                       integer(0)
                               ).executes(this::removeHost)))
                               // omcs move (from) (to)
-                              .then(literal("move").then(argument(
-                                      "from",
+                              .then(literal("move").then(argument("from",
                                       integer(0)
-                              ).then(argument(
-                                      "to",
+                              ).then(argument("to",
                                       integer(0)
                               ).executes(this::moveHost))));
+
+
 
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
@@ -87,7 +83,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         client.world.getPlayers().stream()
                 .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
                 .filter(Objects::nonNull)
-                .forEach(e -> ((Refreshable) e).refresh());
+                .forEach(e -> ((Refreshable) e).skins$refresh());
 
         return 0;
     }
@@ -146,8 +142,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     public int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         final var id = context.getArgument("id", Integer.class);
 
-        final var entry = patchConfig(
-                this.configInstance,
+        final var entry = patchConfig(this.configInstance,
                 config -> config.hosts.remove(id.intValue())
         );
 

@@ -9,7 +9,7 @@ public interface Cache {
     /**
      * Loads bytes from cache if present, else loads using passed function.
      */
-    byte[] getOrLoad(String id, LoadFunction load) throws IOException;
+    byte[] getOrLoad(String id, LoadFunction load);
 
     interface LoadFunction {
         byte[] load() throws IOException;

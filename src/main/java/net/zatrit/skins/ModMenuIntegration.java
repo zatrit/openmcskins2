@@ -6,7 +6,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import net.zatrit.skins.config.SkinsConfig;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,12 +18,15 @@ public class ModMenuIntegration implements ModMenuApi {
         return parent -> {
             final var instance = SkinsClient.getConfigInstance();
 
-            return YetAnotherConfigLib.create(instance, this::getBuilder)
+            return YetAnotherConfigLib.create(instance, this::initConfig)
                            .generateScreen(parent);
         };
     }
 
-    private YetAnotherConfigLib.Builder getBuilder(
+    /**
+     * Initializes OpenMCSkins config for ConfigInstance.
+     */
+    private YetAnotherConfigLib.Builder initConfig(
             @NotNull SkinsConfig defaults,
             @NotNull SkinsConfig config,
             YetAnotherConfigLib.@NotNull Builder builder) {
@@ -35,6 +38,9 @@ public class ModMenuIntegration implements ModMenuApi {
                        ).build());
     }
 
+    /**
+     * Adds general category options.
+     */
     private ConfigCategory.Builder initializeGeneralCategory(
             @NotNull SkinsConfig defaults,
             @NotNull SkinsConfig config,
@@ -58,13 +64,14 @@ public class ModMenuIntegration implements ModMenuApi {
                                        ).name(translatable(
                                        "openmcskins.option.verboseLogs"))
                                        .build())
-                       .option(Option.<Integer>createBuilder()
-                                       .controller(option -> IntegerFieldControllerBuilder.create(
-                                               option).range(0, 60)).binding(
-                                       defaults.loaderTimeout,
-                                       config::getLoaderTimeout,
-                                       config::setLoaderTimeout
-                               ).name(translatable(
+                       .option(Option.<Float>createBuilder()
+                                       .controller(option -> FloatSliderControllerBuilder.create(
+                                               option).range(0f, 60f).step(.5f))
+                                       .binding(
+                                               defaults.loaderTimeout,
+                                               config::getLoaderTimeout,
+                                               config::setLoaderTimeout
+                                       ).name(translatable(
                                        "openmcskins.option.loaderTimeout"))
                                        .build());
     }

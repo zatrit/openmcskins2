@@ -1,5 +1,5 @@
 package net.zatrit.skins;
 
 public interface Refreshable {
-    void refresh();
+    void skins$refresh();
 }

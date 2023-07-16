@@ -16,11 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,6 +50,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.texturesLoaded = true;
         this.textures.clear();
+        this.applyMetadata(Collections.emptyMap());
 
         final var profile = (Profile) getProfile();
         final var skinLoader = SkinsClient.getSkinLoader();
@@ -55,14 +58,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
-            profileTask = profile.refreshUuidAsync()
+            profileTask = profile.skins$refreshUuidAsync()
                                   .exceptionallyAsync(SkinsClient.getErrorHandler()
                                                               .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
+        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
+                resolvers,
                 profile1
         ).join()).whenComplete(sneaky((result, error) -> {
             if (error != null) {
@@ -72,10 +76,10 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             for (final var textureResult : result) {
                 this.loadTextureResult(textureResult);
             }
-        })).exceptionallyAsync(SkinsClient.getErrorHandler()
-                                       .andReturn(null));
+        })).exceptionallyAsync(SkinsClient.getErrorHandler().andReturn(null));
     }
 
+    @Unique
     private void loadTextureResult(@NotNull TextureResult result)
             throws IOException {
         final var type = TextureTypeUtil.toAuthlibType(result.getType());
@@ -93,16 +97,18 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.textures.put(type, id);
 
-        // Skips the next part if there's no metadata.
-        if (metadata == null) {
-            return;
+        if (metadata != null) {
+            this.applyMetadata(metadata);
         }
+    }
 
-        this.model = texture.getMetadata().getOrDefault("model", this.model);
+    @Unique
+    public void applyMetadata(@NotNull Map<String, String> metadata) {
+        this.model = metadata.getOrDefault("model", "default");
     }
 
     @Override
-    public void refresh() {
+    public void skins$refresh() {
         this.texturesLoaded = false;
     }
 }

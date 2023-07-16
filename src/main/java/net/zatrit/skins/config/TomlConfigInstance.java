@@ -5,6 +5,7 @@ import com.moandjiezana.toml.TomlWriter;
 import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.Getter;
 import net.zatrit.skins.SkinsClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,24 +13,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TomlConfigInstance<T> extends ConfigInstance<T> {
+/**
+ * TOML implementation for {@link ConfigInstance} and {@link ConfigHolder}.
+ */
+public class TomlConfigInstance<T> extends ConfigInstance<T> implements ConfigHolder<T> {
     private final List<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter File file;
-    private final T defaultConfig;
+    private final @Getter T defaults;
 
-    public TomlConfigInstance(
-            File file, Class<T> configClass, T defaultConfig) {
-        super(configClass);
+    @SuppressWarnings("unchecked")
+    public TomlConfigInstance(File file, @NotNull T defaultConfig) {
+        super((Class<T>) defaultConfig.getClass());
 
         this.file = file;
-        this.defaultConfig = defaultConfig;
+        this.defaults = defaultConfig;
     }
 
-    @Override
-    public T getDefaults() {
-        return this.defaultConfig;
-    }
-
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation saves a config of
+     * type T to a file stored in {@link #file}.
+     */
     @Override
     public void save() {
         final var tomlWriter = new TomlWriter();
@@ -50,11 +55,13 @@ public class TomlConfigInstance<T> extends ConfigInstance<T> {
         final var config = toml.read(this.file).to(this.getConfigClass());
 
         this.setConfig(config);
-
-        this.listeners.forEach(listener -> listener.accept(config));
     }
 
-    public void addUpdateListener(Consumer<T> listener) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addSaveListener(Consumer<T> listener) {
         this.listeners.add(listener);
     }
 }

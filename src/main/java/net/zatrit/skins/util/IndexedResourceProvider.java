@@ -11,6 +11,13 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * A FileProvider implementation that reads a specific resource
+ * file with the .index extension and uses it to get a list of
+ * files in a specific resource folder (e.g. presets).
+ *
+ * @see FileProvider
+ */
 @AllArgsConstructor
 public class IndexedResourceProvider implements FileProvider {
     private final String path;

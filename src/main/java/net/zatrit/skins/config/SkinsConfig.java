@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class SkinsConfig {
     public boolean cacheTextures = true;
-    public int loaderTimeout = 5;
+    public float loaderTimeout = 5f;
     public List<HostEntry> hosts = new ArrayList<>();
     public boolean verboseLogs = false;
 }

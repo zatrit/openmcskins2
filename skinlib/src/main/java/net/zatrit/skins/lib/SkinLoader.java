@@ -32,12 +32,11 @@ public class SkinLoader {
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
         final var loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
-        final var timeout = getConfig().getLoaderTimeout();
+        final var timeout = (int) (getConfig().getLoaderTimeout() * 1000);
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
-        final var futures = Enumerated.enumerate(resolvers)
-                                    .stream()
+        final var futures = Enumerated.enumerate(resolvers).stream()
                                     .map(pair -> CompletableFuture.supplyAsync(
                                                     /* This function may throw an exception,
                                                      * but it's a CompletableFuture, so
@@ -56,15 +55,14 @@ public class SkinLoader {
                                                                  loaders::add)
                                                          .orTimeout(
                                                                  timeout,
-                                                                 TimeUnit.SECONDS
+                                                                 TimeUnit.MILLISECONDS
                                                          )
                                                          .exceptionally(e -> null))
                                     .toArray(CompletableFuture[]::new);
 
         final var allFutures = CompletableFuture.allOf(futures);
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
-                        type -> loaders.stream()
-                                        .parallel()
+                        type -> loaders.stream().parallel()
                                         // Remains only loaders that has texture
                                         .filter(pair -> pair.getValue() != null &&
                                                                 pair.getValue()

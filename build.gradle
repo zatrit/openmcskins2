@@ -28,11 +28,21 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api"
     }
 
+    var apiModules = [
+            "fabric-resource-loader-v0",
+            "fabric-command-api-v2",
+            "fabric-screen-api-v1",
+            "fabric-key-binding-api-v1",
+            "fabric-lifecycle-events-v1"
+    ]
+
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    apiModules.forEach {
+        modImplementation(fabricApi.module(it, project.fabric_version))
+    }
 
     extraModApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
     extraModApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"

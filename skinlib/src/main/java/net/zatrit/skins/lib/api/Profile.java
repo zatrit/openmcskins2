@@ -17,5 +17,5 @@ public interface Profile {
     /**
      * Asynchronously refreshes UUID from Mojang API or other API.
      */
-    CompletableFuture<Profile> refreshUuidAsync();
+    CompletableFuture<Profile> skins$refreshUuidAsync();
 }

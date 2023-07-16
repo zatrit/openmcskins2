@@ -62,12 +62,13 @@ public final class SkinsClient implements ClientModInitializer {
 
         configInstance = new TomlConfigInstance<>(
                 configPath.toFile(),
-                SkinsConfig.class,
                 new SkinsConfig()
         );
 
-        configInstance.addUpdateListener(this::applyConfig);
+        configInstance.addSaveListener(this::applyConfig);
         configInstance.load();
+
+        this.applyConfig(configInstance.getConfig());
 
         final var commands = new SkinsCommands(
                 configInstance,

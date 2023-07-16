@@ -10,6 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureTypeUtil {
+    /**
+     * Converts texture type from {@link TextureType}
+     * to {@link MinecraftProfileTexture.Type}.
+     */
     @Contract(pure = true)
     public static MinecraftProfileTexture.@Nullable Type toAuthlibType(@NotNull TextureType type) {
         return switch (type) {

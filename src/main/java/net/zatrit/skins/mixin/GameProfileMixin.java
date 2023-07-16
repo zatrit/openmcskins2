@@ -5,6 +5,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -26,7 +27,7 @@ public abstract class GameProfileMixin implements Profile {
     public abstract @Shadow String getName();
 
     @Override
-    public CompletableFuture<Profile> refreshUuidAsync() {
+    public CompletableFuture<Profile> skins$refreshUuidAsync() {
         return CompletableFuture.supplyAsync(sneaky(this::apiRequest))
                        .thenApply(request -> SkinsClient.getHttpClient()
                                                      .sendAsync(
@@ -51,6 +52,7 @@ public abstract class GameProfileMixin implements Profile {
                 });
     }
 
+    @Unique
     private HttpRequest apiRequest() throws URISyntaxException {
         return HttpRequest.newBuilder().uri(new URI(
                 "https://api.mojang.com/users/profiles/minecraft/" +

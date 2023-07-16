@@ -20,6 +20,14 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * An argument type that allows access to
+ * mod resources and files in the mod folder.
+ *
+ * @see FileProvider
+ * @see IndexedResourceProvider
+ * @see DirectoryFileProvider
+ */
 @AllArgsConstructor
 public class FileArgumentType implements ArgumentType<InputStream> {
     private final FileProvider[] providers;
@@ -33,7 +41,7 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     @SneakyThrows
     public InputStream parse(@NotNull StringReader reader) {
         if (reader.canRead() && reader.peek() != ' ') {
-            final var file = reader.readString() + this.extension;
+            final var file = reader.readString() + "." + this.extension;
             final var stream = Arrays.stream(this.providers)
                                        .map(p -> p.getFile(file))
                                        .filter(Objects::nonNull).findFirst();
@@ -62,11 +70,11 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     public void refresh() {
         this.files.clear();
 
-        var set = new HashSet<String>();
+        final var set = new HashSet<String>();
 
         Arrays.stream(providers).map(FileProvider::listFiles)
                 .forEach(set::addAll);
-        set.stream().filter(f -> f.endsWith(this.extension))
+        set.stream().filter(f -> FilenameUtils.isExtension(f, this.extension))
                 .map(FilenameUtils::removeExtension).forEach(this.files::add);
     }
 }
