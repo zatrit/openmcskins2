@@ -1,4 +1,4 @@
-package net.zatrit.skins.util;
+package net.zatrit.skins.util.command;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

@@ -2,6 +2,7 @@ package net.zatrit.skins.lib.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import net.zatrit.skins.lib.TextureType;
 
 import java.util.EnumMap;

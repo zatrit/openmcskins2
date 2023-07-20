@@ -1,4 +1,4 @@
-package net.zatrit.skins.util;
+package net.zatrit.skins.util.command;
 
 import lombok.AllArgsConstructor;
 import net.zatrit.skins.SkinsClient;

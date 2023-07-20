@@ -1,4 +1,4 @@
-package net.zatrit.skins.util;
+package net.zatrit.skins.util.command;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -35,6 +35,8 @@ public final class TextUtil {
                 ""
         ).replaceFirst(", \\)$", ")");
 
+        // Determines whether the currently converted
+        // part of the string is an identifier
         var identifier = true;
 
         final var builder = new StringBuilder();
@@ -51,7 +53,8 @@ public final class TextUtil {
                                                              Formatting.GREEN);
 
                 if (!identifier && isURL(buiderString)) {
-                    final var clickAction = new ClickEvent(ClickEvent.Action.OPEN_URL,
+                    final var clickAction = new ClickEvent(
+                            ClickEvent.Action.OPEN_URL,
                             buiderString
                     );
                     builderText = builderText.styled(s -> s.withFormatting(
@@ -86,9 +89,13 @@ public final class TextUtil {
     }
 
     // https://stackoverflow.com/a/41268655/12245612
-    private static boolean isURL(String urlString) {
+
+    /**
+     * @return true if the {@code string} is a URL.
+     */
+    private static boolean isURL(String string) {
         try {
-            var url = new URL(urlString);
+            var url = new URL(string);
             url.toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {

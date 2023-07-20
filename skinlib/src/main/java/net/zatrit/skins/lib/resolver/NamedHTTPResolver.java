@@ -35,9 +35,6 @@ public class NamedHTTPResolver implements Resolver {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {

@@ -5,12 +5,12 @@ import net.zatrit.skins.AssetPathProvider;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
 
+/**
+ * Cache provider for game asset directory.
+ * {@inheritDoc}
+ */
 @Getter
 public class AssetCacheProvider implements CacheProvider {
-    /**
-     * Cache provider for game asset directory.
-     * {@inheritDoc}
-     */
     private final Cache skinCache;
 
     public AssetCacheProvider(AssetPathProvider path) {

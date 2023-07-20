@@ -36,12 +36,12 @@ public final class SkinsClient implements ClientModInitializer {
     public void applyConfig(@NotNull SkinsConfig config) {
         final var path = (AssetPathProvider) MinecraftClient.getInstance();
 
+        errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
+
         resolvers.clear();
         resolvers.addAll(config.hosts.stream().parallel()
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
-
-        errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
 
         final var loaderConfig = getLoaderConfig();
 
@@ -79,7 +79,6 @@ public final class SkinsClient implements ClientModInitializer {
 
         httpClient = HttpClient.newBuilder()
                              .executor(SkinsClient.loaderConfig.getExecutor())
-                             .followRedirects(HttpClient.Redirect.NEVER)
                              .build();
     }
 }

@@ -26,9 +26,6 @@ import java.util.Base64;
 public final class MojangResolver implements Resolver {
     private final @Getter(AccessLevel.PROTECTED) Config config;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Contract("_ -> new")
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)

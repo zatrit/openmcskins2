@@ -6,6 +6,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.MojangResolver;
 import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
+import net.zatrit.skins.lib.resolver.OptifineResolver;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,16 @@ public final class Resolvers {
                     Validate.notNull(baseUrl);
 
                     yield new NamedHTTPResolver(config, baseUrl);
+                }
+                case OPTIFINE -> {
+                    final var baseUrl = (String) props.get("base_url");
+                    final var animated = (boolean) props.getOrDefault(
+                            "animated",
+                            false
+                    );
+                    Validate.notNull(baseUrl);
+
+                    yield new OptifineResolver(config, baseUrl, animated);
                 }
             };
         } catch (Exception ex) {

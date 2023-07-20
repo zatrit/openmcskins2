@@ -1,4 +1,4 @@
-package net.zatrit.skins.util;
+package net.zatrit.skins.util.command;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
  */
 public interface FileProvider {
     /**
-     * Returns a collection of file names.
+     * @return a collection of file names.
      */
     Collection<String> listFiles();
 

@@ -11,18 +11,18 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.ConfigHolder;
+import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
-import net.zatrit.skins.util.*;
+import net.zatrit.skins.util.command.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static net.zatrit.skins.util.CommandUtil.argument;
-import static net.zatrit.skins.util.CommandUtil.literal;
+import static net.zatrit.skins.util.command.CommandUtil.argument;
+import static net.zatrit.skins.util.command.CommandUtil.literal;
 import static net.zatrit.skins.util.ConfigUtil.patchConfig;
 
 @AllArgsConstructor
@@ -68,12 +68,11 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                               ).executes(this::moveHost))));
 
 
-
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
     }
 
-    public int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
+    private int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
         if (client.world == null) {
             context.getSource()
                     .sendError(Text.translatable("openmcskins.command.no_world"));
@@ -120,8 +119,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         return 0;
     }
 
-    public int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var entries = this.configInstance.getConfig().hosts.stream()
+    private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
+        final var entries = this.configInstance.getConfig().getHosts().stream()
                                     .map(TextUtil::formatObject)
                                     .toArray(MutableText[]::new);
         var result = Text.translatable("openmcskins.command.list");
@@ -139,11 +138,11 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         return 0;
     }
 
-    public int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
+    private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         final var id = context.getArgument("id", Integer.class);
 
         final var entry = patchConfig(this.configInstance,
-                config -> config.hosts.remove(id.intValue())
+                config -> config.getHosts().remove(id.intValue())
         );
 
         context.getSource().sendFeedback(Text.translatable(
@@ -154,13 +153,13 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         return 0;
     }
 
-    public int moveHost(@NotNull CommandContext<FabricClientCommandSource> context) {
+    private int moveHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         final var from = context.getArgument("from", Integer.class);
         final var to = context.getArgument("to", Integer.class);
 
         patchConfig(this.configInstance, config -> {
-            final var entry = config.hosts.remove(from.intValue());
-            config.hosts.add(to, entry);
+            final var entry = config.getHosts().remove(from.intValue());
+            config.getHosts().add(to, entry);
 
             return null;
         });

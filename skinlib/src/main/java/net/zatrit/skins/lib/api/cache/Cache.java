@@ -3,6 +3,7 @@ package net.zatrit.skins.lib.api.cache;
 import java.io.IOException;
 
 /**
+ * An abstract cache implementation.
  * @see CacheProvider
  */
 public interface Cache {

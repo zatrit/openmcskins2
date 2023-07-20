@@ -22,9 +22,6 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
     private final @NotNull Resolver resolver;
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean hasTexture(TextureType type) {
         return this.textures.getTextures().containsKey(type) &&
@@ -43,8 +40,7 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
 
         final var textureData = this.textures.getTextures().get(type);
 
-        return fetchTextureData(
-                textureData,
+        return fetchTextureData(textureData,
                 this.resolver.cacheable() ? this.getCacheProvider() : null
         );
     }
@@ -59,11 +55,10 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
         };
 
         final byte[] buffer = cacheProvider != null ?
-                                      cacheProvider.getSkinCache()
-                                              .getOrLoad(
-                                                      textureData.getUrl(),
-                                                      function
-                                              ) :
+                                      cacheProvider.getSkinCache().getOrLoad(
+                                              textureData.getUrl(),
+                                              function
+                                      ) :
                                       function.load();
 
         return new Texture(buffer, textureData.getMetadata());
