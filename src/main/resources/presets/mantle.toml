@@ -1,5 +1,2 @@
 type = 'OPTIFINE'
-
-[properties]
-base_url = 'http://35.190.10.249'
-animated = true
+properties = { base_url = 'http://35.190.10.249' }

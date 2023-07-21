@@ -28,13 +28,9 @@ public final class Resolvers {
                 }
                 case OPTIFINE -> {
                     final var baseUrl = (String) props.get("base_url");
-                    final var animated = (boolean) props.getOrDefault(
-                            "animated",
-                            false
-                    );
                     Validate.notNull(baseUrl);
 
-                    yield new OptifineResolver(config, baseUrl, animated);
+                    yield new OptifineResolver(config, baseUrl);
                 }
             };
         } catch (Exception ex) {

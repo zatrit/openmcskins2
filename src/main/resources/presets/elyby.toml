@@ -1,4 +1,2 @@
 type = 'NAMED_HTTP'
-
-[properties]
-base_url = 'http://skinsystem.ely.by/'
+properties = { base_url = 'http://skinsystem.ely.by/' }

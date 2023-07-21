@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.data.TextureResult;
 import net.zatrit.skins.lib.util.Enumerated;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static java.util.Arrays.stream;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
@@ -25,6 +24,7 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 @SuppressWarnings("ClassCanBeRecord")
 public class SkinLoader {
     private final @Getter Config config;
+    private final @Getter Collection<SkinLayer> layers;
 
     /**
      * Asynchronously load player skins from specific resolvers.
@@ -60,25 +60,34 @@ public class SkinLoader {
                                                          .exceptionally(e -> null))
                                     .toArray(CompletableFuture[]::new);
 
+        // https://stackoverflow.com/a/44521687/12245612
+        final var layers = this.layers.stream().map(SkinLayer::function).reduce(
+                Function.identity(),
+                Function::andThen
+        );
         final var allFutures = CompletableFuture.allOf(futures);
-        return allFutures.thenApply(unused -> stream(TextureType.values()).map(
-                        type -> loaders.stream().parallel()
-                                        // Remains only loaders that has texture
-                                        .filter(pair -> pair.getValue() != null &&
-                                                                pair.getValue()
-                                                                        .hasTexture(type))
-                                        // Find most prioritized loader and get its value
-                                        .min(Comparator.comparingInt(Enumerated::getIndex))
-                                        .map(sneaky(pair -> {
-                                            // Convert texture into TextureResult
-                                            final var loader = pair.getValue();
-                                            final var texture = loader.download(type);
 
-                                            return new TextureResult(texture, type);
-                                        })))
+        return allFutures.thenApply(unused -> stream(TextureType.values()).map(
+                                type -> loaders.stream().parallel()
+                                                // Remains only loaders that has texture
+                                                .filter(pair -> pair.getValue() != null &&
+                                                                        pair.getValue()
+                                                                                .hasTexture(type))
+                                                // Find most prioritized loader and get its value
+                                                .min(Comparator.comparingInt(Enumerated::getIndex))
+                                                .map(sneaky(pair -> {
+                                                    // Convert texture into TextureResult
+                                                    final var loader = pair.getValue();
+                                                    final var texture = loader.download(type);
+
+                                                    return new TextureResult(texture, type);
+                                                })))
                                                       // Filter and unwrap Optionals
                                                       .filter(Optional::isPresent)
                                                       .map(Optional::get)
+                                                      .toArray(TextureResult[]::new))
+                       .thenApply(textures -> Arrays.stream(textures)
+                                                      .map(layers)
                                                       .toArray(TextureResult[]::new));
     }
 }

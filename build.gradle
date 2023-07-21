@@ -36,6 +36,8 @@ dependencies {
             "fabric-lifecycle-events-v1"
     ]
 
+    implementation "org.jetbrains:annotations:${project.jb_annotations_version}"
+
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
@@ -77,6 +79,7 @@ shadowJar {
     dependencies {
         exclude dependency('org.apache.commons:commons-lang3')
         exclude dependency('com.google.code.gson:gson')
+        exclude dependency('org.jetbrains:annotations')
         exclude 'META-INF/maven/**'
     }
 

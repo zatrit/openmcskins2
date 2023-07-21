@@ -104,7 +104,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
     @Unique
     public void applyMetadata(@NotNull Map<String, String> metadata) {
-        this.model = metadata.getOrDefault("model", "default");
+        this.model = metadata.getOrDefault("model", this.model);
     }
 
     @Override

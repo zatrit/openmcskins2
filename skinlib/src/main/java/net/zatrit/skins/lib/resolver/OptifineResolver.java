@@ -21,7 +21,6 @@ import java.util.HashMap;
 public class OptifineResolver implements Resolver {
     private final @Getter(AccessLevel.PROTECTED) Config config;
     private final @Getter String baseUrl;
-    private final @Getter boolean animated;
 
     @Override
     public boolean requiresUuid() {
@@ -34,8 +33,6 @@ public class OptifineResolver implements Resolver {
         final var textures = new Textures(new EnumMap<>(TextureType.class));
         final var url = this.baseUrl + "/capes/" + profile.getName() + ".png";
         final var metadata = new HashMap<String, String>();
-
-        metadata.put("animated", String.valueOf(this.animated));
 
         if (NetworkUtil.hasContent(new URL(url))) {
             textures.getTextures().put(TextureType.CAPE,

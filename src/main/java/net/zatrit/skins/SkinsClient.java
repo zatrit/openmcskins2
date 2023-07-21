@@ -15,6 +15,7 @@ import net.zatrit.skins.config.TomlConfigInstance;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +56,10 @@ public final class SkinsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         SkinsClient.loaderConfig = Config.builder().build();
-        skinLoader = new SkinLoader(SkinsClient.loaderConfig);
+        skinLoader = new SkinLoader(
+                SkinsClient.loaderConfig,
+                SkinLayer.defaultLayers()
+        );
 
         final var configPath = FabricLoader.getInstance().getConfigDir()
                                        .resolve("openmcskins.toml");

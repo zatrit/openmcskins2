@@ -11,12 +11,12 @@ repositories {
 }
 
 dependencies {
+    implementation "org.jetbrains:annotations:${parent.project.jb_annotations_version}"
+
     compileOnly "org.projectlombok:lombok:${parent.project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${parent.project.lombok_version}"
 
-    compileOnly 'org.jetbrains:annotations:16.0.2'
     compileOnly 'com.google.code.gson:gson:2.10.1'
-
     compileOnly 'com.google.guava:guava:31.1-jre'
 }
 

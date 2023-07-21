@@ -1,5 +1,2 @@
 type = 'OPTIFINE'
-
-[properties]
-base_url = 'https://server.cloaksplus.com'
-animated = true
+properties = { base_url = 'https://server.cloaksplus.com' }

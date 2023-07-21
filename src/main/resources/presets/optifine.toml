@@ -1,5 +1,2 @@
 type = 'OPTIFINE'
-
-[properties]
-base_url = 'http://s.optifine.net'
-animated = false
+properties = { base_url = 'http://s.optifine.net' }
