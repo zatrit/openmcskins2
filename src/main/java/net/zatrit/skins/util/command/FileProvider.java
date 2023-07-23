@@ -10,6 +10,7 @@ import java.util.Collection;
  *
  * @see IndexedResourceProvider
  * @see DirectoryFileProvider
+ * @see FileArgumentType
  */
 public interface FileProvider {
     /**

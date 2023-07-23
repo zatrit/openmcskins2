@@ -29,11 +29,15 @@ public final class TextUtil {
      * {@link lombok.ToString}.
      */
     public static @NotNull MutableText formatObject(@NotNull Object input) {
-        // https://stackoverflow.com/a/59323411/12245612
+        /*
+         {b=1, a  = null} => {b=1}
+         {b=1, a=  {}} => {b=1}
+         {b=1, a   =[]} => {b=1}
+        */
         final var string = input.toString().replaceAll(
-                "(?<=(, |\\())[^\\s(]+?=null(?:, )?",
+                ",?\\s*\\w*\\s*=\\s*(null|\\{}|\\[])",
                 ""
-        ).replaceFirst(", \\)$", ")");
+        );
 
         // Determines whether the currently converted
         // part of the string is an identifier
@@ -53,8 +57,7 @@ public final class TextUtil {
                                                              Formatting.GREEN);
 
                 if (!identifier && isURL(buiderString)) {
-                    final var clickAction = new ClickEvent(
-                            ClickEvent.Action.OPEN_URL,
+                    final var clickAction = new ClickEvent(ClickEvent.Action.OPEN_URL,
                             buiderString
                     );
                     builderText = builderText.styled(s -> s.withFormatting(

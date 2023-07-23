@@ -23,7 +23,8 @@ public final class CommandUtil {
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(
             final String name, final ArgumentType<T> type) {
-        return RequiredArgumentBuilder.<FabricClientCommandSource, T>argument(name,
+        return RequiredArgumentBuilder.<FabricClientCommandSource, T>argument(
+                name,
                 type
         ).executes(CommandUtil::noArguments);
     }

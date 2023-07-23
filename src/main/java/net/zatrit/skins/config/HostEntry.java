@@ -17,6 +17,6 @@ public class HostEntry {
     public enum HostType {
         MOJANG,
         NAMED_HTTP,
-        OPTIFINE;
+        OPTIFINE
     }
 }

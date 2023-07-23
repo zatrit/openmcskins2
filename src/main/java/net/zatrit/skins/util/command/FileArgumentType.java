@@ -30,12 +30,11 @@ import java.util.concurrent.CompletableFuture;
  */
 @AllArgsConstructor
 public class FileArgumentType implements ArgumentType<InputStream> {
+    private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
+            Text.translatable("openmcskins.command.no_preset"));
     private final FileProvider[] providers;
     private final @Getter String extension;
     private final Collection<String> files = new HashSet<>();
-
-    private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("openmcskins.command.no_preset"));
 
     @Override
     @SneakyThrows
@@ -67,6 +66,10 @@ public class FileArgumentType implements ArgumentType<InputStream> {
         return this.files;
     }
 
+    /**
+     * Searches for all available files
+     * and stores them in {@link #files}
+     */
     public void refresh() {
         this.files.clear();
 

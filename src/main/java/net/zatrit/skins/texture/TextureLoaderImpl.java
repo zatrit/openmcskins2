@@ -22,7 +22,8 @@ public class TextureLoaderImpl implements TextureLoader {
             return config;
         }
 
-        config.animated = Boolean.parseBoolean(metadata.getOrDefault("animated",
+        config.animated = Boolean.parseBoolean(metadata.getOrDefault(
+                "animated",
                 "false"
         ));
 

@@ -21,9 +21,9 @@ import java.io.InputStream;
 import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static net.zatrit.skins.util.ConfigUtil.patchConfig;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
-import static net.zatrit.skins.util.ConfigUtil.patchConfig;
 
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
@@ -38,7 +38,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                                         .resolve("omcs");
 
         final var presetsType = new FileArgumentType(new FileProvider[]{
-                new IndexedResourceProvider("presets",
+                new IndexedResourceProvider(
+                        "presets",
                         getClass().getClassLoader()
                 ),
                 new DirectoryFileProvider(presetsPath)
@@ -49,21 +50,26 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                               // omcs refresh
                               .then(literal("refresh").executes(this::refresh))
                               // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument("preset",
+                              .then(literal("add").then(argument(
+                                      "preset",
                                       presetsType
-                              ).executes(this::addHost).then(argument("id",
+                              ).executes(this::addHost).then(argument(
+                                      "id",
                                       integer(0)
                               ).executes(this::addHost))))
                               // omcs list
                               .then(literal("list").executes(this::listHosts))
                               // omcs remove (id)
-                              .then(literal("remove").then(argument("id",
+                              .then(literal("remove").then(argument(
+                                      "id",
                                       integer(0)
                               ).executes(this::removeHost)))
                               // omcs move (from) (to)
-                              .then(literal("move").then(argument("from",
+                              .then(literal("move").then(argument(
+                                      "from",
                                       integer(0)
-                              ).then(argument("to",
+                              ).then(argument(
+                                      "to",
                                       integer(0)
                               ).executes(this::moveHost))));
 
@@ -141,7 +147,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         final var id = context.getArgument("id", Integer.class);
 
-        final var entry = patchConfig(this.configInstance,
+        final var entry = patchConfig(
+                this.configInstance,
                 config -> config.getHosts().remove(id.intValue())
         );
 

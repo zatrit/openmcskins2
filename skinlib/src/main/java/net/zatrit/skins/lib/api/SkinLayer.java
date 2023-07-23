@@ -1,23 +1,21 @@
 package net.zatrit.skins.lib.api;
 
-import com.google.common.collect.ImmutableList;
+import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.data.TextureResult;
-import net.zatrit.skins.lib.layer.BufferedImageLayer;
+import net.zatrit.skins.lib.layer.ImageLayer;
 import net.zatrit.skins.lib.layer.ScaleCapeLayer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 public interface SkinLayer {
-    TextureResult apply(TextureResult result);
+    Collection<SkinLayer> defaultLayers = List.of(new ImageLayer(
+            List.of(new ScaleCapeLayer()),
+            List.of(TextureType.CAPE)
+    ));
 
-    @Contract(pure = true)
-    static @NotNull @Unmodifiable Collection<SkinLayer> defaultLayers() {
-        return ImmutableList.of(new BufferedImageLayer(ImmutableList.of(new ScaleCapeLayer())));
-    }
+    TextureResult apply(TextureResult result);
 
     default Function<TextureResult, TextureResult> function() {
         return this::apply;

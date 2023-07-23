@@ -15,26 +15,18 @@ repositories {
     maven { url 'https://maven.isxander.dev/releases' }
 }
 
+configurations.modApi {
+    // Excludes the Fabric API as otherwise the debugger will not work.
+    exclude group: "net.fabricmc"
+    exclude group: "net.fabricmc.fabric-api"
+}
+
 dependencies {
-    var shadowImpl = { dep ->
-        // Shadows and implements dependency (D.R.Y.)
-        implementation dep
-        shadow dep
-    }
-
-    var extraModApi = dep -> modApi(dep) {
-        // Excludes the Fabric API as otherwise the debugger will not work
-        exclude group: "net.fabricmc"
-        exclude group: "net.fabricmc.fabric-api"
-    }
-
-    var apiModules = [
-            "fabric-resource-loader-v0",
-            "fabric-command-api-v2",
-            "fabric-screen-api-v1",
-            "fabric-key-binding-api-v1",
-            "fabric-lifecycle-events-v1"
-    ]
+    var apiModules = ["fabric-resource-loader-v0",
+                      "fabric-command-api-v2",
+                      "fabric-screen-api-v1",
+                      "fabric-key-binding-api-v1",
+                      "fabric-lifecycle-events-v1"]
 
     implementation "org.jetbrains:annotations:${project.jb_annotations_version}"
 
@@ -46,17 +38,21 @@ dependencies {
         modImplementation(fabricApi.module(it, project.fabric_version))
     }
 
-    extraModApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
-    extraModApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
-    extraModApi "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
+    modApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
-    shadowImpl "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-    shadowImpl "org.apache.commons:commons-text:${project.commons_text_version}"
+    shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
+    shadow "org.apache.commons:commons-text:${project.commons_text_version}"
 
-    shadowImpl project(":skinlib")
+    shadow project(":skinlib")
+
+    // It is necessary to run the game client, because otherwise
+    // all dependencies of shadow type will not be loaded.
+    configurations.shadow.dependencies.forEach { implementation it }
 }
 
 processResources {
@@ -72,7 +68,6 @@ remapJar {
     //noinspection GroovyAssignabilityCheck
     inputFile.set shadowJar.archiveFile
 }
-
 shadowJar {
     minimize()
 
@@ -80,7 +75,9 @@ shadowJar {
         exclude dependency('org.apache.commons:commons-lang3')
         exclude dependency('com.google.code.gson:gson')
         exclude dependency('org.jetbrains:annotations')
+
         exclude 'META-INF/maven/**'
+        exclude 'META-INF/*.txt'
     }
 
     from('license/APACHE.txt') {
@@ -97,7 +94,7 @@ shadowJar {
 
     configurations = [project.configurations.shadow]
     archiveBaseName.set archives_base_name
-    archiveClassifier.set 'not-remapped'
+    archiveClassifier.set 'dev'
 }
 
 allprojects {
@@ -105,7 +102,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_16
+        sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 

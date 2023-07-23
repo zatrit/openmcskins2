@@ -20,17 +20,15 @@ public final class Resolvers {
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(config);
-                case NAMED_HTTP -> {
+                case NAMED_HTTP, OPTIFINE -> {
                     final var baseUrl = (String) props.get("base_url");
                     Validate.notNull(baseUrl);
 
-                    yield new NamedHTTPResolver(config, baseUrl);
-                }
-                case OPTIFINE -> {
-                    final var baseUrl = (String) props.get("base_url");
-                    Validate.notNull(baseUrl);
-
-                    yield new OptifineResolver(config, baseUrl);
+                    yield switch (entry.getType()) {
+                        case OPTIFINE -> new OptifineResolver(config, baseUrl);
+                        case NAMED_HTTP -> new NamedHTTPResolver(config, baseUrl);
+                        default -> null;
+                    };
                 }
             };
         } catch (Exception ex) {

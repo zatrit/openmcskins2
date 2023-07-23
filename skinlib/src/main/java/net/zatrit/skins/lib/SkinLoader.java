@@ -86,8 +86,7 @@ public class SkinLoader {
                                                       .filter(Optional::isPresent)
                                                       .map(Optional::get)
                                                       .toArray(TextureResult[]::new))
-                       .thenApply(textures -> Arrays.stream(textures)
-                                                      .map(layers)
+                       .thenApply(textures -> Arrays.stream(textures).map(layers)
                                                       .toArray(TextureResult[]::new));
     }
 }

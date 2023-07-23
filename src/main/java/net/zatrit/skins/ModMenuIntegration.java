@@ -62,11 +62,10 @@ public class ModMenuIntegration implements ModMenuApi {
                                                config::isVerboseLogs,
                                                config::setVerboseLogs
                                        ).name(translatable(
-                                       "openmcskins.option.verboseLogs"))
-                                       .build())
+                                       "openmcskins.option.verboseLogs")).build())
                        .option(Option.<Float>createBuilder()
                                        .controller(option -> FloatSliderControllerBuilder.create(
-                                               option).range(0f, 60f).step(.5f))
+                                               option).range(0f, 60f).step(0.5f))
                                        .binding(
                                                defaults.loaderTimeout,
                                                config::getLoaderTimeout,

@@ -10,14 +10,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
  * TOML implementation for {@link ConfigInstance} and {@link ConfigHolder}.
  */
 public class TomlConfigInstance<T> extends ConfigInstance<T> implements ConfigHolder<T> {
-    private final List<Consumer<T>> listeners = new ArrayList<>();
+    private final Collection<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter File file;
     private final @Getter T defaults;
 
@@ -52,9 +52,13 @@ public class TomlConfigInstance<T> extends ConfigInstance<T> implements ConfigHo
     @Override
     public void load() {
         final var toml = new Toml();
-        final var config = toml.read(this.file).to(this.getConfigClass());
 
-        this.setConfig(config);
+        try {
+            final var config = toml.read(this.file).to(this.getConfigClass());
+            this.setConfig(config);
+        } catch (Exception e) {
+            SkinsClient.getErrorHandler().accept(e);
+        }
     }
 
     /**

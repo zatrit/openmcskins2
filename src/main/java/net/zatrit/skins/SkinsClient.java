@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
+    private static final @Getter List<Resolver> resolvers = new ArrayList<>();
+    private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
     private static @Getter TomlConfigInstance<SkinsConfig> configInstance;
     private static @Getter Config loaderConfig;
     private static @Getter SkinLoader skinLoader;
     private static @Getter HttpClient httpClient;
-    private static @Getter ExceptionConsumer<Void> errorHandler;
-    private static final @Getter List<Resolver> resolvers = new ArrayList<>();
-    private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
+    private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
+            false);
 
     public void applyConfig(@NotNull SkinsConfig config) {
         final var path = (AssetPathProvider) MinecraftClient.getInstance();
@@ -58,7 +59,7 @@ public final class SkinsClient implements ClientModInitializer {
         SkinsClient.loaderConfig = Config.builder().build();
         skinLoader = new SkinLoader(
                 SkinsClient.loaderConfig,
-                SkinLayer.defaultLayers()
+                SkinLayer.defaultLayers
         );
 
         final var configPath = FabricLoader.getInstance().getConfigDir()
