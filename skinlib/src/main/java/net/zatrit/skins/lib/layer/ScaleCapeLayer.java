@@ -35,7 +35,7 @@ public class ScaleCapeLayer implements ImageLayer.ImageSublayer {
         );
 
         final var graphics = result.getGraphics();
-        if (backgroundTexture != null) {
+        if (backgroundTexture != null && image.getWidth(null) != width) {
             graphics.drawImage(
                     backgroundTexture,
                     0,

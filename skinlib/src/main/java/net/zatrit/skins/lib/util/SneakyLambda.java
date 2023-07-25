@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -23,7 +22,6 @@ public class SneakyLambda {
         };
     }
 
-
     @Contract(value = "_ -> new", pure = true)
     public static <T, R> @NotNull Function<T, R> sneaky(FunctionThrows<T, R> function) {
         return new Function<>() {
@@ -35,43 +33,13 @@ public class SneakyLambda {
         };
     }
 
-    @Contract(value = "_ -> new", pure = true)
-    public static <T, U> @NotNull BiConsumer<T, U> sneaky(
-            BiConsumerThrows<T, U> consumer) {
-        return new BiConsumer<>() {
-            @Override
-            @SneakyThrows
-            public void accept(T t, U u) {
-                consumer.accept(t, u);
-            }
-        };
-    }
-
-    @Contract(value = "_ -> new", pure = true)
-    public static @NotNull Runnable sneaky(
-            RunnableThrows runnable) {
-        return new Runnable() {
-            @Override
-            @SneakyThrows
-            public void run() {
-                runnable.run();
-            }
-        };
-    }
-
+    @FunctionalInterface
     public interface SupplierThrows<T> {
         T get() throws Throwable;
     }
 
+    @FunctionalInterface
     public interface FunctionThrows<T, R> {
         R apply(T t) throws Throwable;
-    }
-
-    public interface BiConsumerThrows<T, U> {
-        void accept(T t, U u) throws Throwable;
-    }
-
-    public interface RunnableThrows {
-        void run() throws Throwable;
     }
 }

@@ -21,7 +21,6 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
     private final @NotNull Textures textures;
     private final @NotNull Resolver resolver;
 
-
     @Override
     public boolean hasTexture(TextureType type) {
         return this.textures.getTextures().containsKey(type) &&
@@ -40,7 +39,8 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
 
         final var textureData = this.textures.getTextures().get(type);
 
-        return fetchTextureData(textureData,
+        return fetchTextureData(
+                textureData,
                 this.resolver.cacheable() ? this.getCacheProvider() : null
         );
     }

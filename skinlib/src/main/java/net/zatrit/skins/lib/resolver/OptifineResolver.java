@@ -35,7 +35,8 @@ public class OptifineResolver implements Resolver {
         final var metadata = new HashMap<String, String>();
 
         if (NetworkUtil.isOk(new URL(url))) {
-            textures.getTextures().put(TextureType.CAPE,
+            textures.getTextures().put(
+                    TextureType.CAPE,
                     new Textures.TextureData(url, metadata)
             );
         }

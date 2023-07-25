@@ -38,7 +38,7 @@ public final class Resolvers {
                     final var directory = (String) props.get("directory");
                     final var replaces = new HashMap<String, Object>();
                     replaces.put(
-                            "configdir",
+                            "configDir",
                             FabricLoader.getInstance().getConfigDir().toString()
                     );
 

@@ -88,14 +88,16 @@ public final class SkinsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         SkinsClient.loaderConfig = Config.builder().build();
-        skinLoader = new SkinLoader(SkinsClient.loaderConfig,
+        skinLoader = new SkinLoader(
+                SkinsClient.loaderConfig,
                 SkinLayer.DEFAULT_LAYERS
         );
 
         final var configPath = FabricLoader.getInstance().getConfigDir()
                                        .resolve("openmcskins.toml");
 
-        configHolder = new TomlConfigInstance<>(configPath.toFile(),
+        configHolder = new TomlConfigInstance<>(
+                configPath.toFile(),
                 new SkinsConfig()
         );
         configHolder.addSaveListener(this::applyConfig);
@@ -112,7 +114,8 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHolder.getConfig());
 
-        final var commands = new SkinsCommands(configHolder,
+        final var commands = new SkinsCommands(
+                configHolder,
                 MinecraftClient.getInstance()
         );
 

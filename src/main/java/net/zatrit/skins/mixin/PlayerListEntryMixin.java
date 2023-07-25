@@ -2,6 +2,7 @@ package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import lombok.SneakyThrows;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.Refreshable;
@@ -22,12 +23,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
@@ -65,9 +63,10 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
+        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
+                resolvers,
                 profile1
-        ).join()).whenComplete(sneaky((result, error) -> {
+        ).join()).whenComplete((result, error) -> {
             if (error != null) {
                 SkinsClient.getErrorHandler().accept(error);
             }
@@ -75,12 +74,12 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             for (final var textureResult : result) {
                 this.loadTextureResult(textureResult);
             }
-        })).exceptionallyAsync(SkinsClient.getErrorHandler().andReturn(null));
+        }).exceptionallyAsync(SkinsClient.getErrorHandler().andReturn(null));
     }
 
     @Unique
-    private void loadTextureResult(@NotNull TextureResult result)
-            throws IOException {
+    @SneakyThrows
+    private void loadTextureResult(@NotNull TextureResult result) {
         final var type = TextureTypeUtil.toAuthlibType(result.getType());
 
         // Doesn't create a texture if no matching type is found.
@@ -91,7 +90,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         final var texture = result.getTexture();
         final var metadata = texture.getMetadata();
 
-        final var textureId = new TextureIdentifier(getProfile().getName(),
+        final var textureId = new TextureIdentifier(
+                getProfile().getName(),
                 result.getType()
         );
 

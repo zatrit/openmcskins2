@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface TextureLoader {
-    static @NotNull TextureLoader create(TextureIdentifier id, @Nullable Map<String, String> metadata) {
+    static @NotNull TextureLoader create(
+            TextureIdentifier id,
+            @Nullable Map<String, String> metadata) {
         return TextureLoaderImpl.create(id, metadata);
     }
 

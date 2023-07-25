@@ -1,6 +1,7 @@
 package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
+import lombok.SneakyThrows;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,14 +10,11 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile {
@@ -28,7 +26,7 @@ public abstract class GameProfileMixin implements Profile {
 
     @Override
     public CompletableFuture<Profile> skins$refreshUuidAsync() {
-        return CompletableFuture.supplyAsync(sneaky(this::apiRequest))
+        return CompletableFuture.supplyAsync(this::apiRequest)
                        .thenApply(request -> SkinsClient.getHttpClient()
                                                      .sendAsync(
                                                              request,
@@ -53,7 +51,8 @@ public abstract class GameProfileMixin implements Profile {
     }
 
     @Unique
-    private HttpRequest apiRequest() throws URISyntaxException {
+    @SneakyThrows
+    private HttpRequest apiRequest() {
         return HttpRequest.newBuilder().uri(new URI(
                 "https://api.mojang.com/users/profiles/minecraft/" +
                         this.getName())).build();

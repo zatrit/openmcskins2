@@ -17,6 +17,7 @@ public final class Config {
     private final Gson gson = new GsonBuilder().create();
     private @Setter @Nullable CacheProvider cacheProvider;
     private @Setter float loaderTimeout;
+    @SuppressWarnings("CanBeFinal")
     private @Builder.Default Executor executor = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors());
 }

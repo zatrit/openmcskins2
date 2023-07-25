@@ -41,7 +41,13 @@ public class NamedHTTPResolver implements Resolver {
         final var url = new URL(this.getBaseUrl() + profile.getName());
         final var config = getConfig();
 
-        final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
+        // Type for EnumMap<TextureType, Textures.TextureData>
+        final var type = TypeToken.getParameterized(
+                EnumMap.class,
+                TextureType.class,
+                Textures.TextureData.class
+        ).getType();
+
         final var textures = new Textures(this.config.getGson()
                                                   .fromJson(
                                                           new InputStreamReader(

@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 /**
  * Various utility functions for interacting with Minecraft text APIs.
@@ -27,7 +27,10 @@ public final class TextUtil {
      */
     public static void mapToText(
             @NotNull MutableText text, @NotNull Map<String, ?> map) {
-        text.append(Text.literal("{").styled(TextUtil::specialStyle));
+        final var specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
+                Formatting.GRAY);
+
+        text.append(Text.literal("{").styled(specialStyle));
 
         var first = true;
         for (final var entry : map.entrySet()) {
@@ -38,13 +41,13 @@ public final class TextUtil {
             }
 
             if (!first) {
-                text.append(Text.literal(", ").styled(TextUtil::specialStyle));
+                text.append(Text.literal(", ").styled(specialStyle));
             }
             first = false;
 
             text.append(Text.literal(entry.getKey())
                                 .styled(style -> style.withFormatting(Formatting.RESET)));
-            text.append(Text.literal(" = ").styled(TextUtil::specialStyle));
+            text.append(Text.literal(" = ").styled(specialStyle));
 
             if (value instanceof Map) {
                 //noinspection unchecked
@@ -70,18 +73,7 @@ public final class TextUtil {
             }
         }
 
-        text.append(Text.literal("}").styled(TextUtil::specialStyle));
-    }
-
-    public interface ToText {
-        void toText(@NotNull MutableText text);
-
-        default Text toText() {
-            final var text = Text.empty();
-            this.toText(text);
-
-            return text;
-        }
+        text.append(Text.literal("}").styled(specialStyle));
     }
 
     /**
@@ -107,7 +99,14 @@ public final class TextUtil {
         }
     }
 
-    private static Style specialStyle(@NotNull Style style) {
-        return style.withFormatting(Formatting.GRAY);
+    public interface ToText {
+        void toText(@NotNull MutableText text);
+
+        default Text toText() {
+            final var text = Text.empty();
+            this.toText(text);
+
+            return text;
+        }
     }
 }
