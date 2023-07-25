@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.HostEntry;
@@ -18,7 +17,6 @@ import net.zatrit.skins.util.command.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
-import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.zatrit.skins.util.ConfigUtil.patchConfig;
@@ -35,7 +33,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess registryAccess) {
         final var presetsPath = FabricLoader.getInstance().getConfigDir()
-                                        .resolve("omcs");
+                                        .resolve("openmcskins");
 
         final var presetsType = new FileArgumentType(new FileProvider[]{
                 new IndexedResourceProvider(
@@ -85,10 +83,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        client.world.getPlayers().stream()
-                .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
-                .filter(Objects::nonNull)
-                .forEach(e -> ((Refreshable) e).skins$refresh());
+        SkinsClient.getRefresher().refresh(client.world.getPlayers());
 
         return 0;
     }
@@ -119,7 +114,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.added",
-                TextUtil.formatObject(entry)
+                entry.toText()
         ));
 
         return 0;
@@ -127,8 +122,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
     private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
         final var entries = this.configInstance.getConfig().getHosts().stream()
-                                    .map(TextUtil::formatObject)
-                                    .toArray(MutableText[]::new);
+                                    .map(TextUtil.ToText::toText)
+                                    .toArray(Text[]::new);
         var result = Text.translatable("openmcskins.command.list");
 
         for (int i = 0; i < entries.length; i++) {
@@ -154,7 +149,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.removed",
-                TextUtil.formatObject(entry)
+                entry.toText()
         ));
 
         return 0;

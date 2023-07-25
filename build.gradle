@@ -46,7 +46,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
     shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-    shadow "org.apache.commons:commons-text:${project.commons_text_version}"
+    shadow "net.andreinc:aleph:${project.aleph_formatter_version}"
 
     shadow project(":skinlib")
 
@@ -78,6 +78,7 @@ shadowJar {
 
         exclude 'META-INF/maven/**'
         exclude 'META-INF/*.txt'
+        exclude '**/package-info.*'
     }
 
     from('license/APACHE.txt') {

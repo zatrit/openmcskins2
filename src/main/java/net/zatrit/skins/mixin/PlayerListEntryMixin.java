@@ -9,6 +9,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +32,7 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
     @Shadow private boolean texturesLoaded;
-    @Shadow @Final
-    private Map<MinecraftProfileTexture.Type, Identifier> textures;
+    @Shadow @Final private Map<MinecraftProfileTexture.Type, Identifier> textures;
     @Shadow @Nullable private String model;
 
     @Shadow
@@ -65,8 +65,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
-                resolvers,
+        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
                 profile1
         ).join()).whenComplete(sneaky((result, error) -> {
             if (error != null) {
@@ -92,7 +91,11 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         final var texture = result.getTexture();
         final var metadata = texture.getMetadata();
 
-        final var id = TextureLoader.fromMetadata(metadata)
+        final var textureId = new TextureIdentifier(getProfile().getName(),
+                result.getType()
+        );
+
+        final var id = TextureLoader.create(textureId, metadata)
                                .getTexture(texture.getContent());
 
         this.textures.put(type, id);

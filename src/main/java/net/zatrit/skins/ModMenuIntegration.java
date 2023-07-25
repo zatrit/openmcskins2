@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
+import dev.isxander.yacl3.config.ConfigInstance;
 import net.zatrit.skins.config.SkinsConfig;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,8 @@ public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
-            final var instance = SkinsClient.getConfigInstance();
+            @SuppressWarnings("unchecked")
+            final var instance = (ConfigInstance<SkinsConfig>) SkinsClient.getConfigHolder();
 
             return YetAnotherConfigLib.create(instance, this::initConfig)
                            .generateScreen(parent);
@@ -63,6 +65,15 @@ public class ModMenuIntegration implements ModMenuApi {
                                                config::setVerboseLogs
                                        ).name(translatable(
                                        "openmcskins.option.verboseLogs")).build())
+                       .option(Option.<Boolean>createBuilder()
+                                       .controller(BooleanControllerBuilder::create)
+                                       .binding(
+                                               defaults.refreshOnConfigSave,
+                                               config::isRefreshOnConfigSave,
+                                               config::setRefreshOnConfigSave
+                                       ).name(translatable(
+                                       "openmcskins.option.refreshOnConfigSave"))
+                                       .build())
                        .option(Option.<Float>createBuilder()
                                        .controller(option -> FloatSliderControllerBuilder.create(
                                                option).range(0f, 60f).step(0.5f))

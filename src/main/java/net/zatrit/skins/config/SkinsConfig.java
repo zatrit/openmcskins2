@@ -17,4 +17,5 @@ public class SkinsConfig {
             Collections.emptyMap()
     ));
     public boolean verboseLogs = false;
+    public boolean refreshOnConfigSave = false;
 }

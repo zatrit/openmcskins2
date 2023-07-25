@@ -34,7 +34,7 @@ public class OptifineResolver implements Resolver {
         final var url = this.baseUrl + "/capes/" + profile.getName() + ".png";
         final var metadata = new HashMap<String, String>();
 
-        if (NetworkUtil.hasContent(new URL(url))) {
+        if (NetworkUtil.isOk(new URL(url))) {
             textures.getTextures().put(TextureType.CAPE,
                     new Textures.TextureData(url, metadata)
             );

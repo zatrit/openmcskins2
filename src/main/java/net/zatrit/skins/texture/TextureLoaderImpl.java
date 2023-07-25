@@ -1,5 +1,6 @@
 package net.zatrit.skins.texture;
 
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -12,11 +13,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class TextureLoaderImpl implements TextureLoader {
-    private boolean animated;
+    private final Identifier id;
+    private boolean animated = false;
 
-    public static @NotNull TextureLoaderImpl fromMetadata(@Nullable Map<String, String> metadata) {
-        final var config = new TextureLoaderImpl();
+    public static @NotNull TextureLoaderImpl create(
+            @NotNull TextureIdentifier id,
+            @Nullable Map<String, String> metadata) {
+        final var config = new TextureLoaderImpl(id.asId());
 
         if (metadata == null) {
             return config;
@@ -38,9 +43,11 @@ public class TextureLoaderImpl implements TextureLoader {
         } else {
             final var image = NativeImage.read(new ByteArrayInputStream(content));
             final var texture = new NativeImageBackedTexture(image);
+            final var manager = MinecraftClient.getInstance().getTextureManager();
 
-            return MinecraftClient.getInstance().getTextureManager()
-                           .registerDynamicTexture("skins", texture);
+            manager.registerTexture(id, texture);
+
+            return id;
         }
     }
 }

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Various utility functions for interacting with Minecraft text APIs.
@@ -21,65 +22,66 @@ import java.net.URL;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextUtil {
-    private static final String SPECIAL = "(){}=,";
-
     /**
-     * Formats as nice chat text the result of the
-     * {@link #toString} method for classes annotated with
-     * {@link lombok.ToString}.
+     * Converts {@link Map} into a nicely formatted {@link Text}.
      */
-    public static @NotNull MutableText formatObject(@NotNull Object input) {
-        /*
-         {b=1, a  = null} => {b=1}
-         {b=1, a=  {}} => {b=1}
-         {b=1, a   =[]} => {b=1}
-        */
-        final var string = input.toString().replaceAll(
-                ",?\\s*\\w*\\s*=\\s*(null|\\{}|\\[])",
-                ""
-        );
+    public static void mapToText(
+            @NotNull MutableText text, @NotNull Map<String, ?> map) {
+        text.append(Text.literal("{").styled(TextUtil::specialStyle));
 
-        // Determines whether the currently converted
-        // part of the string is an identifier
-        var identifier = true;
+        var first = true;
+        for (final var entry : map.entrySet()) {
+            final var value = entry.getValue();
 
-        final var builder = new StringBuilder();
-        final var text = Text.empty();
+            if (value == null) {
+                continue;
+            }
 
-        for (int i = 0; i < string.length(); i++) {
-            var ch = String.valueOf(string.charAt(i));
+            if (!first) {
+                text.append(Text.literal(", ").styled(TextUtil::specialStyle));
+            }
+            first = false;
 
-            if (SPECIAL.contains(ch)) {
-                final var buiderString = builder.toString();
-                var builderText = Text.literal(buiderString)
-                                          .formatted(identifier ?
-                                                             Formatting.RESET :
-                                                             Formatting.GREEN);
+            text.append(Text.literal(entry.getKey())
+                                .styled(style -> style.withFormatting(Formatting.RESET)));
+            text.append(Text.literal(" = ").styled(TextUtil::specialStyle));
 
-                if (!identifier && isURL(buiderString)) {
-                    final var clickAction = new ClickEvent(ClickEvent.Action.OPEN_URL,
-                            buiderString
+            if (value instanceof Map) {
+                //noinspection unchecked
+                mapToText(text, (Map<String, ?>) value);
+            } else if (value instanceof ToText) {
+                ((ToText) value).toText(text);
+            } else {
+                final var stringValue = value.toString();
+                var mutableText = Text.literal(stringValue)
+                                          .styled(style -> style.withFormatting(
+                                                  Formatting.GREEN));
+
+                if (isURL(stringValue)) {
+                    final var clickAction = new ClickEvent(
+                            ClickEvent.Action.OPEN_URL,
+                            stringValue
                     );
-                    builderText = builderText.styled(s -> s.withFormatting(
+                    mutableText = mutableText.styled(s -> s.withFormatting(
                             Formatting.UNDERLINE).withClickEvent(clickAction));
                 }
 
-                text.append(builderText);
-
-                identifier = !ch.equals("=");
-                if (ch.equals("=")) {
-                    ch = " = ";
-                }
-
-                text.append(Text.literal(ch)
-                                    .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
-                builder.setLength(0);
-            } else {
-                builder.append(ch);
+                text.append(mutableText);
             }
         }
 
-        return text;
+        text.append(Text.literal("}").styled(TextUtil::specialStyle));
+    }
+
+    public interface ToText {
+        void toText(@NotNull MutableText text);
+
+        default Text toText() {
+            final var text = Text.empty();
+            this.toText(text);
+
+            return text;
+        }
     }
 
     /**
@@ -91,11 +93,10 @@ public final class TextUtil {
         return Text.literal(String.valueOf(n)).formatted(Formatting.GREEN);
     }
 
-    // https://stackoverflow.com/a/41268655/12245612
-
     /**
      * @return true if the {@code string} is a URL.
      */
+    // https://stackoverflow.com/a/41268655/12245612
     private static boolean isURL(String string) {
         try {
             var url = new URL(string);
@@ -104,5 +105,9 @@ public final class TextUtil {
         } catch (MalformedURLException | URISyntaxException e) {
             return false;
         }
+    }
+
+    private static Style specialStyle(@NotNull Style style) {
+        return style.withFormatting(Formatting.GRAY);
     }
 }

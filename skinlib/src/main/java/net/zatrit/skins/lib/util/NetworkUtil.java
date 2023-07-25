@@ -10,12 +10,8 @@ import java.net.URL;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NetworkUtil {
-    public static boolean hasContent(@NotNull URL url) {
-        try {
-            final var connection = (HttpURLConnection) url.openConnection();
-            return connection.getContentLength() != 0;
-        } catch (IOException e) {
-            return false;
-        }
+    public static boolean isOk(@NotNull URL url) throws IOException {
+        final var connection = (HttpURLConnection) url.openConnection();
+        return connection.getResponseCode() / 100 == 2;
     }
 }

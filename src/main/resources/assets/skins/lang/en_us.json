@@ -1,7 +1,6 @@
 {
   "openmcskins.command.added": "§a+ %s",
   "openmcskins.command.removed": "§c- %s",
-  "openmcskins.command.updated": "§b* %s",
   "openmcskins.command.list": "Configured hosts:",
   "openmcskins.command.list_entry": "%d§7. %s",
   "openmcskins.command.moved": "A host was moved from %d to %d successfully.",
@@ -12,5 +11,6 @@
   "openmcskins.category.general": "General",
   "openmcskins.option.cacheTextures": "Cache textures",
   "openmcskins.option.verboseLogs": "Verbose logs",
-  "openmcskins.option.loaderTimeout": "Loader timeout"
+  "openmcskins.option.loaderTimeout": "Loader timeout",
+  "openmcskins.option.refreshOnConfigSave": "Refresh on config save"
 }

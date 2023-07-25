@@ -34,6 +34,12 @@ public class SkinLoader {
         final var loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
         final var timeout = (int) (getConfig().getLoaderTimeout() * 1000);
 
+        // https://stackoverflow.com/a/44521687/12245612
+        final var layers = this.layers.stream().map(SkinLayer::function).reduce(
+                Function.identity(),
+                Function::andThen
+        );
+
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
         final var futures = Enumerated.enumerate(resolvers).stream()
@@ -60,33 +66,29 @@ public class SkinLoader {
                                                          .exceptionally(e -> null))
                                     .toArray(CompletableFuture[]::new);
 
-        // https://stackoverflow.com/a/44521687/12245612
-        final var layers = this.layers.stream().map(SkinLayer::function).reduce(
-                Function.identity(),
-                Function::andThen
-        );
         final var allFutures = CompletableFuture.allOf(futures);
 
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
-                                type -> loaders.stream().parallel()
-                                                // Remains only loaders that has texture
-                                                .filter(pair -> pair.getValue() != null &&
-                                                                        pair.getValue()
-                                                                                .hasTexture(type))
-                                                // Find most prioritized loader and get its value
-                                                .min(Comparator.comparingInt(Enumerated::getIndex))
-                                                .map(sneaky(pair -> {
-                                                    // Convert texture into TextureResult
-                                                    final var loader = pair.getValue();
-                                                    final var texture = loader.download(type);
+                        type -> loaders.stream().parallel()
+                                        // Remains only loaders that has texture
+                                        .filter(pair -> pair.getValue() != null &&
+                                                                pair.getValue()
+                                                                        .hasTexture(type))
+                                        // Find most prioritized loader and get its value
+                                        .min(Comparator.comparingInt(Enumerated::getIndex))
+                                        .map(sneaky(pair -> {
+                                            // Convert texture into TextureResult
+                                            final var loader = pair.getValue();
+                                            final var texture = loader.download(type);
 
-                                                    return new TextureResult(texture, type);
-                                                })))
+                                            return layers.apply(new TextureResult(
+                                                    texture,
+                                                    type
+                                            ));
+                                        })))
                                                       // Filter and unwrap Optionals
                                                       .filter(Optional::isPresent)
                                                       .map(Optional::get)
-                                                      .toArray(TextureResult[]::new))
-                       .thenApply(textures -> Arrays.stream(textures).map(layers)
                                                       .toArray(TextureResult[]::new));
     }
 }

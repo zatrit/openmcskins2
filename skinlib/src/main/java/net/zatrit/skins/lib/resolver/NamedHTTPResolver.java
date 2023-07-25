@@ -38,13 +38,11 @@ public class NamedHTTPResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        final var url = new URL(this.getBaseUrl() +
-                                        "/textures/" +
-                                        profile.getName());
+        final var url = new URL(this.getBaseUrl() + profile.getName());
         final var config = getConfig();
 
         final var type = new TypeToken<EnumMap<TextureType, Textures.TextureData>>() {}.getType();
-        final var textures = new Textures(config.getGson()
+        final var textures = new Textures(this.config.getGson()
                                                   .fromJson(
                                                           new InputStreamReader(
                                                                   url.openStream()),

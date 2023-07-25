@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface SkinLayer {
-    Collection<SkinLayer> defaultLayers = List.of(new ImageLayer(
-            List.of(new ScaleCapeLayer()),
+    ScaleCapeLayer CAPE_LAYER = new ScaleCapeLayer();
+
+    Collection<SkinLayer> DEFAULT_LAYERS = List.of(new ImageLayer(
+            List.of(CAPE_LAYER),
             List.of(TextureType.CAPE)
     ));
 

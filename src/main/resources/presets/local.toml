@@ -1,0 +1,2 @@
+type = 'LOCAL'
+properties = { directory = '#{configdir}/openmcskins/local' }
