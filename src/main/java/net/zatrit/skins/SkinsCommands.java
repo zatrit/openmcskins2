@@ -4,6 +4,7 @@ import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,10 +33,10 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     public void register(
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess registryAccess) {
-        final var presetsPath = FabricLoader.getInstance().getConfigDir()
+        val presetsPath = FabricLoader.getInstance().getConfigDir()
                                         .resolve("openmcskins");
 
-        final var presetsType = new FileArgumentType(new FileProvider[]{
+        val presetsType = new FileArgumentType(new FileProvider[]{
                 new IndexedResourceProvider(
                         "presets",
                         getClass().getClassLoader()
@@ -89,7 +90,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     public int addHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var stream = context.getArgument("preset", InputStream.class);
+        val stream = context.getArgument("preset", InputStream.class);
         int id = 0;
 
         try {
@@ -98,8 +99,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }
 
         final int finalId = id;
-        final var toml = new Toml().read(stream);
-        final var entry = toml.to(HostEntry.class);
+        val toml = new Toml().read(stream);
+        val entry = toml.to(HostEntry.class);
 
         if (entry.getType() == null) {
             context.getSource().sendError(Text.translatable(
@@ -121,7 +122,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var entries = this.configInstance.getConfig().getHosts().stream()
+        val entries = this.configInstance.getConfig().getHosts().stream()
                                     .map(TextUtil.ToText::toText)
                                     .toArray(Text[]::new);
         var result = Text.translatable("openmcskins.command.list");
@@ -140,9 +141,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var id = context.getArgument("id", Integer.class);
+        val id = context.getArgument("id", Integer.class);
 
-        final var entry = patchConfig(
+        val entry = patchConfig(
                 this.configInstance,
                 config -> config.getHosts().remove(id.intValue())
         );
@@ -156,11 +157,11 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int moveHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        final var from = context.getArgument("from", Integer.class);
-        final var to = context.getArgument("to", Integer.class);
+        val from = context.getArgument("from", Integer.class);
+        val to = context.getArgument("to", Integer.class);
 
         patchConfig(this.configInstance, config -> {
-            final var entry = config.getHosts().remove(from.intValue());
+            val entry = config.getHosts().remove(from.intValue());
             config.getHosts().add(to, entry);
 
             return null;

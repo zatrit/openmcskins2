@@ -1,9 +1,7 @@
 package net.zatrit.skins.lib.resolver;
 
 import com.google.gson.reflect.TypeToken;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.URLPlayerLoader;
@@ -38,17 +36,17 @@ public class NamedHTTPResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        final var url = new URL(this.getBaseUrl() + profile.getName());
-        final var config = getConfig();
+        val url = new URL(this.getBaseUrl() + profile.getName());
+        val config = getConfig();
 
         // Type for EnumMap<TextureType, Textures.TextureData>
-        final var type = TypeToken.getParameterized(
+        val type = TypeToken.getParameterized(
                 EnumMap.class,
                 TextureType.class,
                 Textures.TextureData.class
         ).getType();
 
-        final var textures = new Textures(this.config.getGson()
+        val textures = new Textures(this.config.getGson()
                                                   .fromJson(
                                                           new InputStreamReader(
                                                                   url.openStream()),

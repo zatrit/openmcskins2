@@ -16,10 +16,15 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
-    compileOnly 'com.google.code.gson:gson:2.10.1'
-    compileOnly 'com.google.guava:guava:31.1-jre'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.guava:guava:31.1-jre'
 
-    compileOnly "net.andreinc:aleph:${project.aleph_formatter_version}"
+    implementation "net.andreinc:aleph:${project.aleph_formatter_version}"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 jar {

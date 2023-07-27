@@ -2,6 +2,7 @@ package net.zatrit.skins.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Resolver;
@@ -18,14 +19,14 @@ import java.util.HashMap;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Resolvers {
     public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
-        final var props = entry.getProperties();
-        final var config = SkinsClient.getLoaderConfig();
+        val props = entry.getProperties();
+        val config = SkinsClient.getLoaderConfig();
 
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(config);
                 case NAMED_HTTP, OPTIFINE -> {
-                    final var baseUrl = (String) props.get("base_url");
+                    val baseUrl = (String) props.get("base_url");
                     Validate.notNull(baseUrl);
 
                     yield switch (entry.getType()) {
@@ -35,8 +36,8 @@ public final class Resolvers {
                     };
                 }
                 case LOCAL -> {
-                    final var directory = (String) props.get("directory");
-                    final var replaces = new HashMap<String, Object>();
+                    val directory = (String) props.get("directory");
+                    val replaces = new HashMap<String, Object>();
                     replaces.put(
                             "configDir",
                             FabricLoader.getInstance().getConfigDir().toString()

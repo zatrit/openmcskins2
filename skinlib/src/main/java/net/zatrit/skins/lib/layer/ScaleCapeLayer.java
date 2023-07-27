@@ -3,6 +3,7 @@ package net.zatrit.skins.lib.layer;
 import com.google.common.math.IntMath;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -23,18 +24,18 @@ public class ScaleCapeLayer implements ImageLayer.ImageSublayer {
     @Override
     public BufferedImage apply(@NotNull Image image) {
         // TODO: use IntMath.ceilingPowerOfTwo when it become stable
-        final var power = IntMath.log2(image.getHeight(null), RoundingMode.UP);
+        val power = IntMath.log2(image.getHeight(null), RoundingMode.UP);
 
-        final var height = IntMath.pow(2, power);
-        final var width = height * 2;
+        val height = IntMath.pow(2, power);
+        val width = height * 2;
 
-        final var result = new BufferedImage(
+        val result = new BufferedImage(
                 width,
                 height,
                 BufferedImage.TYPE_INT_ARGB
         );
 
-        final var graphics = result.getGraphics();
+        val graphics = result.getGraphics();
         if (backgroundTexture != null && image.getWidth(null) != width) {
             graphics.drawImage(
                     backgroundTexture,

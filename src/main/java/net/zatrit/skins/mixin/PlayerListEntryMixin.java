@@ -3,6 +3,7 @@ package net.zatrit.skins.mixin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.SneakyThrows;
+import lombok.val;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.Refreshable;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
@@ -50,9 +52,12 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.textures.clear();
         this.applyMetadata(Collections.emptyMap());
 
-        final var profile = (Profile) getProfile();
-        final var skinLoader = SkinsClient.getSkinLoader();
-        final var resolvers = SkinsClient.getResolvers();
+        val profile = (Profile) getProfile();
+        val skinLoader = SkinsClient.getSkinLoader();
+        val resolvers = SkinsClient.getResolvers();
+
+        val timeout = (int) (SkinsClient.getConfigHolder().getConfig()
+                                           .getLoaderTimeout() * 1000);
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
@@ -64,38 +69,40 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         }
 
         profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
-                resolvers,
-                profile1
-        ).join()).whenComplete((result, error) -> {
-            if (error != null) {
-                SkinsClient.getErrorHandler().accept(error);
-            }
+                        resolvers,
+                        profile1
+                ).join()).orTimeout(timeout, TimeUnit.MILLISECONDS)
+                .whenComplete((result, error) -> {
+                    if (error != null) {
+                        SkinsClient.getErrorHandler().accept(error);
+                    }
 
-            for (final var textureResult : result) {
-                this.loadTextureResult(textureResult);
-            }
-        }).exceptionallyAsync(SkinsClient.getErrorHandler().andReturn(null));
+                    for (val textureResult : result) {
+                        this.loadTextureResult(textureResult);
+                    }
+                }).exceptionallyAsync(SkinsClient.getErrorHandler()
+                                              .andReturn(null));
     }
 
     @Unique
     @SneakyThrows
     private void loadTextureResult(@NotNull TextureResult result) {
-        final var type = TextureTypeUtil.toAuthlibType(result.getType());
+        val type = TextureTypeUtil.toAuthlibType(result.getType());
 
         // Doesn't create a texture if no matching type is found.
         if (type == null) {
             return;
         }
 
-        final var texture = result.getTexture();
-        final var metadata = texture.getMetadata();
+        val texture = result.getTexture();
+        val metadata = texture.getMetadata();
 
-        final var textureId = new TextureIdentifier(
+        val textureId = new TextureIdentifier(
                 getProfile().getName(),
                 result.getType()
         );
 
-        final var id = TextureLoader.create(textureId, metadata)
+        val id = TextureLoader.create(textureId, metadata)
                                .getTexture(texture.getContent());
 
         this.textures.put(type, id);

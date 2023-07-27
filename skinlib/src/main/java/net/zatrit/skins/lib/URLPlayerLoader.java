@@ -1,8 +1,7 @@
 package net.zatrit.skins.lib;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.google.common.io.ByteStreams;
+import lombok.*;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
@@ -37,7 +36,7 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
             return null;
         }
 
-        final var textureData = this.textures.getTextures().get(type);
+        val textureData = this.textures.getTextures().get(type);
 
         return fetchTextureData(
                 textureData,
@@ -50,7 +49,7 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
             @Nullable CacheProvider cacheProvider) throws IOException {
         final Cache.LoadFunction function = () -> {
             try (var stream = new URL(textureData.getUrl()).openStream()) {
-                return stream.readAllBytes();
+                return ByteStreams.toByteArray(stream);
             }
         };
 

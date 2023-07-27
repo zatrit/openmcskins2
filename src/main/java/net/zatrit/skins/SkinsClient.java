@@ -4,6 +4,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -16,7 +17,7 @@ import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
-import net.zatrit.skins.config.TomlConfigInstance;
+import net.zatrit.skins.config.TomlConfigHolder;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.api.Resolver;
@@ -45,7 +46,7 @@ public final class SkinsClient implements ClientModInitializer {
             false);
 
     private void applyConfig(@NotNull SkinsConfig config) {
-        final var path = (AssetPathProvider) MinecraftClient.getInstance();
+        val path = (AssetPathProvider) MinecraftClient.getInstance();
 
         errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
 
@@ -54,12 +55,11 @@ public final class SkinsClient implements ClientModInitializer {
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
-        final var loaderConfig = getLoaderConfig();
+        val loaderConfig = getLoaderConfig();
 
         loaderConfig.setCacheProvider(config.cacheTextures ?
                                               new AssetCacheProvider(path) :
                                               null);
-        loaderConfig.setLoaderTimeout(config.loaderTimeout);
 
         if (config.isRefreshOnConfigSave()) {
             refresh();
@@ -67,9 +67,9 @@ public final class SkinsClient implements ClientModInitializer {
     }
 
     private void applyElytraTextureFix(@NotNull ResourceManager manager) {
-        final var elytraId = new Identifier("textures/entity/elytra.png");
-        try (final var stream = manager.open(elytraId)) {
-            final var elytraImage = ImageIO.read(stream);
+        val elytraId = new Identifier("textures/entity/elytra.png");
+        try (val stream = manager.open(elytraId)) {
+            val elytraImage = ImageIO.read(stream);
 
             SkinLayer.CAPE_LAYER.setBackgroundTexture(elytraImage);
         } catch (IOException e) {
@@ -78,7 +78,7 @@ public final class SkinsClient implements ClientModInitializer {
     }
 
     private void refresh() {
-        final var client = MinecraftClient.getInstance();
+        val client = MinecraftClient.getInstance();
         if (client.world != null) {
             getRefresher().refresh(client.world.getPlayers());
         }
@@ -88,16 +88,14 @@ public final class SkinsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         SkinsClient.loaderConfig = Config.builder().build();
-        skinLoader = new SkinLoader(
-                SkinsClient.loaderConfig,
+        skinLoader = new SkinLoader(SkinsClient.loaderConfig,
                 SkinLayer.DEFAULT_LAYERS
         );
 
-        final var configPath = FabricLoader.getInstance().getConfigDir()
+        val configPath = FabricLoader.getInstance().getConfigDir()
                                        .resolve("openmcskins.toml");
 
-        configHolder = new TomlConfigInstance<>(
-                configPath.toFile(),
+        configHolder = new TomlConfigHolder<>(configPath.toFile(),
                 new SkinsConfig()
         );
         configHolder.addSaveListener(this::applyConfig);
@@ -114,8 +112,7 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHolder.getConfig());
 
-        final var commands = new SkinsCommands(
-                configHolder,
+        val commands = new SkinsCommands(configHolder,
                 MinecraftClient.getInstance()
         );
 

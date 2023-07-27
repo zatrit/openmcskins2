@@ -2,6 +2,8 @@ package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
+import lombok.var;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.SkinLayer;
@@ -21,7 +23,6 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
  * OpenMCSkins simple loader implementation.
  */
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 public class SkinLoader {
     private final @Getter Config config;
     private final @Getter Collection<SkinLayer> layers;
@@ -31,25 +32,24 @@ public class SkinLoader {
      */
     public CompletableFuture<TextureResult[]> fetchAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
-        final var loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
-        final var timeout = (int) (getConfig().getLoaderTimeout() * 1000);
+        val loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
 
         // https://stackoverflow.com/a/44521687/12245612
-        final var layers = this.layers.stream().map(SkinLayer::function).reduce(
+        val layers = this.layers.stream().map(SkinLayer::function).reduce(
                 Function.identity(),
                 Function::andThen
         );
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
-        final var futures = Enumerated.enumerate(resolvers).stream()
+        val futures = Enumerated.enumerate(resolvers).stream()
                                     .map(pair -> CompletableFuture.supplyAsync(
                                                     /* This function may throw an exception,
                                                      * but it's a CompletableFuture, so
                                                      * an exception won't crash the game. */
                                                     sneaky(() -> {
-                                                        final var resolver = pair.getValue();
-                                                        final var loader = resolver.resolve(
+                                                        val resolver = pair.getValue();
+                                                        val loader = resolver.resolve(
                                                                 profile);
 
                                                         return pair.withValue(loader);
@@ -59,14 +59,10 @@ public class SkinLoader {
                                                                   * loaders to futures so it just,
                                                                   * stores them into list. */
                                                                  loaders::add)
-                                                         .orTimeout(
-                                                                 timeout,
-                                                                 TimeUnit.MILLISECONDS
-                                                         )
                                                          .exceptionally(e -> null))
                                     .toArray(CompletableFuture[]::new);
 
-        final var allFutures = CompletableFuture.allOf(futures);
+        val allFutures = CompletableFuture.allOf(futures);
 
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
                         type -> loaders.stream().parallel()
@@ -78,8 +74,8 @@ public class SkinLoader {
                                         .min(Comparator.comparingInt(Enumerated::getIndex))
                                         .map(sneaky(pair -> {
                                             // Convert texture into TextureResult
-                                            final var loader = pair.getValue();
-                                            final var texture = loader.download(type);
+                                            val loader = pair.getValue();
+                                            val texture = loader.download(type);
 
                                             return layers.apply(new TextureResult(
                                                     texture,

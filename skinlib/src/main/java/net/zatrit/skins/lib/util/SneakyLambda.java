@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Supplier<T> sneaky(SupplierThrows<T> supplier) {
-        return new Supplier<>() {
+        return new Supplier<T>() {
             @Override
             @SneakyThrows
             public T get() {
@@ -24,7 +24,7 @@ public class SneakyLambda {
 
     @Contract(value = "_ -> new", pure = true)
     public static <T, R> @NotNull Function<T, R> sneaky(FunctionThrows<T, R> function) {
-        return new Function<>() {
+        return new Function<T, R>() {
             @Override
             @SneakyThrows
             public R apply(T t) {

@@ -9,6 +9,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.val;
 import net.minecraft.text.Text;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -40,8 +41,8 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     @SneakyThrows
     public InputStream parse(@NotNull StringReader reader) {
         if (reader.canRead() && reader.peek() != ' ') {
-            final var file = reader.readString() + "." + this.extension;
-            final var stream = Arrays.stream(this.providers)
+            val file = reader.readString() + "." + this.extension;
+            val stream = Arrays.stream(this.providers)
                                        .map(p -> p.getFile(file))
                                        .filter(Objects::nonNull).findFirst();
 
@@ -73,7 +74,7 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     public void refresh() {
         this.files.clear();
 
-        final var set = new HashSet<String>();
+        val set = new HashSet<String>();
 
         Arrays.stream(providers).map(FileProvider::listFiles)
                 .forEach(set::addAll);

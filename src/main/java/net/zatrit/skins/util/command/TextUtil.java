@@ -2,6 +2,7 @@ package net.zatrit.skins.util.command;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -27,14 +28,14 @@ public final class TextUtil {
      */
     public static void mapToText(
             @NotNull MutableText text, @NotNull Map<String, ?> map) {
-        final var specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
+        val specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
                 Formatting.GRAY);
 
         text.append(Text.literal("{").styled(specialStyle));
 
         var first = true;
-        for (final var entry : map.entrySet()) {
-            final var value = entry.getValue();
+        for (val entry : map.entrySet()) {
+            val value = entry.getValue();
 
             if (value == null) {
                 continue;
@@ -55,13 +56,13 @@ public final class TextUtil {
             } else if (value instanceof ToText) {
                 ((ToText) value).toText(text);
             } else {
-                final var stringValue = value.toString();
+                val stringValue = value.toString();
                 var mutableText = Text.literal(stringValue)
                                           .styled(style -> style.withFormatting(
                                                   Formatting.GREEN));
 
                 if (isURL(stringValue)) {
-                    final var clickAction = new ClickEvent(
+                    val clickAction = new ClickEvent(
                             ClickEvent.Action.OPEN_URL,
                             stringValue
                     );
@@ -103,7 +104,7 @@ public final class TextUtil {
         void toText(@NotNull MutableText text);
 
         default Text toText() {
-            final var text = Text.empty();
+            val text = Text.empty();
             this.toText(text);
 
             return text;

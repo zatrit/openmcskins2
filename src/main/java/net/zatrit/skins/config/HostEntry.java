@@ -2,6 +2,7 @@ package net.zatrit.skins.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.val;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -22,7 +23,7 @@ public class HostEntry implements TextUtil.ToText {
 
     @Override
     public void toText(@NotNull MutableText text) {
-        final var map = new HashMap<String, Object>();
+        val map = new HashMap<String, Object>();
 
         map.put("type", this.getType());
         map.put("properties", this.getProperties());

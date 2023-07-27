@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.config.ConfigInstance;
+import lombok.val;
 import net.zatrit.skins.config.SkinsConfig;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ public class ModMenuIntegration implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
             @SuppressWarnings("unchecked")
-            final var instance = (ConfigInstance<SkinsConfig>) SkinsClient.getConfigHolder();
+            val instance = (ConfigInstance<SkinsConfig>) SkinsClient.getConfigHolder();
 
             return YetAnotherConfigLib.create(instance, this::initConfig)
                            .generateScreen(parent);
@@ -76,7 +77,8 @@ public class ModMenuIntegration implements ModMenuApi {
                                        .build())
                        .option(Option.<Float>createBuilder()
                                        .controller(option -> FloatSliderControllerBuilder.create(
-                                               option).range(0f, 60f).step(0.5f))
+                                                       option).range(0.5f, 60f)
+                                                                     .step(0.5f))
                                        .binding(
                                                defaults.loaderTimeout,
                                                config::getLoaderTimeout,

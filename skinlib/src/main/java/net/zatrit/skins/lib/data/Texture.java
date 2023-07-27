@@ -7,7 +7,6 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 public class Texture {
     private final byte[] content;
     private final Map<String, String> metadata;

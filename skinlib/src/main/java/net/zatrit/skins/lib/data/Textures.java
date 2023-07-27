@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 public class Textures {
     private final EnumMap<TextureType, TextureData> textures;
 

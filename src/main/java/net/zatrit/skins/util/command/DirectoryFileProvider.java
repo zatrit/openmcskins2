@@ -1,6 +1,7 @@
 package net.zatrit.skins.util.command;
 
 import lombok.AllArgsConstructor;
+import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +20,7 @@ public class DirectoryFileProvider implements FileProvider {
 
     @Override
     public Collection<String> listFiles() {
-        final var files = this.path.toFile().listFiles();
+        val files = this.path.toFile().listFiles();
 
         if (files == null) {
             return Collections.emptyList();
@@ -30,7 +31,7 @@ public class DirectoryFileProvider implements FileProvider {
 
     @Override
     public @Nullable InputStream getFile(String name) {
-        final var path = this.path.resolve(name);
+        val path = this.path.resolve(name);
 
         try {
             return new FileInputStream(path.toFile());

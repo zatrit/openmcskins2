@@ -1,6 +1,7 @@
 package net.zatrit.skins.texture;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -21,7 +22,7 @@ public class TextureLoaderImpl implements TextureLoader {
     public static @NotNull TextureLoaderImpl create(
             @NotNull TextureIdentifier id,
             @Nullable Map<String, String> metadata) {
-        final var config = new TextureLoaderImpl(id.asId());
+        val config = new TextureLoaderImpl(id.asId());
 
         if (metadata == null) {
             return config;
@@ -41,9 +42,9 @@ public class TextureLoaderImpl implements TextureLoader {
             throw new NotImplementedException(
                     "Animated textures aren't supported yet.");
         } else {
-            final var image = NativeImage.read(new ByteArrayInputStream(content));
-            final var texture = new NativeImageBackedTexture(image);
-            final var manager = MinecraftClient.getInstance().getTextureManager();
+            val image = NativeImage.read(new ByteArrayInputStream(content));
+            val texture = new NativeImageBackedTexture(image);
+            val manager = MinecraftClient.getInstance().getTextureManager();
 
             manager.registerTexture(id, texture);
 

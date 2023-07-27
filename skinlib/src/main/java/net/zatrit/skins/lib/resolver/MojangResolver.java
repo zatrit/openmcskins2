@@ -1,8 +1,6 @@
 package net.zatrit.skins.lib.resolver;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
@@ -30,25 +28,25 @@ public final class MojangResolver implements Resolver {
     @Contract("_ -> new")
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        final var gson = getConfig().getGson();
-        final var url =
+        val gson = getConfig().getGson();
+        val url =
                 "https://sessionserver.mojang.com/session/minecraft/profile/" +
                         profile.getId().toString().replaceAll("-", "");
 
         MojangResponse response;
-        try (final var stream = new URL(url).openStream()) {
+        try (val stream = new URL(url).openStream()) {
             response = gson.fromJson(
                     new InputStreamReader(stream),
                     MojangResponse.class
             );
         }
 
-        final var decoder = Base64.getDecoder();
-        final var textureData = decoder.decode(response.getProperties()
+        val decoder = Base64.getDecoder();
+        val textureData = decoder.decode(response.getProperties()
                                                        .get(0)
                                                        .getValue());
 
-        final var textures = gson.fromJson(
+        val textures = gson.fromJson(
                 new InputStreamReader(new ByteArrayInputStream(textureData)),
                 Textures.class
         );

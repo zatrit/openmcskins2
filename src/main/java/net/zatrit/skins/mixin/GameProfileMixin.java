@@ -2,6 +2,7 @@ package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
 import lombok.SneakyThrows;
+import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,12 +34,12 @@ public abstract class GameProfileMixin implements Profile {
                                                              HttpResponse.BodyHandlers.ofInputStream()
                                                      ).join())
                        .thenApply(HttpResponse::body).thenApply(stream -> {
-                    final var map = SkinsClient.getLoaderConfig().getGson()
+                    val map = SkinsClient.getLoaderConfig().getGson()
                                             .fromJson(
                                                     new InputStreamReader(
                                                             stream), Map.class);
 
-                    final var id = String.valueOf(map.get("id")).replaceAll(
+                    val id = String.valueOf(map.get("id")).replaceAll(
                             "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
                             "$1-$2-$3-$4-$5"
                     );

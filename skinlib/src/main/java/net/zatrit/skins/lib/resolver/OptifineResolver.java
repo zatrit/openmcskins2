@@ -1,8 +1,6 @@
 package net.zatrit.skins.lib.resolver;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.URLPlayerLoader;
@@ -30,9 +28,9 @@ public class OptifineResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        final var textures = new Textures(new EnumMap<>(TextureType.class));
-        final var url = this.baseUrl + "/capes/" + profile.getName() + ".png";
-        final var metadata = new HashMap<String, String>();
+        val textures = new Textures(new EnumMap<>(TextureType.class));
+        val url = this.baseUrl + "/capes/" + profile.getName() + ".png";
+        val metadata = new HashMap<String, String>();
 
         if (NetworkUtil.isOk(new URL(url))) {
             textures.getTextures().put(

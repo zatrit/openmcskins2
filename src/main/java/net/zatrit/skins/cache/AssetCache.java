@@ -2,6 +2,7 @@ package net.zatrit.skins.cache;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import net.zatrit.skins.AssetPathProvider;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.cache.Cache;
@@ -21,11 +22,11 @@ public class AssetCache implements Cache {
     @Override
     @SneakyThrows
     public byte[] getOrLoad(String id, LoadFunction load) {
-        final var path = Paths.get(this.pathProvider.getAssetPath(), type);
-        final var function = SkinsClient.getHashFunction();
-        final var hash = function.hashUnencodedChars(id).toString();
+        val path = Paths.get(this.pathProvider.getAssetPath(), type);
+        val function = SkinsClient.getHashFunction();
+        val hash = function.hashUnencodedChars(id).toString();
 
-        final var cacheFile = Paths.get(
+        val cacheFile = Paths.get(
                 path.toString(),
                 hash.substring(0, 2),
                 hash
@@ -34,7 +35,7 @@ public class AssetCache implements Cache {
         if (cacheFile.toFile().exists()) {
             return Files.readAllBytes(cacheFile);
         } else {
-            final var content = load.load();
+            val content = load.load();
             // noinspection ResultOfMethodCallIgnored
             cacheFile.getParent().toFile().mkdirs();
             Files.write(cacheFile, content, StandardOpenOption.CREATE);

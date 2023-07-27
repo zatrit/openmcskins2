@@ -7,7 +7,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 public class MojangResponse {
     private final String id;
     private final String name;
@@ -15,7 +14,6 @@ public class MojangResponse {
 
     @Getter
     @AllArgsConstructor
-    @SuppressWarnings("ClassCanBeRecord")
     public static class MojangProperty {
         private final String name;
         private final String value;

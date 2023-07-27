@@ -2,6 +2,8 @@ package net.zatrit.skins.lib.layer;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
+import lombok.var;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.data.Texture;
@@ -30,14 +32,14 @@ public class ImageLayer implements SkinLayer {
         var stream = new ByteArrayInputStream(input.getTexture().getContent());
         var image = ImageIO.read(stream);
 
-        for (final var sublayer : this.sublayers) {
+        for (val sublayer : this.sublayers) {
             image = sublayer.apply(image);
         }
 
-        final var outputStream = new ByteArrayOutputStream();
+        val outputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", outputStream);
 
-        final var texture = new Texture(
+        val texture = new Texture(
                 outputStream.toByteArray(),
                 input.getTexture().getMetadata()
         );
