@@ -1,5 +1,7 @@
 # W.I.P. OpenMCSkins remake
 
+## [Official Discord server](https://discord.gg/P4SX2uEspy)
+
 ## License
 
 This project is licensed under the [Apache License 2.0](license/APACHE.txt), and also
