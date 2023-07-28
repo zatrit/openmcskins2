@@ -10,9 +10,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.Resolvers;
@@ -22,13 +21,12 @@ import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.SkinLoader;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.SkinLayer;
-import net.zatrit.skins.util.CallbackResourceReloadListener;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,7 @@ public final class SkinsClient implements ClientModInitializer {
             false);
 
     private void applyConfig(@NotNull SkinsConfig config) {
-        val path = (AssetPathProvider) MinecraftClient.getInstance();
+        val path = (HasAssetPath) MinecraftClient.getInstance();
 
         errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
 
@@ -66,17 +64,6 @@ public final class SkinsClient implements ClientModInitializer {
         }
     }
 
-    private void applyElytraTextureFix(@NotNull ResourceManager manager) {
-        val elytraId = new Identifier("textures/entity/elytra.png");
-        try (val stream = manager.open(elytraId)) {
-            val elytraImage = ImageIO.read(stream);
-
-            SkinLayer.CAPE_LAYER.setBackgroundTexture(elytraImage);
-        } catch (IOException e) {
-            getErrorHandler().accept(e);
-        }
-    }
-
     private void refresh() {
         val client = MinecraftClient.getInstance();
         if (client.world != null) {
@@ -87,13 +74,11 @@ public final class SkinsClient implements ClientModInitializer {
     @SneakyThrows
     @Override
     public void onInitializeClient() {
-        SkinsClient.loaderConfig = Config.builder().build();
-        skinLoader = new SkinLoader(SkinsClient.loaderConfig,
-                SkinLayer.DEFAULT_LAYERS
-        );
+        loaderConfig = new Config();
+        skinLoader = new SkinLoader(loaderConfig, SkinLayer.DEFAULT_LAYERS);
 
         val configPath = FabricLoader.getInstance().getConfigDir()
-                                       .resolve("openmcskins.toml");
+                                 .resolve("openmcskins.toml");
 
         configHolder = new TomlConfigHolder<>(configPath.toFile(),
                 new SkinsConfig()
@@ -102,13 +87,7 @@ public final class SkinsClient implements ClientModInitializer {
         configHolder.load();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
-                .registerReloadListener(new CallbackResourceReloadListener(
-                        "elytra_texture_fix",
-                        manager -> {
-                            applyElytraTextureFix(manager);
-                            refresh();
-                        }
-                ));
+                .registerReloadListener(new ElytraTextureFix(this::refresh));
 
         this.applyConfig(configHolder.getConfig());
 

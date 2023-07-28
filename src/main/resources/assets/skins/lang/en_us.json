@@ -12,5 +12,9 @@
   "openmcskins.option.cacheTextures": "Cache textures",
   "openmcskins.option.verboseLogs": "Verbose logs",
   "openmcskins.option.loaderTimeout": "Loader timeout",
-  "openmcskins.option.refreshOnConfigSave": "Refresh on config save"
+  "openmcskins.option.refreshOnConfigSave": "Refresh on config save",
+  "openmcskins.option.uuidMode": "Refresh UUID",
+  "openmcskins.option.uuidMode.never": "Never",
+  "openmcskins.option.uuidMode.always": "Always",
+  "openmcskins.option.uuidMode.offline": "When offline"
 }

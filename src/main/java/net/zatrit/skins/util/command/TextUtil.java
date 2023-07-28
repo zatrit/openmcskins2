@@ -1,5 +1,6 @@
 package net.zatrit.skins.util.command;
 
+import com.google.common.collect.Lists;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -12,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 /**
@@ -23,9 +27,16 @@ import java.util.function.UnaryOperator;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextUtil {
+    private static final List<?> SKIP_ELEMENTS = Lists.newArrayList(
+            null,
+            Collections.emptyMap(),
+            Collections.emptyList()
+    );
+
     /**
      * Converts {@link Map} into a nicely formatted {@link Text}.
      */
+    @SuppressWarnings("unchecked")
     public static void mapToText(
             @NotNull MutableText text, @NotNull Map<String, ?> map) {
         val specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
@@ -37,7 +48,7 @@ public final class TextUtil {
         for (val entry : map.entrySet()) {
             val value = entry.getValue();
 
-            if (value == null) {
+            if (SKIP_ELEMENTS.stream().anyMatch(e -> Objects.equals(e, value))) {
                 continue;
             }
 
@@ -51,7 +62,6 @@ public final class TextUtil {
             text.append(Text.literal(" = ").styled(specialStyle));
 
             if (value instanceof Map) {
-                //noinspection unchecked
                 mapToText(text, (Map<String, ?>) value);
             } else if (value instanceof ToText) {
                 ((ToText) value).toText(text);

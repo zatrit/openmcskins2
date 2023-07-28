@@ -43,8 +43,8 @@ public class FileArgumentType implements ArgumentType<InputStream> {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
             val stream = Arrays.stream(this.providers)
-                                       .map(p -> p.getFile(file))
-                                       .filter(Objects::nonNull).findFirst();
+                                 .map(p -> p.getFile(file))
+                                 .filter(Objects::nonNull).findFirst();
 
             if (stream.isPresent()) {
                 return stream.get();

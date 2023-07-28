@@ -4,6 +4,7 @@ import com.google.common.math.IntMath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
+import net.zatrit.skins.lib.api.Layer;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -15,11 +16,11 @@ import java.math.RoundingMode;
  * is greater than the height of the image and creates
  * a new image with a width equal to the two new heights.
  */
-public class ScaleCapeLayer implements ImageLayer.ImageSublayer {
+public class ScaleCapeLayer implements Layer<Image> {
     /**
      * Used to properly render the elytra.
      */
-    private @Getter @Setter Image backgroundTexture;
+    private @Getter @Setter Image elytraTexture;
 
     @Override
     public BufferedImage apply(@NotNull Image image) {
@@ -36,9 +37,9 @@ public class ScaleCapeLayer implements ImageLayer.ImageSublayer {
         );
 
         val graphics = result.getGraphics();
-        if (backgroundTexture != null && image.getWidth(null) != width) {
+        if (elytraTexture != null && image.getWidth(null) != width) {
             graphics.drawImage(
-                    backgroundTexture,
+                    elytraTexture,
                     0,
                     0,
                     result.getWidth(),

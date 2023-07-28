@@ -6,10 +6,14 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.val;
+import net.minecraft.text.Text;
 import net.zatrit.skins.config.SkinsConfig;
+import net.zatrit.skins.config.UuidMode;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.text.Text.translatable;
@@ -65,7 +69,8 @@ public class ModMenuIntegration implements ModMenuApi {
                                                config::isVerboseLogs,
                                                config::setVerboseLogs
                                        ).name(translatable(
-                                       "openmcskins.option.verboseLogs")).build())
+                                       "openmcskins.option.verboseLogs"))
+                                       .build())
                        .option(Option.<Boolean>createBuilder()
                                        .controller(BooleanControllerBuilder::create)
                                        .binding(
@@ -85,6 +90,23 @@ public class ModMenuIntegration implements ModMenuApi {
                                                config::setLoaderTimeout
                                        ).name(translatable(
                                        "openmcskins.option.loaderTimeout"))
-                                       .build());
+                                       .build())
+                       .option(Option.<UuidMode>createBuilder()
+                                       .controller(option -> EnumControllerBuilder.create(
+                                                       option).enumClass(UuidMode.class)
+                                                                     .valueFormatter(
+                                                                             this::formatMode))
+                                       .binding(
+                                               defaults.uuidMode,
+                                               config::getUuidMode,
+                                               config::setUuidMode
+                                       ).name(translatable(
+                                       "openmcskins.option.uuidMode")).build());
+    }
+
+    @Contract("_ -> new")
+    private @NotNull Text formatMode(@NotNull UuidMode mode) {
+        return translatable("openmcskins.option.uuidMode." +
+                                    mode.toString().toLowerCase());
     }
 }

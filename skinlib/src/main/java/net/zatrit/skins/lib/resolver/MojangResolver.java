@@ -29,22 +29,20 @@ public final class MojangResolver implements Resolver {
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val gson = getConfig().getGson();
-        val url =
-                "https://sessionserver.mojang.com/session/minecraft/profile/" +
-                        profile.getId().toString().replaceAll("-", "");
+        val url = "https://sessionserver.mojang.com/session/minecraft/profile/" +
+                          profile.getId().toString().replaceAll("-", "");
 
         MojangResponse response;
-        try (val stream = new URL(url).openStream()) {
-            response = gson.fromJson(
-                    new InputStreamReader(stream),
-                    MojangResponse.class
-            );
-        }
+        @Cleanup val stream = new URL(url).openStream();
+
+        response = gson.fromJson(
+                new InputStreamReader(stream),
+                MojangResponse.class
+        );
 
         val decoder = Base64.getDecoder();
-        val textureData = decoder.decode(response.getProperties()
-                                                       .get(0)
-                                                       .getValue());
+        val textureData = decoder.decode(response.getProperties().get(0)
+                                                 .getValue());
 
         val textures = gson.fromJson(
                 new InputStreamReader(new ByteArrayInputStream(textureData)),

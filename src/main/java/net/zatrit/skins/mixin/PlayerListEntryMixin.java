@@ -4,10 +4,11 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.SneakyThrows;
 import lombok.val;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.Refreshable;
 import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
@@ -32,7 +33,8 @@ import java.util.concurrent.TimeUnit;
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
     @Shadow private boolean texturesLoaded;
-    @Shadow @Final private Map<MinecraftProfileTexture.Type, Identifier> textures;
+    @Shadow @Final
+    private Map<MinecraftProfileTexture.Type, Identifier> textures;
     @Shadow @Nullable private String model;
 
     @Shadow
@@ -56,11 +58,23 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val skinLoader = SkinsClient.getSkinLoader();
         val resolvers = SkinsClient.getResolvers();
 
-        val timeout = (int) (SkinsClient.getConfigHolder().getConfig()
-                                           .getLoaderTimeout() * 1000);
+        val config = SkinsClient.getConfigHolder().getConfig();
+        val timeout = (int) (config.getLoaderTimeout() * 1000);
+        val refreshUuid = switch (config.getUuidMode()) {
+            case NEVER -> false;
+            case ALWAYS -> true;
+            case OFFLINE -> {
+                val client = MinecraftClient.getInstance();
+                val networkHandler = client.getNetworkHandler();
+
+                yield networkHandler != null &&
+                              !networkHandler.getConnection()
+                                       .isEncrypted();
+            }
+        };
 
         CompletableFuture<Profile> profileTask;
-        if (resolvers.stream().anyMatch(Resolver::requiresUuid)) {
+        if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileTask = profile.skins$refreshUuidAsync()
                                   .exceptionallyAsync(SkinsClient.getErrorHandler()
                                                               .andReturn(profile));
@@ -103,7 +117,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         );
 
         val id = TextureLoader.create(textureId, metadata)
-                               .getTexture(texture.getContent());
+                         .getTexture(texture.getContent());
 
         this.textures.put(type, id);
 

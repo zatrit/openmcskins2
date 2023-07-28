@@ -3,7 +3,7 @@ package net.zatrit.skins.lib;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
+import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.SkinLayer;
@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.Arrays.stream;
@@ -35,32 +34,28 @@ public class SkinLoader {
         val loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
 
         // https://stackoverflow.com/a/44521687/12245612
-        val layers = this.layers.stream().map(SkinLayer::function).reduce(
-                Function.identity(),
-                Function::andThen
-        );
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        val layers = this.layers.stream().map(Layer::function)
+                             .reduce(Function::andThen).get();
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
         val futures = Enumerated.enumerate(resolvers).stream()
-                                    .map(pair -> CompletableFuture.supplyAsync(
-                                                    /* This function may throw an exception,
-                                                     * but it's a CompletableFuture, so
-                                                     * an exception won't crash the game. */
-                                                    sneaky(() -> {
-                                                        val resolver = pair.getValue();
-                                                        val loader = resolver.resolve(
-                                                                profile);
+                              .map(pair -> CompletableFuture.supplyAsync(
+                                      /* This function may throw an exception,
+                                       * but it's a CompletableFuture, so
+                                       * an exception won't crash the game. */
+                                      sneaky(() -> {
+                                          val resolver = pair.getValue();
+                                          val loader = resolver.resolve(profile);
 
-                                                        return pair.withValue(loader);
-                                                    }), this.config.getExecutor())
-                                                         .thenAccept(
-                                                                 /* I don't know, how to pass
-                                                                  * loaders to futures so it just,
-                                                                  * stores them into list. */
-                                                                 loaders::add)
-                                                         .exceptionally(e -> null))
-                                    .toArray(CompletableFuture[]::new);
+                                          return pair.withValue(loader);
+                                      }), this.config.getExecutor()).thenAccept(
+                                      /* I don't know, how to pass
+                                       * loaders to futures so it just,
+                                       * stores them into list. */
+                                      loaders::add).exceptionally(e -> null))
+                              .toArray(CompletableFuture[]::new);
 
         val allFutures = CompletableFuture.allOf(futures);
 

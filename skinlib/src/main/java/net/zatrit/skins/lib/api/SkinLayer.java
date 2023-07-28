@@ -7,19 +7,12 @@ import net.zatrit.skins.lib.layer.ImageLayer;
 import net.zatrit.skins.lib.layer.ScaleCapeLayer;
 
 import java.util.Collection;
-import java.util.function.Function;
 
-public interface SkinLayer {
+public interface SkinLayer extends Layer<TextureResult> {
     ScaleCapeLayer CAPE_LAYER = new ScaleCapeLayer();
 
     Collection<SkinLayer> DEFAULT_LAYERS = Lists.newArrayList(new ImageLayer(
             Lists.newArrayList(CAPE_LAYER),
             Lists.newArrayList(TextureType.CAPE)
     ));
-
-    TextureResult apply(TextureResult result);
-
-    default Function<TextureResult, TextureResult> function() {
-        return this::apply;
-    }
 }

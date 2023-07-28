@@ -1,7 +1,7 @@
 package net.zatrit.skins.cache;
 
 import lombok.Getter;
-import net.zatrit.skins.AssetPathProvider;
+import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
 
@@ -13,7 +13,7 @@ import net.zatrit.skins.lib.api.cache.CacheProvider;
 public class AssetCacheProvider implements CacheProvider {
     private final Cache skinCache;
 
-    public AssetCacheProvider(AssetPathProvider path) {
+    public AssetCacheProvider(HasAssetPath path) {
         this.skinCache = new AssetCache(path, "skins");
     }
 }

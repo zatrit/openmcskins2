@@ -3,7 +3,7 @@ package net.zatrit.skins.cache;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
-import net.zatrit.skins.AssetPathProvider;
+import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.cache.Cache;
 
@@ -13,7 +13,7 @@ import java.nio.file.StandardOpenOption;
 
 @AllArgsConstructor
 public class AssetCache implements Cache {
-    private final AssetPathProvider pathProvider;
+    private final HasAssetPath pathProvider;
     private final String type;
 
     /**

@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": "Настроенные хосты:",
+  "openmcskins.command.moved": "Хост был перемещён с %d на %d.",
+  "openmcskins.command.no_world": "Не удалось получить список игроков.",
+  "openmcskins.command.no_preset": "Преднастройка не найдена.",
+  "openmcskins.command.invalid_file_format": "Неверный формат входного файла.",
+  "openmcskins.options.title": "Настройки OpenMCSkins",
+  "openmcskins.category.general": "Основные",
+  "openmcskins.option.cacheTextures": "Кэшировать текстуры",
+  "openmcskins.option.verboseLogs": "Многословные логи",
+  "openmcskins.option.loaderTimeout": "Таймаут загрузки",
+  "openmcskins.option.refreshOnConfigSave": "Перезагружать при сохранении конфига",
+  "openmcskins.option.uuidMode": "Перезагружать UUID",
+  "openmcskins.option.uuidMode.never": "Никогда",
+  "openmcskins.option.uuidMode.always": "Всегда",
+  "openmcskins.option.uuidMode.offline": "Когда оффлайн"
+}

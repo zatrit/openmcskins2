@@ -48,9 +48,8 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
             @NotNull Textures.TextureData textureData,
             @Nullable CacheProvider cacheProvider) throws IOException {
         final Cache.LoadFunction function = () -> {
-            try (var stream = new URL(textureData.getUrl()).openStream()) {
-                return ByteStreams.toByteArray(stream);
-            }
+            @Cleanup val stream = new URL(textureData.getUrl()).openStream();
+            return ByteStreams.toByteArray(stream);
         };
 
         final byte[] buffer = cacheProvider != null ?

@@ -1,22 +1,22 @@
 package net.zatrit.skins.lib;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Getter
-@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public final class Config {
-    private final Gson gson = new GsonBuilder().create();
-    private @Setter @Nullable CacheProvider cacheProvider;
+    private final Gson gson = new Gson();
+    private @Setter CacheProvider cacheProvider;
     @SuppressWarnings("CanBeFinal")
-    private @Builder.Default Executor executor = Executors.newFixedThreadPool(
+    private Executor executor = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors());
 }

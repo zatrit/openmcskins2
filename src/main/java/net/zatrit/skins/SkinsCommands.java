@@ -4,6 +4,8 @@ import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.val;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -34,7 +36,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess registryAccess) {
         val presetsPath = FabricLoader.getInstance().getConfigDir()
-                                        .resolve("openmcskins");
+                                  .resolve("openmcskins");
 
         val presetsType = new FileArgumentType(new FileProvider[]{
                 new IndexedResourceProvider(
@@ -45,7 +47,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }, "toml");
         presetsType.refresh();
 
-        var command = literal("openmcskins")
+        val command = literal("openmcskins")
                               // omcs refresh
                               .then(literal("refresh").executes(this::refresh))
                               // omcs add (preset (e.g. mojang)) [id]
@@ -89,8 +91,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         return 0;
     }
 
+    @SneakyThrows
     public int addHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        val stream = context.getArgument("preset", InputStream.class);
+        @Cleanup val stream = context.getArgument("preset", InputStream.class);
         int id = 0;
 
         try {
@@ -123,8 +126,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
     private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
         val entries = this.configInstance.getConfig().getHosts().stream()
-                                    .map(TextUtil.ToText::toText)
-                                    .toArray(Text[]::new);
+                              .map(TextUtil.ToText::toText)
+                              .toArray(Text[]::new);
         var result = Text.translatable("openmcskins.command.list");
 
         for (int i = 0; i < entries.length; i++) {

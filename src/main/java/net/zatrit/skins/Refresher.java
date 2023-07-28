@@ -1,6 +1,8 @@
 package net.zatrit.skins;
 
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.zatrit.skins.accessor.HasPlayerListEntry;
+import net.zatrit.skins.accessor.Refreshable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
