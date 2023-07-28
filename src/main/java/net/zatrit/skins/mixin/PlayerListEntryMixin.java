@@ -68,8 +68,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 val networkHandler = client.getNetworkHandler();
 
                 yield networkHandler != null &&
-                              !networkHandler.getConnection()
-                                       .isEncrypted();
+                              !networkHandler.getConnection().isEncrypted();
             }
         };
 
@@ -116,14 +115,14 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 result.getType()
         );
 
-        val id = TextureLoader.create(textureId, metadata)
-                         .getTexture(texture.getContent());
+        TextureLoader.create(textureId, metadata)
+                .getTexture(texture.getContent(), id -> {
+                    this.textures.put(type, id);
 
-        this.textures.put(type, id);
-
-        if (metadata != null) {
-            this.applyMetadata(metadata);
-        }
+                    if (metadata != null) {
+                        this.applyMetadata(metadata);
+                    }
+                });
     }
 
     @Unique

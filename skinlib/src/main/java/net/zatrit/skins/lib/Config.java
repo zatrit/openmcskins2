@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 public final class Config {
     private final Gson gson = new Gson();
     private @Setter CacheProvider cacheProvider;
-    @SuppressWarnings("CanBeFinal")
-    private Executor executor = Executors.newFixedThreadPool(
-            Runtime.getRuntime().availableProcessors());
+    private Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime()
+                                                                     .availableProcessors());
 }

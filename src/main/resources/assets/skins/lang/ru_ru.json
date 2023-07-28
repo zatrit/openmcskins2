@@ -7,7 +7,7 @@
   "openmcskins.options.title": "Настройки OpenMCSkins",
   "openmcskins.category.general": "Основные",
   "openmcskins.option.cacheTextures": "Кэшировать текстуры",
-  "openmcskins.option.verboseLogs": "Многословные логи",
+  "openmcskins.option.verboseLogs": "Подробные логи",
   "openmcskins.option.loaderTimeout": "Таймаут загрузки",
   "openmcskins.option.refreshOnConfigSave": "Перезагружать при сохранении конфига",
   "openmcskins.option.uuidMode": "Перезагружать UUID",
