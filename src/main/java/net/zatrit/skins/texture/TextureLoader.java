@@ -1,17 +1,15 @@
 package net.zatrit.skins.texture;
 
 import net.minecraft.util.Identifier;
+import net.zatrit.skins.lib.data.Texture;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public interface TextureLoader {
-    static @NotNull TextureLoader create(
-            TextureIdentifier id, @Nullable Map<String, String> metadata) {
-        return TextureLoaderImpl.create(id, metadata);
+    static @NotNull TextureLoader create(Texture texture) {
+        return TextureLoaderImpl.create(texture);
     }
 
     /**
@@ -19,6 +17,7 @@ public interface TextureLoader {
      *                 the texture is registered.
      * @implNote the callback will be executed on the rendering thread.
      */
-    void getTexture(byte @NotNull [] content, Consumer<Identifier> callback)
-            throws IOException;
+    void getTexture(
+            @NotNull TextureIdentifier id,
+            @NotNull Consumer<Identifier> callback) throws IOException;
 }

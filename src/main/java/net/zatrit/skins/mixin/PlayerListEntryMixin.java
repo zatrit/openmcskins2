@@ -115,14 +115,13 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 result.getType()
         );
 
-        TextureLoader.create(textureId, metadata)
-                .getTexture(texture.getContent(), id -> {
-                    this.textures.put(type, id);
+        TextureLoader.create(texture).getTexture(textureId, id -> {
+            this.textures.put(type, id);
 
-                    if (metadata != null) {
-                        this.applyMetadata(metadata);
-                    }
-                });
+            if (metadata != null) {
+                this.applyMetadata(metadata);
+            }
+        });
     }
 
     @Unique

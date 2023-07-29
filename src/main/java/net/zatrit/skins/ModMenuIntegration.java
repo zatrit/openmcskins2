@@ -8,7 +8,6 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
-import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.val;
 import net.minecraft.text.Text;
 import net.zatrit.skins.config.SkinsConfig;
@@ -22,8 +21,7 @@ public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
-            @SuppressWarnings("unchecked")
-            val instance = (ConfigInstance<SkinsConfig>) SkinsClient.getConfigHolder();
+            val instance = SkinsClient.getConfigHolder();
 
             return YetAnotherConfigLib.create(instance, this::initConfig)
                            .generateScreen(parent);

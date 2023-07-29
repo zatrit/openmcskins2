@@ -3,7 +3,6 @@ package net.zatrit.skins.lib.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import lombok.var;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

@@ -2,12 +2,12 @@ package net.zatrit.skins.lib.resolver;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Textures;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
