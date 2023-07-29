@@ -1,4 +1,6 @@
-# W.I.P. OpenMCSkins remake
+# OpenMCSkins 2
+
+[![Crowdin](https://badges.crowdin.net/openmcskins/localized.svg)](https://crowdin.com/project/openmcskins)
 
 ## [Official Discord server](https://discord.gg/P4SX2uEspy)
 
