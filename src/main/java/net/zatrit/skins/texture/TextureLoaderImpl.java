@@ -7,24 +7,22 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
+import net.zatrit.skins.lib.data.Texture;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class TextureLoaderImpl implements TextureLoader {
-    private final Identifier id;
+    private final Texture texture;
     private boolean animated = false;
 
-    public static @NotNull TextureLoaderImpl create(
-            @NotNull TextureIdentifier id,
-            @Nullable Map<String, String> metadata) {
-        val config = new TextureLoaderImpl(id.asId());
+    public static @NotNull TextureLoaderImpl create(@NotNull Texture texture) {
+        val metadata = texture.getMetadata();
+        val config = new TextureLoaderImpl(texture);
 
         if (metadata == null) {
             return config;
@@ -40,13 +38,14 @@ public class TextureLoaderImpl implements TextureLoader {
 
     @Override
     public void getTexture(
-            byte @NotNull [] content, Consumer<Identifier> callback)
-            throws IOException {
+            @NotNull TextureIdentifier identifier,
+            @NotNull Consumer<Identifier> callback) throws IOException {
+        val id = identifier.asId();
         if (this.animated) {
             throw new NotImplementedException(
                     "Animated textures aren't supported yet.");
         } else {
-            val image = NativeImage.read(new ByteArrayInputStream(content));
+            val image = NativeImage.read(new ByteArrayInputStream(this.texture.getContent()));
             val texture = new NativeImageBackedTexture(image);
             val manager = MinecraftClient.getInstance().getTextureManager();
 
