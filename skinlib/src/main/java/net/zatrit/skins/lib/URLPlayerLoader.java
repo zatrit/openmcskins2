@@ -3,10 +3,10 @@ package net.zatrit.skins.lib;
 import com.google.common.io.ByteStreams;
 import lombok.*;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
 import net.zatrit.skins.lib.data.Texture;
 import net.zatrit.skins.lib.data.Textures;
+import net.zatrit.skins.lib.api.cache.Cache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

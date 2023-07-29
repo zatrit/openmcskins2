@@ -1,7 +1,8 @@
 package net.zatrit.skins.lib.api;
 
-import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.data.Texture;
+import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,7 @@ public interface Resolver {
 
     /**
      * @return true if resolver doesn't fetch remote skins.
-     * @see net.zatrit.skins.lib.api.cache.Cache
+     * @see Cache
      */
     default boolean cacheable() {
         return true;
