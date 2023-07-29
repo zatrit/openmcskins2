@@ -1,0 +1,20 @@
+{
+  "openmcskins.command.added": "§a+ %s",
+  "openmcskins.command.removed": "§c- %s",
+  "openmcskins.command.list": "Configured hosts:",
+  "openmcskins.command.list_entry": "%d§7. %s",
+  "openmcskins.command.moved": "A host was moved from %d to %d successfully.",
+  "openmcskins.command.no_world": "Unable to list players.",
+  "openmcskins.command.no_preset": "No preset found.",
+  "openmcskins.command.invalid_file_format": "Invalid input file format.",
+  "openmcskins.options.title": "OpenMCSkins options",
+  "openmcskins.category.general": "General",
+  "openmcskins.option.cacheTextures": "Cache textures",
+  "openmcskins.option.verboseLogs": "Verbose logs",
+  "openmcskins.option.loaderTimeout": "Loader timeout",
+  "openmcskins.option.refreshOnConfigSave": "Refresh on config save",
+  "openmcskins.option.uuidMode": "Refresh UUID",
+  "openmcskins.option.uuidMode.never": "Never",
+  "openmcskins.option.uuidMode.always": "Always",
+  "openmcskins.option.uuidMode.offline": "When offline"
+}
