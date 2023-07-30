@@ -1,7 +1,9 @@
 {
+  "openmcskins.command.added": "",
+  "openmcskins.command.removed": "",
   "openmcskins.command.list": "Настроенные хосты:",
+  "openmcskins.command.list_entry": "",
   "openmcskins.command.moved": "Хост был успешно перемещен из %d в %d.",
-  "openmcskins.command.no_world": "Не удалось получить список игроков.",
   "openmcskins.command.no_preset": "Предустановка не найдена.",
   "openmcskins.command.invalid_file_format": "Неверный формат файла.",
   "openmcskins.options.title": "Настройки OpenMCSkins",
@@ -13,5 +15,10 @@
   "openmcskins.option.uuidMode": "Обновлять UUID",
   "openmcskins.option.uuidMode.never": "Никогда",
   "openmcskins.option.uuidMode.always": "Всегда",
-  "openmcskins.option.uuidMode.offline": "Когда оффлайн"
+  "openmcskins.option.uuidMode.offline": "Когда оффлайн",
+  "openmcskins": {
+    "command": {
+      "unable_to_refresh": "Не удалось обновить скины."
+    }
+  }
 }
