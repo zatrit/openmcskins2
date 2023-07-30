@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
 @AllArgsConstructor
 public class FileArgumentType implements ArgumentType<InputStream> {
     private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("openmcskins.command.no_preset"));
+            Text.translatable("openmcskins.command.noPreset"));
     private final FileProvider[] providers;
     private final @Getter String extension;
     private final Collection<String> files = new HashSet<>();

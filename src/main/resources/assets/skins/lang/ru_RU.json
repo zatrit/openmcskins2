@@ -1,7 +1,6 @@
 {
   "openmcskins.command.list": "Настроенные хосты:",
   "openmcskins.command.moved": "Хост был успешно перемещен из %d в %d.",
-  "openmcskins.command.no_world": "Не удалось получить список игроков.",
   "openmcskins.command.no_preset": "Предустановка не найдена.",
   "openmcskins.command.invalid_file_format": "Неверный формат файла.",
   "openmcskins.options.title": "Настройки OpenMCSkins",

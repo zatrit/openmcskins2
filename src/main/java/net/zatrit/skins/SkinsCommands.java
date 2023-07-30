@@ -81,7 +81,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         if (!SkinsClient.refresh()) {
             context.getSource()
                     .sendError(Text.translatable(
-                            "openmcskins.command.unable_to_refresh"));
+                            "openmcskins.command.unableToRefresh"));
             return -1;
         }
 
@@ -104,7 +104,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
         if (entry.getType() == null) {
             context.getSource().sendError(Text.translatable(
-                    "openmcskins.command.invalid_file_format"));
+                    "openmcskins.command.invalidFileFormat"));
             return -1;
         }
 
@@ -128,7 +128,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
         for (int i = 0; i < entries.length; i++) {
             result.append(Text.literal("\n").append(Text.translatable(
-                    "openmcskins.command.list_entry",
+                    "openmcskins.command.listEntry",
                     TextUtil.formatNumber(i),
                     entries[i]
             )));
