@@ -3,12 +3,12 @@ package net.zatrit.skins.lib;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import net.zatrit.skins.lib.util.Enumerated;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.util.Enumerated;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

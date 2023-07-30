@@ -39,19 +39,16 @@ public class NamedHTTPResolver implements Resolver {
         val url = new URL(this.getBaseUrl() + profile.getName());
         val config = getConfig();
 
+        @Cleanup val reader = new InputStreamReader(url.openStream());
+
         // Type for EnumMap<TextureType, Textures.TextureData>
-        val type = TypeToken.getParameterized(
-                EnumMap.class,
+        val type = TypeToken.getParameterized(EnumMap.class,
                 TextureType.class,
                 Textures.TextureData.class
         ).getType();
 
         val textures = new Textures(this.config.getGson()
-                                                  .fromJson(
-                                                          new InputStreamReader(
-                                                                  url.openStream()),
-                                                          type
-                                                  ));
+                                            .fromJson(reader, type));
 
         return new URLPlayerLoader(config.getCacheProvider(), textures, this);
     }
