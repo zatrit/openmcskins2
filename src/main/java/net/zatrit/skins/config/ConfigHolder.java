@@ -22,6 +22,4 @@ public interface ConfigHolder<T> {
     void load();
 
     T getConfig();
-
-    T getDefaults();
 }

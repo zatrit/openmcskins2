@@ -11,7 +11,7 @@ import java.util.List;
 public class SkinsConfig {
     public boolean cacheTextures = true;
     public boolean verboseLogs = false;
-    public boolean refreshOnConfigSave = false;
+    public boolean refreshOnConfigSave = true;
     public float loaderTimeout = 5f;
     public UuidMode uuidMode = UuidMode.OFFLINE;
     public List<HostEntry> hosts = Lists.newArrayList(new HostEntry(

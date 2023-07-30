@@ -10,7 +10,6 @@ import lombok.val;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.zatrit.skins.config.ConfigHolder;
@@ -29,7 +28,6 @@ import static net.zatrit.skins.util.command.CommandUtil.literal;
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
     private final ConfigHolder<SkinsConfig> configInstance;
-    private final MinecraftClient client;
 
     @Override
     public void register(
@@ -39,7 +37,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                                   .resolve("openmcskins");
 
         val presetsType = new FileArgumentType(new FileProvider[]{
-                new IndexedResourceProvider("presets",
+                new IndexedResourceProvider(
+                        "presets",
                         getClass().getClassLoader()
                 ),
                 new DirectoryFileProvider(presetsPath)
@@ -50,21 +49,26 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                               // omcs refresh
                               .then(literal("refresh").executes(this::refresh))
                               // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument("preset",
+                              .then(literal("add").then(argument(
+                                      "preset",
                                       presetsType
-                              ).executes(this::addHost).then(argument("id",
+                              ).executes(this::addHost).then(argument(
+                                      "id",
                                       integer(0)
                               ).executes(this::addHost))))
                               // omcs list
                               .then(literal("list").executes(this::listHosts))
                               // omcs remove (id)
-                              .then(literal("remove").then(argument("id",
+                              .then(literal("remove").then(argument(
+                                      "id",
                                       integer(0)
                               ).executes(this::removeHost)))
                               // omcs move (from) (to)
-                              .then(literal("move").then(argument("from",
+                              .then(literal("move").then(argument(
+                                      "from",
                                       integer(0)
-                              ).then(argument("to",
+                              ).then(argument(
+                                      "to",
                                       integer(0)
                               ).executes(this::moveHost))));
 
@@ -74,13 +78,12 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
-        if (client.world == null) {
+        if (!SkinsClient.refresh()) {
             context.getSource()
-                    .sendError(Text.translatable("openmcskins.command.no_world"));
+                    .sendError(Text.translatable(
+                            "openmcskins.command.unable_to_refresh"));
             return -1;
         }
-
-        SkinsClient.refresh(client.world.getPlayers());
 
         return 0;
     }
@@ -139,7 +142,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val id = context.getArgument("id", Integer.class);
 
-        val entry = patchConfig(this.configInstance,
+        val entry = patchConfig(
+                this.configInstance,
                 config -> config.getHosts().remove(id.intValue())
         );
 
