@@ -2,11 +2,7 @@
   "openmcskins.command.added": "§a+ %s",
   "openmcskins.command.removed": "§c- %s",
   "openmcskins.command.list": "Configured hosts:",
-  "openmcskins.command.list_entry": "%d§7. %s",
   "openmcskins.command.moved": "A host was moved from %d to %d successfully.",
-  "openmcskins.command.no_preset": "No preset found.",
-  "openmcskins.command.unable_to_refresh": "Unable to list players.",
-  "openmcskins.command.invalid_file_format": "Invalid input file format.",
   "openmcskins.options.title": "OpenMCSkins options",
   "openmcskins.category.general": "General",
   "openmcskins.option.cacheTextures": "Cache textures",
@@ -16,5 +12,9 @@
   "openmcskins.option.uuidMode": "Refresh UUID",
   "openmcskins.option.uuidMode.never": "Never",
   "openmcskins.option.uuidMode.always": "Always",
-  "openmcskins.option.uuidMode.offline": "When offline"
+  "openmcskins.option.uuidMode.offline": "When offline",
+  "openmcskins.command.noPreset": "No preset found.",
+  "openmcskins.command.listEntry": "%d§7. %s",
+  "openmcskins.command.invalidFileFormat": "Invalid input file format.",
+  "openmcskins.command.unableToRefresh": "Unable to refresh skins."
 }
