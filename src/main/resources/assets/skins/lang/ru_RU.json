@@ -1,8 +1,6 @@
 {
   "openmcskins.command.list": "Настроенные хосты:",
   "openmcskins.command.moved": "Хост был успешно перемещен из %d в %d.",
-  "openmcskins.command.no_preset": "Предустановка не найдена.",
-  "openmcskins.command.invalid_file_format": "Неверный формат файла.",
   "openmcskins.options.title": "Настройки OpenMCSkins",
   "openmcskins.category.general": "Основные",
   "openmcskins.option.cacheTextures": "Кешировать текстуры",
@@ -12,5 +10,8 @@
   "openmcskins.option.uuidMode": "Обновлять UUID",
   "openmcskins.option.uuidMode.never": "Никогда",
   "openmcskins.option.uuidMode.always": "Всегда",
-  "openmcskins.option.uuidMode.offline": "Когда оффлайн"
+  "openmcskins.option.uuidMode.offline": "Когда оффлайн",
+  "openmcskins.command.noPreset": "Предустановка не найдена.",
+  "openmcskins.command.invalidFileFormat": "Неверный формат файла.",
+  "openmcskins.command.unableToRefresh": "Не удалось обновить скины."
 }
