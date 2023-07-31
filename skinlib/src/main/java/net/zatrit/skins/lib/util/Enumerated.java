@@ -10,7 +10,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
 public class Enumerated<T> {
     private final int index;
     private final T value;

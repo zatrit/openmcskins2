@@ -3,10 +3,10 @@ package net.zatrit.skins.lib;
 import com.google.common.io.ByteStreams;
 import lombok.*;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
 import net.zatrit.skins.lib.data.Texture;
 import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.api.cache.Cache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,17 +47,15 @@ public class URLPlayerLoader implements Resolver.PlayerLoader {
     private @NotNull Texture fetchTextureData(
             @NotNull Textures.TextureData textureData,
             @Nullable CacheProvider cacheProvider) throws IOException {
-        final Cache.LoadFunction function = () -> {
+        val function = (Cache.LoadFunction) () -> {
             @Cleanup val stream = new URL(textureData.getUrl()).openStream();
             return ByteStreams.toByteArray(stream);
         };
 
-        final byte[] buffer = cacheProvider != null ?
-                                      cacheProvider.getSkinCache().getOrLoad(
-                                              textureData.getUrl(),
-                                              function
-                                      ) :
-                                      function.load();
+        val buffer = cacheProvider != null ?
+                             cacheProvider.getSkinCache()
+                                     .getOrLoad(textureData.getUrl(), function) :
+                             function.load();
 
         return new Texture(buffer, textureData.getMetadata());
     }

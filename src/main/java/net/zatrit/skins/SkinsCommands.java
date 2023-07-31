@@ -98,7 +98,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         } catch (IllegalArgumentException ignored) {
         }
 
-        final int finalId = id;
+        val finalId = id;
         val toml = new Toml().read(stream);
         val entry = toml.to(HostEntry.class);
 
