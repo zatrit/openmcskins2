@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": "Podešeni hostovi:",
+  "openmcskins.command.moved": "Uspješna promjena sa hosta %d na %d.",
+  "openmcskins.options.title": "OpenMCSkins postavke",
+  "openmcskins.category.general": "Općenito",
+  "openmcskins.option.cacheTextures": "Zapamti teksture",
+  "openmcskins.option.verboseLogs": "Opširni logovi",
+  "openmcskins.option.loaderTimeout": "Čekanje učitavača",
+  "openmcskins.option.refreshOnConfigSave": "Osvježi na spremanju postavki",
+  "openmcskins.option.uuidMode": "Osvježi UUID",
+  "openmcskins.option.uuidMode.never": "Nikad",
+  "openmcskins.option.uuidMode.always": "Uvijek",
+  "openmcskins.option.uuidMode.offline": "Na offline serveru",
+  "openmcskins.command.noPreset": "Nema pronađenih postavki.",
+  "openmcskins.command.invalidFileFormat": "Neispravan unosni format.",
+  "openmcskins.command.unableToRefresh": "Nemoguće osvježavanje skinova."
+}
