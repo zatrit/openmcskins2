@@ -1,6 +1,7 @@
 package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
@@ -16,6 +17,8 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile {
@@ -33,22 +36,22 @@ public abstract class GameProfileMixin implements Profile {
                                                              request,
                                                              HttpResponse.BodyHandlers.ofInputStream()
                                                      ).join())
-                       .thenApply(HttpResponse::body).thenApply(stream -> {
-                    val map = SkinsClient.getLoaderConfig().getGson()
-                                            .fromJson(
-                                                    new InputStreamReader(
-                                                            stream), Map.class);
+                       .thenApply(HttpResponse::body)
+                       .thenApply(sneaky(stream -> {
+                           @Cleanup val reader = new InputStreamReader(stream);
+                           val map = SkinsClient.getLoaderConfig().getGson()
+                                             .fromJson(reader, Map.class);
 
-                    val id = String.valueOf(map.get("id")).replaceAll(
-                            "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                            "$1-$2-$3-$4-$5"
-                    );
+                           val id = String.valueOf(map.get("id")).replaceAll(
+                                   "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                                   "$1-$2-$3-$4-$5"
+                           );
 
-                    return (Profile) new GameProfile(
-                            UUID.fromString(id),
-                            this.getName()
-                    );
-                });
+                           return (Profile) new GameProfile(
+                                   UUID.fromString(id),
+                                   this.getName()
+                           );
+                       }));
     }
 
     @Unique

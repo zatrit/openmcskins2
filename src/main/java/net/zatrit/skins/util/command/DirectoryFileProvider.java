@@ -6,9 +6,9 @@ import net.zatrit.skins.SkinsClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,7 +34,7 @@ public class DirectoryFileProvider implements FileProvider {
         val path = this.path.resolve(name);
 
         try {
-            return new FileInputStream(path.toFile());
+            return Files.newInputStream(path);
         } catch (IOException e) {
             SkinsClient.getErrorHandler().accept(e);
             return null;

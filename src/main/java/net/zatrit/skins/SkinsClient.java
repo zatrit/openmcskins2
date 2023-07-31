@@ -84,9 +84,7 @@ public final class SkinsClient implements ClientModInitializer {
         val configPath = FabricLoader.getInstance().getConfigDir()
                                  .resolve("openmcskins.toml");
 
-        configHolder = new TomlConfigHolder<>(configPath.toFile(),
-                new SkinsConfig()
-        );
+        configHolder = new TomlConfigHolder<>(configPath, new SkinsConfig());
         configHolder.addSaveListener(this::applyConfig);
         configHolder.load();
 

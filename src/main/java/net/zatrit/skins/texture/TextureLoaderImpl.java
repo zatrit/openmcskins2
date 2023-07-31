@@ -1,6 +1,7 @@
 package net.zatrit.skins.texture;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
@@ -28,8 +29,7 @@ public class TextureLoaderImpl implements TextureLoader {
             return config;
         }
 
-        config.animated = Boolean.parseBoolean(metadata.getOrDefault(
-                "animated",
+        config.animated = Boolean.parseBoolean(metadata.getOrDefault("animated",
                 "false"
         ));
 
@@ -45,7 +45,9 @@ public class TextureLoaderImpl implements TextureLoader {
             throw new NotImplementedException(
                     "Animated textures aren't supported yet.");
         } else {
-            val image = NativeImage.read(new ByteArrayInputStream(this.texture.getContent()));
+            @Cleanup
+            val stream = new ByteArrayInputStream(this.texture.getContent());
+            val image = NativeImage.read(stream);
             val texture = new NativeImageBackedTexture(image);
             val manager = MinecraftClient.getInstance().getTextureManager();
 

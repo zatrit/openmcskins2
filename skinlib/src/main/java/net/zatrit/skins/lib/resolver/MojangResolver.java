@@ -35,22 +35,20 @@ public final class MojangResolver implements Resolver {
         MojangResponse response;
         @Cleanup val stream = new URL(url).openStream();
 
-        response = gson.fromJson(
-                new InputStreamReader(stream),
+        response = gson.fromJson(new InputStreamReader(stream),
                 MojangResponse.class
         );
 
         val decoder = Base64.getDecoder();
         val textureData = decoder.decode(response.getProperties().get(0)
                                                  .getValue());
+        @Cleanup
+        val bytesReader = new InputStreamReader(new ByteArrayInputStream(
+                textureData));
 
-        val textures = gson.fromJson(
-                new InputStreamReader(new ByteArrayInputStream(textureData)),
-                Textures.class
-        );
+        val textures = gson.fromJson(bytesReader, Textures.class);
 
-        return new URLPlayerLoader(
-                getConfig().getCacheProvider(),
+        return new URLPlayerLoader(getConfig().getCacheProvider(),
                 textures,
                 this
         );
