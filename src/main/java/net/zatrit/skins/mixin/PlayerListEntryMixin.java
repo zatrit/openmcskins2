@@ -9,6 +9,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.accessor.Refreshable;
+import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.TextureResult;
@@ -52,7 +53,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.texturesLoaded = true;
         this.textures.clear();
-        this.applyMetadata(Collections.emptyMap());
+        this.applyMetadata(TextureType.SKIN, Collections.emptyMap());
 
         val profile = (Profile) getProfile();
         val skinLoader = SkinsClient.getSkinLoader();
@@ -81,8 +82,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(
-                        resolvers,
+        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
                         profile1
                 ).join()).orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .whenComplete((result, error) -> {
@@ -110,8 +110,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(
-                getProfile().getName(),
+        val textureId = new TextureIdentifier(getProfile().getName(),
                 result.getType()
         );
 
@@ -119,14 +118,17 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             this.textures.put(type, id);
 
             if (metadata != null) {
-                this.applyMetadata(metadata);
+                this.applyMetadata(result.getType(), metadata);
             }
         });
     }
 
     @Unique
-    public void applyMetadata(@NotNull Map<String, String> metadata) {
-        this.model = metadata.getOrDefault("model", this.model);
+    public void applyMetadata(
+            TextureType type, @NotNull Map<String, String> metadata) {
+        if (type == TextureType.SKIN) {
+            this.model = metadata.get("model");
+        }
     }
 
     @Override
