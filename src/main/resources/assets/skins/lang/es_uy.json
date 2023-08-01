@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": "Hosts configurados:",
+  "openmcskins.command.moved": "Un host ha sido movido de %d a %d con éxito.",
+  "openmcskins.options.title": "Opciones de OpenMCSkins",
+  "openmcskins.category.general": "General",
+  "openmcskins.option.cacheTextures": "Caché de texturas",
+  "openmcskins.option.verboseLogs": "Registros Verbose",
+  "openmcskins.option.loaderTimeout": "Tiempo de carga agotado",
+  "openmcskins.option.refreshOnConfigSave": "Actualizar al guardar configuración",
+  "openmcskins.option.uuidMode": "Actualizar UUID",
+  "openmcskins.option.uuidMode.never": "Nunca",
+  "openmcskins.option.uuidMode.always": "Siempre",
+  "openmcskins.option.uuidMode.offline": "Cuando este sin conexion",
+  "openmcskins.command.noPreset": "No hay presets disponibles.",
+  "openmcskins.command.invalidFileFormat": "Formato de archivo de imagen invalido.",
+  "openmcskins.command.unableToRefresh": "No se pueden actualizar las skins."
+}
