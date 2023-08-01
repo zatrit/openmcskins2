@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import static java.util.Arrays.stream;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
@@ -29,14 +28,14 @@ public class SkinLoader {
     /**
      * Asynchronously load player skins from specific resolvers.
      */
-    public CompletableFuture<TextureResult[]> fetchAsync(
+    public CompletableFuture<TextureResult[]> resolveAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
         val loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
 
         // https://stackoverflow.com/a/44521687/12245612
         @SuppressWarnings("OptionalGetWithoutIsPresent")
-        val layers = this.layers.stream().map(Layer::function)
-                             .reduce(Function::andThen).get();
+        val layers = this.layers.stream().map(l -> (Layer<TextureResult>) l)
+                             .reduce(Layer::andThen).get();
 
         /* There are more comments than the rest of the code,
          * because this is a very complex implementation. */
@@ -72,8 +71,7 @@ public class SkinLoader {
                                             val loader = pair.getValue();
                                             val texture = loader.download(type);
 
-                                            return layers.apply(new TextureResult(
-                                                    texture,
+                                            return layers.apply(new TextureResult(texture,
                                                     type
                                             ));
                                         })))

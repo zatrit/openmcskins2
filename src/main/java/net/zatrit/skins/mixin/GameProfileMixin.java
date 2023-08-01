@@ -29,7 +29,8 @@ public abstract class GameProfileMixin implements Profile {
     public abstract @Shadow String getName();
 
     @Override
-    public CompletableFuture<Profile> skins$refreshUuidAsync() {
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    public CompletableFuture<Profile> refreshUuidAsync() {
         return CompletableFuture.supplyAsync(this::apiRequest)
                        .thenApply(request -> SkinsClient.getHttpClient()
                                                      .sendAsync(

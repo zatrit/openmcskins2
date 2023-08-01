@@ -6,10 +6,7 @@ import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.resolver.LocalResolver;
-import net.zatrit.skins.lib.resolver.MojangResolver;
-import net.zatrit.skins.lib.resolver.NamedHTTPResolver;
-import net.zatrit.skins.lib.resolver.OptifineResolver;
+import net.zatrit.skins.lib.resolver.*;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,13 +22,15 @@ public final class Resolvers {
         try {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(config);
+                case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
                 case NAMED_HTTP, OPTIFINE -> {
                     val baseUrl = (String) props.get("base_url");
                     Validate.notNull(baseUrl);
 
                     yield switch (entry.getType()) {
                         case OPTIFINE -> new OptifineResolver(config, baseUrl);
-                        case NAMED_HTTP -> new NamedHTTPResolver(config, baseUrl);
+                        case NAMED_HTTP ->
+                                new NamedHTTPResolver(config, baseUrl);
                         default -> null;
                     };
                 }

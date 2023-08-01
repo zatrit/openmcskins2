@@ -1,7 +1,5 @@
 package net.zatrit.skins.lib.api;
 
-import net.zatrit.skins.lib.api.cache.Cache;
-import net.zatrit.skins.lib.data.Texture;
 import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,14 +15,6 @@ public interface Resolver {
      * require UUID, skip UUID refreshing.
      */
     default boolean requiresUuid() {
-        return true;
-    }
-
-    /**
-     * @return true if resolver doesn't fetch remote skins.
-     * @see Cache
-     */
-    default boolean cacheable() {
         return true;
     }
 
@@ -46,6 +36,6 @@ public interface Resolver {
          * @return texture of specified type if
          * present (check via {@link #hasTexture})).
          */
-        @Nullable Texture download(TextureType type) throws IOException;
+        @Nullable RawTexture download(TextureType type) throws IOException;
     }
 }

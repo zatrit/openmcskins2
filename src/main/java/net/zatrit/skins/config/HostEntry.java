@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.zatrit.skins.util.command.TextUtil.mapToText;
-
 @Getter
 @AllArgsConstructor
 @SuppressWarnings("ClassCanBeRecord")
@@ -31,13 +29,14 @@ public class HostEntry implements TextUtil.ToText {
         text.append(Text.literal("HostEntry")
                             .styled(style -> style.withFormatting(Formatting.RESET)));
 
-        mapToText(text, map);
+        TextUtil.mapToText(text, map);
     }
 
     public enum HostType {
+        LOCAL,
+        MINECRAFT_CAPES,
         MOJANG,
         NAMED_HTTP,
-        OPTIFINE,
-        LOCAL
+        OPTIFINE
     }
 }

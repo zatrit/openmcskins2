@@ -75,14 +75,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
-            profileTask = profile.skins$refreshUuidAsync()
+            profileTask = profile.refreshUuidAsync()
                                   .exceptionallyAsync(SkinsClient.getErrorHandler()
                                                               .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.fetchAsync(resolvers,
+        profileTask.thenApplyAsync(profile1 -> skinLoader.resolveAsync(
+                        resolvers,
                         profile1
                 ).join()).orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .whenComplete((result, error) -> {
@@ -93,8 +94,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                     for (val textureResult : result) {
                         this.loadTextureResult(textureResult);
                     }
-                }).exceptionallyAsync(SkinsClient.getErrorHandler()
-                                              .andReturn(null));
+                }).exceptionally(SkinsClient.getErrorHandler().andReturn(null));
     }
 
     @Unique
@@ -110,7 +110,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(getProfile().getName(),
+        val textureId = new TextureIdentifier(
+                getProfile().getName(),
                 result.getType()
         );
 

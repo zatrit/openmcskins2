@@ -2,12 +2,14 @@ package net.zatrit.skins.lib.resolver;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.*;
+import net.zatrit.skins.lib.BasePlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
+import net.zatrit.skins.lib.api.RawTexture;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
+import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,15 +33,10 @@ public class LocalResolver implements Resolver {
     }
 
     @Override
-    public boolean cacheable() {
-        return false;
-    }
-
-    @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val name = profile.getName();
-        val textures = new EnumMap<TextureType, Textures.TextureData>(TextureType.class);
+        val textures = new EnumMap<TextureType, RawTexture>(TextureType.class);
 
         val metadataDir = this.directory.resolve("metadata");
         val texturesDir = this.directory.resolve("textures");
@@ -71,13 +68,9 @@ public class LocalResolver implements Resolver {
                                    .fromJson(reader, metadataType);
             }
 
-            textures.put(type, new Textures.TextureData(url, metadata));
+            textures.put(type, new URLTexture(url, metadata));
         }
 
-        return new URLPlayerLoader(
-                getConfig().getCacheProvider(),
-                new Textures(textures),
-                this
-        );
+        return new BasePlayerLoader<>(new Textures<>(textures));
     }
 }

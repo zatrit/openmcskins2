@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.data.Texture;
+import net.zatrit.skins.lib.api.RawTexture;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class TextureLoaderImpl implements TextureLoader {
-    private final Texture texture;
+    private final RawTexture texture;
     private boolean animated = false;
 
-    public static @NotNull TextureLoaderImpl create(@NotNull Texture texture) {
+    public static @NotNull TextureLoaderImpl create(@NotNull RawTexture texture) {
         val metadata = texture.getMetadata();
         val config = new TextureLoaderImpl(texture);
 
@@ -29,7 +29,8 @@ public class TextureLoaderImpl implements TextureLoader {
             return config;
         }
 
-        config.animated = Boolean.parseBoolean(metadata.getOrDefault("animated",
+        config.animated = Boolean.parseBoolean(metadata.getOrDefault(
+                "animated",
                 "false"
         ));
 
@@ -46,7 +47,7 @@ public class TextureLoaderImpl implements TextureLoader {
                     "Animated textures aren't supported yet.");
         } else {
             @Cleanup
-            val stream = new ByteArrayInputStream(this.texture.getContent());
+            val stream = new ByteArrayInputStream(this.texture.getBytes());
             val image = NativeImage.read(stream);
             val texture = new NativeImageBackedTexture(image);
             val manager = MinecraftClient.getInstance().getTextureManager();

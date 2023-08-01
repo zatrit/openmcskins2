@@ -2,12 +2,13 @@ package net.zatrit.skins.lib.resolver;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.*;
+import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
+import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -41,15 +42,15 @@ public class NamedHTTPResolver implements Resolver {
 
         @Cleanup val reader = new InputStreamReader(url.openStream());
 
-        // Type for EnumMap<TextureType, Textures.TextureData>
+        // Type for EnumMap<TextureType, URLTexture>
         val type = TypeToken.getParameterized(EnumMap.class,
                 TextureType.class,
-                Textures.TextureData.class
+                URLTexture.class
         ).getType();
 
-        val textures = new Textures(this.config.getGson()
-                                            .fromJson(reader, type));
+        val textures = new Textures<>(this.config.getGson()
+                                              .fromJson(reader, type));
 
-        return new URLPlayerLoader(config.getCacheProvider(), textures, this);
+        return new CachedPlayerLoader<>(config.getCacheProvider(), textures);
     }
 }

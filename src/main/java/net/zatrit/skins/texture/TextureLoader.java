@@ -1,14 +1,14 @@
 package net.zatrit.skins.texture;
 
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.data.Texture;
+import net.zatrit.skins.lib.api.RawTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.function.Consumer;
 
 public interface TextureLoader {
-    static @NotNull TextureLoader create(Texture texture) {
+    static @NotNull TextureLoader create(RawTexture texture) {
         return TextureLoaderImpl.create(texture);
     }
 

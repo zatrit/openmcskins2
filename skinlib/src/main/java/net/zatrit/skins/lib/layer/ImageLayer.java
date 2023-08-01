@@ -7,8 +7,8 @@ import lombok.val;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.SkinLayer;
-import net.zatrit.skins.lib.data.Texture;
 import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.texture.LazyTexture;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -17,7 +17,6 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
-import java.util.function.Function;
 
 @AllArgsConstructor
 public class ImageLayer implements SkinLayer {
@@ -31,24 +30,25 @@ public class ImageLayer implements SkinLayer {
             return input;
         }
 
-        @Cleanup val stream = new ByteArrayInputStream(input.getTexture()
-                                                               .getContent());
+        val texture = input.getTexture();
+        return new TextureResult(new LazyTexture(texture.getId(),
+                texture.getMetadata(),
+                () -> {
+                    @Cleanup
+                    val stream = new ByteArrayInputStream(texture.getBytes());
 
-        // https://stackoverflow.com/a/44521687/12245612
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
-        val layers = this.sublayers.stream().map(Layer::function)
-                             .reduce(Function::andThen).get();
+                    // https://stackoverflow.com/a/44521687/12245612
+                    @SuppressWarnings("OptionalGetWithoutIsPresent")
+                    val layers = this.sublayers.stream().reduce(Layer::andThen)
+                                         .get();
 
-        val image = (RenderedImage) layers.apply(ImageIO.read(stream));
+                    val image = (RenderedImage) layers.apply(ImageIO.read(stream));
 
-        @Cleanup val outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
+                    @Cleanup val outputStream = new ByteArrayOutputStream();
+                    ImageIO.write(image, "png", outputStream);
 
-        val texture = new Texture(
-                outputStream.toByteArray(),
-                input.getTexture().getMetadata()
-        );
-
-        return new TextureResult(texture, input.getType());
+                    return outputStream.toByteArray();
+                }
+        ), input.getType());
     }
 }

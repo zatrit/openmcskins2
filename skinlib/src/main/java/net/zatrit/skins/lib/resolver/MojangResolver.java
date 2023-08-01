@@ -1,12 +1,14 @@
 package net.zatrit.skins.lib.resolver;
 
+import com.google.gson.reflect.TypeToken;
 import lombok.*;
+import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
 import net.zatrit.skins.lib.data.Textures;
+import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +26,7 @@ import java.util.Base64;
 public final class MojangResolver implements Resolver {
     private final @Getter(AccessLevel.PROTECTED) Config config;
 
+    @SuppressWarnings("unchecked")
     @Override
     @Contract("_ -> new")
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
@@ -46,11 +49,9 @@ public final class MojangResolver implements Resolver {
         val bytesReader = new InputStreamReader(new ByteArrayInputStream(
                 textureData));
 
-        val textures = gson.fromJson(bytesReader, Textures.class);
+        val type = TypeToken.getParameterized(Textures.class, URLTexture.class);
+        val textures = (Textures<URLTexture>) gson.fromJson(bytesReader, type);
 
-        return new URLPlayerLoader(getConfig().getCacheProvider(),
-                textures,
-                this
-        );
+        return new CachedPlayerLoader<>(config.getCacheProvider(), textures);
     }
 }

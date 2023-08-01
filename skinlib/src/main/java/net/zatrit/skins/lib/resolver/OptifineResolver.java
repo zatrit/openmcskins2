@@ -1,19 +1,22 @@
 package net.zatrit.skins.lib.resolver;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.ByteStreams;
 import lombok.*;
+import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.URLPlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.util.NetworkUtil;
+import net.zatrit.skins.lib.texture.BytesTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 
 @AllArgsConstructor
 public class OptifineResolver implements Resolver {
@@ -28,17 +31,19 @@ public class OptifineResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val textures = new Textures(new EnumMap<>(TextureType.class));
-        val url = this.baseUrl + "/capes/" + profile.getName() + ".png";
-        val metadata = new HashMap<String, String>();
+        val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
+        val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
+        val connection = (HttpURLConnection) url.openConnection();
 
-        if (NetworkUtil.isOk(new URL(url))) {
-            textures.getTextures().put(
-                    TextureType.CAPE,
-                    new Textures.TextureData(url, metadata)
-            );
+        if (connection.getResponseCode() / 100 == 2) {
+            @Cleanup val stream = connection.getInputStream();
+            val content = ByteStreams.toByteArray(stream);
+            val id = Hashing.murmur3_128().hashBytes(content).toString();
+            val texture = new BytesTexture(id, content, Collections.emptyMap());
+
+            textures.getTextures().put(TextureType.CAPE, texture);
         }
 
-        return new URLPlayerLoader(config.getCacheProvider(), textures, this);
+        return new CachedPlayerLoader<>(config.getCacheProvider(), textures);
     }
 }
