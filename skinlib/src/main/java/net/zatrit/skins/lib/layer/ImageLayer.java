@@ -24,7 +24,6 @@ public class ImageLayer implements SkinLayer {
     private final Collection<TextureType> textureTypes;
 
     @Override
-    @SneakyThrows
     public TextureResult apply(@NotNull TextureResult input) {
         if (!this.textureTypes.contains(input.getType())) {
             return input;

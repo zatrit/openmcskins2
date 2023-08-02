@@ -69,7 +69,7 @@ public class SkinLoader {
                                         .map(sneaky(pair -> {
                                             // Convert texture into TextureResult
                                             val loader = pair.getValue();
-                                            val texture = loader.download(type);
+                                            val texture = loader.getTexture(type);
 
                                             return layers.apply(new TextureResult(texture,
                                                     type

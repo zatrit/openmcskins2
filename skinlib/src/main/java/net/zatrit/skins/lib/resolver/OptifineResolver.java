@@ -2,7 +2,9 @@ package net.zatrit.skins.lib.resolver;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.val;
 import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
@@ -20,8 +22,8 @@ import java.util.EnumMap;
 
 @AllArgsConstructor
 public class OptifineResolver implements Resolver {
-    private final @Getter(AccessLevel.PROTECTED) Config config;
-    private final @Getter String baseUrl;
+    private final Config config;
+    private final String baseUrl;
 
     @Override
     public boolean requiresUuid() {
@@ -44,6 +46,9 @@ public class OptifineResolver implements Resolver {
             textures.getTextures().put(TextureType.CAPE, texture);
         }
 
-        return new CachedPlayerLoader<>(config.getCacheProvider(), textures);
+        return new CachedPlayerLoader<>(
+                this.config.getCacheProvider(),
+                textures
+        );
     }
 }

@@ -1,13 +1,14 @@
 package net.zatrit.skins.lib.resolver;
 
 import com.google.gson.reflect.TypeToken;
-import lombok.*;
+import lombok.Cleanup;
+import lombok.val;
 import net.zatrit.skins.lib.BasePlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Profile;
-import net.zatrit.skins.lib.api.RawTexture;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ import java.util.Map;
 import static net.andreinc.aleph.AlephFormatter.str;
 
 public class LocalResolver implements Resolver {
-    private final @Getter(AccessLevel.PROTECTED) Config config;
+    private final Config config;
     private final Path directory;
 
     public LocalResolver(
@@ -36,13 +37,13 @@ public class LocalResolver implements Resolver {
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val name = profile.getName();
-        val textures = new EnumMap<TextureType, RawTexture>(TextureType.class);
+        val textures = new EnumMap<TextureType, Texture>(TextureType.class);
 
         val metadataDir = this.directory.resolve("metadata");
         val texturesDir = this.directory.resolve("textures");
 
         for (val type : TextureType.values()) {
-            var metadata = new HashMap<String, String>();
+            val metadata = new HashMap<String, String>();
             val typeName = type.toString().toLowerCase();
             val texturesFile = texturesDir.resolve(typeName)
                                        .resolve(name + ".png").toFile();
@@ -58,14 +59,13 @@ public class LocalResolver implements Resolver {
             if (metadataFile.toFile().isFile()) {
                 @Cleanup val reader = Files.newBufferedReader(metadataFile);
 
-                val metadataType = TypeToken.getParameterized(
-                        HashMap.class,
+                val metadataType = TypeToken.getParameterized(HashMap.class,
                         String.class,
                         String.class
                 ).getType();
 
-                metadata = this.getConfig().getGson()
-                                   .fromJson(reader, metadataType);
+                metadata.putAll(this.config.getGson()
+                                        .fromJson(reader, metadataType));
             }
 
             textures.put(type, new URLTexture(url, metadata));

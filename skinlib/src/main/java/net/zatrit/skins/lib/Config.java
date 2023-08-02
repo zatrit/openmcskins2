@@ -6,16 +6,19 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 public final class Config {
-    private final Gson gson = new Gson();
-    private @Setter CacheProvider cacheProvider;
-    private Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime()
-                                                                     .availableProcessors());
+    private @Nullable CacheProvider cacheProvider;
+    private @NotNull Gson gson = new Gson();
+    private @NotNull Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime()
+                                                                              .availableProcessors());
 }

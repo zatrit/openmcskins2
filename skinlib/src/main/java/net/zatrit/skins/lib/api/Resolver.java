@@ -36,6 +36,6 @@ public interface Resolver {
          * @return texture of specified type if
          * present (check via {@link #hasTexture})).
          */
-        @Nullable RawTexture download(TextureType type) throws IOException;
+        @Nullable Texture getTexture(TextureType type) throws IOException;
     }
 }

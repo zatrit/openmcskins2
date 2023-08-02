@@ -5,17 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.val;
-import net.zatrit.skins.lib.api.RawTexture;
+import net.zatrit.skins.lib.api.Texture;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
-@Getter
 @AllArgsConstructor
-public class URLTexture implements RawTexture {
+public class URLTexture implements Texture {
     private String url;
-    private Map<String, String> metadata;
+    private @Getter Map<String, String> metadata;
 
     @Override
     public String getId() {
@@ -24,7 +23,7 @@ public class URLTexture implements RawTexture {
 
     @Override
     public byte[] getBytes() throws IOException {
-        @Cleanup val stream = new URL(this.getUrl()).openStream();
+        @Cleanup val stream = new URL(this.url).openStream();
         return ByteStreams.toByteArray(stream);
     }
 }

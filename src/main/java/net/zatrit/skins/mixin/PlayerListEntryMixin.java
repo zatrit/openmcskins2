@@ -76,8 +76,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileTask = profile.refreshUuidAsync()
-                                  .exceptionallyAsync(SkinsClient.getErrorHandler()
-                                                              .andReturn(profile));
+                                  .exceptionally(SkinsClient.getErrorHandler()
+                                                         .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
@@ -91,15 +91,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                         SkinsClient.getErrorHandler().accept(error);
                     }
 
-                    for (val textureResult : result) {
-                        this.loadTextureResult(textureResult);
+                    for (val texture : result) {
+                        this.loadTexture(texture);
                     }
                 }).exceptionally(SkinsClient.getErrorHandler().andReturn(null));
     }
 
     @Unique
     @SneakyThrows
-    private void loadTextureResult(@NotNull TextureResult result) {
+    private void loadTexture(@NotNull TextureResult result) {
         val type = TextureTypeUtil.toAuthlibType(result.getType());
 
         // Doesn't create a texture if no matching type is found.

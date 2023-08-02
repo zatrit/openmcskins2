@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.api.RawTexture;
+import net.zatrit.skins.lib.api.Texture;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class TextureLoaderImpl implements TextureLoader {
-    private final RawTexture texture;
+    private final Texture texture;
     private boolean animated = false;
 
-    public static @NotNull TextureLoaderImpl create(@NotNull RawTexture texture) {
+    public static @NotNull TextureLoaderImpl create(@NotNull Texture texture) {
         val metadata = texture.getMetadata();
         val config = new TextureLoaderImpl(texture);
 

@@ -1,6 +1,8 @@
 package net.zatrit.skins.lib.resolver;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.val;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
@@ -13,7 +15,7 @@ import java.net.URL;
 @AllArgsConstructor
 public class MinecraftCapesResolver implements Resolver {
     private static final String BASE_URL = "https://api.minecraftcapes.net/profile/";
-    private final @Getter(AccessLevel.PROTECTED) Config config;
+    private final Config config;
 
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)

@@ -1,7 +1,9 @@
 package net.zatrit.skins.lib.resolver;
 
 import com.google.gson.reflect.TypeToken;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.val;
 import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
@@ -22,8 +24,8 @@ import java.util.EnumMap;
  */
 @AllArgsConstructor
 public class NamedHTTPResolver implements Resolver {
-    private final transient @Getter(AccessLevel.PROTECTED) Config config;
-    private final @Getter String baseUrl;
+    private final transient Config config;
+    private final String baseUrl;
 
     /**
      * Doesn't require UUID, because resolves by name.
@@ -37,20 +39,20 @@ public class NamedHTTPResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val url = new URL(this.getBaseUrl() + profile.getName());
-        val config = getConfig();
+        val url = new URL(this.baseUrl + profile.getName());
 
         @Cleanup val reader = new InputStreamReader(url.openStream());
 
         // Type for EnumMap<TextureType, URLTexture>
-        val type = TypeToken.getParameterized(EnumMap.class,
+        val type = TypeToken.getParameterized(
+                EnumMap.class,
                 TextureType.class,
                 URLTexture.class
         ).getType();
 
-        val textures = new Textures<>(this.config.getGson()
-                                              .fromJson(reader, type));
-
-        return new CachedPlayerLoader<>(config.getCacheProvider(), textures);
+        return new CachedPlayerLoader<>(
+                this.config.getCacheProvider(),
+                new Textures<>(this.config.getGson().fromJson(reader, type))
+        );
     }
 }

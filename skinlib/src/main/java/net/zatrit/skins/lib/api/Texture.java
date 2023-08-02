@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * An abstract texture that can be converted to a {@link Byte} array.
  */
-public interface RawTexture {
+public interface Texture {
     /**
      * Texture name used during caching.
      */

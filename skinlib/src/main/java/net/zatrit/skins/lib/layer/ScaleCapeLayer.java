@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib.layer;
 
 import com.google.common.math.IntMath;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
@@ -20,7 +19,7 @@ public class ScaleCapeLayer implements Layer<Image> {
     /**
      * Used to properly render the elytra.
      */
-    private @Getter @Setter Image elytraTexture;
+    private @Setter Image elytraTexture;
 
     @Override
     public BufferedImage apply(@NotNull Image image) {
@@ -37,9 +36,9 @@ public class ScaleCapeLayer implements Layer<Image> {
         );
 
         val graphics = result.getGraphics();
-        if (elytraTexture != null && image.getWidth(null) != width) {
+        if (this.elytraTexture != null && image.getWidth(null) != width) {
             graphics.drawImage(
-                    elytraTexture,
+                    this.elytraTexture,
                     0,
                     0,
                     result.getWidth(),

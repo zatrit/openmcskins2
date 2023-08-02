@@ -75,7 +75,6 @@ public final class SkinsClient implements ClientModInitializer {
         return false;
     }
 
-    @SneakyThrows
     @Override
     public void onInitializeClient() {
         loaderConfig = new Config();
