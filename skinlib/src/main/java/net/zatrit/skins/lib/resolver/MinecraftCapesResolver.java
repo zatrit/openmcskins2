@@ -6,6 +6,8 @@ import lombok.val;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.data.MCCapesResponse;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -21,7 +23,11 @@ public class MinecraftCapesResolver implements Resolver {
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val url = BASE_URL + profile.getId().toString().replace("-", "");
-        @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
+        @Cleanup
+        val reader = new InputStreamReader(new URL(url).openStream());
+        val response = this.config.getGson().fromJson(reader, MCCapesResponse.class);
+
+        System.out.println(response);
 
         throw new IOException();
     }

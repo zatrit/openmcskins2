@@ -24,6 +24,7 @@ import java.util.function.UnaryOperator;
  *
  * @see MutableText
  * @see Text
+ * @see ToText
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextUtil {
@@ -44,7 +45,7 @@ public final class TextUtil {
 
         text.append(Text.literal("{").styled(specialStyle));
 
-        var first = true;
+        boolean first = true;
         for (val entry : map.entrySet()) {
             val value = entry.getValue();
 
@@ -92,7 +93,7 @@ public final class TextUtil {
      *
      * @see Formatting
      */
-    public static MutableText formatNumber(int n) {
+    public static MutableText formatNumber(Number n) {
         return Text.literal(String.valueOf(n)).formatted(Formatting.GREEN);
     }
 

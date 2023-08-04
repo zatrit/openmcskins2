@@ -34,7 +34,7 @@ public interface Resolver {
 
         /**
          * @return texture of specified type if
-         * present (check via {@link #hasTexture})).
+         * present (check via {@link #hasTexture}).
          */
         @Nullable Texture getTexture(TextureType type) throws IOException;
     }

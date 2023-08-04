@@ -17,7 +17,7 @@ import java.util.Map;
 @SuppressWarnings("ClassCanBeRecord")
 public class HostEntry implements TextUtil.ToText {
     private final HostType type;
-    private final Map<String, Object> properties;
+    private final Map<String, ?> properties;
 
     @Override
     public void toText(@NotNull MutableText text) {

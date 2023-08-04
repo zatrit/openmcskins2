@@ -11,6 +11,4 @@ import java.util.EnumMap;
 @AllArgsConstructor
 public class Textures<T extends Texture> {
     private final EnumMap<TextureType, T> textures;
-
 }
-

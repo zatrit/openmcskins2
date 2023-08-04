@@ -26,45 +26,40 @@ import static net.zatrit.skins.util.command.CommandUtil.literal;
 
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
-    private final ConfigHolder<SkinsConfig> configInstance;
+    private final ConfigHolder<SkinsConfig> configHolder;
 
     @Override
     public void register(
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandRegistryAccess registryAccess) {
         val presetsPath = FabricLoader.getInstance().getConfigDir()
-                                  .resolve("openmcskins");
+                .resolve("openmcskins");
 
-        val presetsType = new FileArgumentType(new FileProvider[]{
+        val presetsType = new FileArgumentType(new FileProvider[] {
                 new IndexedResourceProvider("presets",
-                        getClass().getClassLoader()
-                ),
+                        getClass().getClassLoader()),
                 new DirectoryFileProvider(presetsPath)
         }, "toml");
         presetsType.refresh();
 
         val command = literal("openmcskins")
-                              // omcs refresh
-                              .then(literal("refresh").executes(this::refresh))
-                              // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument("preset",
-                                      presetsType
-                              ).executes(this::addHost).then(argument("id",
-                                      integer(0)
-                              ).executes(this::addHost))))
-                              // omcs list
-                              .then(literal("list").executes(this::listHosts))
-                              // omcs remove (id)
-                              .then(literal("remove").then(argument("id",
-                                      integer(0)
-                              ).executes(this::removeHost)))
-                              // omcs move (from) (to)
-                              .then(literal("move").then(argument("from",
-                                      integer(0)
-                              ).then(argument("to",
-                                      integer(0)
-                              ).executes(this::moveHost))));
-
+                // omcs refresh
+                .then(literal("refresh").executes(this::refresh))
+                // omcs add (preset (e.g. mojang)) [id]
+                .then(literal("add").then(argument("preset",
+                        presetsType).executes(this::addHost).then(
+                                argument("id",
+                                        integer(0)).executes(this::addHost))))
+                // omcs list
+                .then(literal("list").executes(this::listHosts))
+                // omcs remove (id)
+                .then(literal("remove").then(argument("id",
+                        integer(0)).executes(this::removeHost)))
+                // omcs move (from) (to)
+                .then(literal("move").then(argument("from",
+                        integer(0)).then(
+                                argument("to",
+                                        integer(0)).executes(this::moveHost))));
 
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
@@ -82,7 +77,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
     @SneakyThrows
     public int addHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        @Cleanup val stream = context.getArgument("preset", InputStream.class);
+        @Cleanup
+        val stream = context.getArgument("preset", InputStream.class);
         int id = 0;
 
         try {
@@ -100,30 +96,28 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        this.configInstance.patchConfig(config -> {
+        this.configHolder.patchConfig(config -> {
             config.hosts.add(finalId, entry);
             return null;
         });
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.added",
-                entry.toText()
-        ));
+                entry.toText()));
 
         return 0;
     }
 
     private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
-        val entries = this.configInstance.getConfig().getHosts().stream()
-                              .map(TextUtil.ToText::toText).toArray(Text[]::new);
+        val entries = this.configHolder.getConfig().getHosts().stream()
+                .map(TextUtil.ToText::toText).toArray(Text[]::new);
         var result = Text.translatable("openmcskins.command.list");
 
         for (int i = 0; i < entries.length; i++) {
             result.append(Text.literal("\n").append(Text.translatable(
                     "openmcskins.command.listEntry",
                     TextUtil.formatNumber(i),
-                    entries[i]
-            )));
+                    entries[i])));
         }
 
         context.getSource().sendFeedback(result);
@@ -135,14 +129,13 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         val id = context.getArgument("id", Integer.class);
 
         @SuppressWarnings("CodeBlock2Expr")
-        val entry = this.configInstance.patchConfig(config -> {
+        val entry = this.configHolder.patchConfig(config -> {
             return config.getHosts().remove(id.intValue());
         });
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.removed",
-                entry.toText()
-        ));
+                entry.toText()));
 
         return 0;
     }
@@ -151,7 +144,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         val from = context.getArgument("from", Integer.class);
         val to = context.getArgument("to", Integer.class);
 
-        this.configInstance.patchConfig(config -> {
+        this.configHolder.patchConfig(config -> {
             val entry = config.getHosts().remove(from.intValue());
             config.getHosts().add(to, entry);
 
@@ -161,8 +154,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.moved",
                 TextUtil.formatNumber(from),
-                TextUtil.formatNumber(to)
-        ));
+                TextUtil.formatNumber(to)));
 
         return 0;
     }

@@ -3,7 +3,6 @@ package net.zatrit.skins;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.val;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;

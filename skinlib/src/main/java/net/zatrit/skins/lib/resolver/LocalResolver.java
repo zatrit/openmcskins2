@@ -28,7 +28,7 @@ public class LocalResolver implements Resolver {
     private final Path directory;
 
     public LocalResolver(
-            Config config, String directory, Map<String, Object> replaces) {
+            Config config, String directory, Map<String, ?> replaces) {
         this.config = config;
         this.directory = Paths.get(str(directory).args(replaces).fmt());
     }
