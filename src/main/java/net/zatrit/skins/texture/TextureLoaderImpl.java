@@ -5,11 +5,11 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.lib.api.Texture;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -29,10 +29,7 @@ public class TextureLoaderImpl implements TextureLoader {
             return config;
         }
 
-        config.animated = Boolean.parseBoolean(metadata.getOrDefault(
-                "animated",
-                "false"
-        ));
+        config.animated = metadata.isAnimated();
 
         return config;
     }
@@ -42,20 +39,22 @@ public class TextureLoaderImpl implements TextureLoader {
             @NotNull TextureIdentifier identifier,
             @NotNull Consumer<Identifier> callback) throws IOException {
         val id = identifier.asId();
-        if (this.animated) {
-            throw new NotImplementedException(
-                    "Animated textures aren't supported yet.");
-        } else {
-            @Cleanup
-            val stream = new ByteArrayInputStream(this.texture.getBytes());
-            val image = NativeImage.read(stream);
-            val texture = new NativeImageBackedTexture(image);
-            val manager = MinecraftClient.getInstance().getTextureManager();
 
-            RenderSystem.recordRenderCall(() -> {
-                manager.registerTexture(id, texture);
-                callback.accept(id);
-            });
+        @Cleanup
+        val stream = new ByteArrayInputStream(this.texture.getBytes());
+        val image = NativeImage.read(stream);
+        val manager = MinecraftClient.getInstance().getTextureManager();
+
+        AbstractTexture texture;
+        if (this.animated) {
+            texture = new AnimatedTexture(image, 100);
+        } else {
+            texture = new NativeImageBackedTexture(image);
         }
+
+        RenderSystem.recordRenderCall(() -> {
+            manager.registerTexture(id, texture);
+            callback.accept(id);
+        });
     }
 }

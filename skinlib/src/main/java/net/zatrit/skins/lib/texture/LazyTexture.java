@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.zatrit.skins.lib.api.Texture;
+import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.util.SneakyLambda;
-
-import java.util.Map;
 
 @AllArgsConstructor
 public class LazyTexture implements Texture {
-    private @Getter String id;
-    private @Getter Map<String, String> metadata;
-    private SneakyLambda.SupplierThrows<byte[]> function;
+    private final @Getter String id;
+    private final @Getter Metadata metadata;
+    private final SneakyLambda.SupplierThrows<byte[]> function;
 
     @Override
     @SneakyThrows

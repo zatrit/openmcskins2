@@ -29,8 +29,10 @@ public final class Resolvers {
 
                     yield switch (entry.getType()) {
                         case OPTIFINE -> new OptifineResolver(config, baseUrl);
-                        case NAMED_HTTP ->
-                                new NamedHTTPResolver(config, baseUrl);
+                        case NAMED_HTTP -> new NamedHTTPResolver(
+                                config,
+                                baseUrl
+                        );
                         default -> null;
                     };
                 }

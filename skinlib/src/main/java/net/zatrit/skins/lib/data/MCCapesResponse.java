@@ -1,15 +1,13 @@
 package net.zatrit.skins.lib.data;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+
+import java.util.Map;
 
 @Getter
-@ToString
 @AllArgsConstructor
 public class MCCapesResponse {
-    private boolean animatedCapes;
+    private boolean animatedCape;
     private Map<String, String> textures;
 }

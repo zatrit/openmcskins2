@@ -12,6 +12,7 @@ import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.TextureResult;
 import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
@@ -26,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +53,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.texturesLoaded = true;
         this.textures.clear();
-        this.applyMetadata(TextureType.SKIN, Collections.emptyMap());
+        this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) getProfile();
         val skinLoader = SkinsClient.getSkinLoader();
@@ -126,9 +126,9 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
     @Unique
     public void applyMetadata(
-            TextureType type, @NotNull Map<String, String> metadata) {
+            TextureType type, @NotNull Metadata metadata) {
         if (type == TextureType.SKIN) {
-            this.model = metadata.get("model");
+            this.model = metadata.getModel();
         }
     }
 

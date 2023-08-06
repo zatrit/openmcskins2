@@ -1,14 +1,15 @@
 package net.zatrit.skins.lib.resolver;
 
-import com.google.gson.reflect.TypeToken;
 import lombok.Cleanup;
 import lombok.val;
+import lombok.var;
 import net.zatrit.skins.lib.BasePlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.Texture;
+import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import static net.andreinc.aleph.AlephFormatter.str;
@@ -43,29 +43,26 @@ public class LocalResolver implements Resolver {
         val texturesDir = this.directory.resolve("textures");
 
         for (val type : TextureType.values()) {
-            val metadata = new HashMap<String, String>();
+            var metadata = new Metadata();
             val typeName = type.toString().toLowerCase();
-            val texturesFile = texturesDir.resolve(typeName)
-                                       .resolve(name + ".png").toFile();
+            val texturesFile = texturesDir.resolve(typeName).resolve(
+                    name + ".png").toFile();
 
             if (!texturesFile.isFile()) {
                 continue;
             }
 
             val url = texturesFile.toURI().toURL().toString();
-            val metadataFile = metadataDir.resolve(typeName)
-                                       .resolve(name + ".json");
+            val metadataFile = metadataDir.resolve(typeName).resolve(
+                    name + ".json");
 
             if (metadataFile.toFile().isFile()) {
                 @Cleanup val reader = Files.newBufferedReader(metadataFile);
 
-                val metadataType = TypeToken.getParameterized(HashMap.class,
-                        String.class,
-                        String.class
-                ).getType();
-
-                metadata.putAll(this.config.getGson()
-                                        .fromJson(reader, metadataType));
+                metadata = this.config.getGson().fromJson(
+                        reader,
+                        Metadata.class
+                );
             }
 
             textures.put(type, new URLTexture(url, metadata));

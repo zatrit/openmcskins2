@@ -1,7 +1,9 @@
 package net.zatrit.skins.lib.api;
 
+import net.zatrit.skins.lib.data.Metadata;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * An abstract texture that can be converted to a {@link Byte} array.
@@ -12,7 +14,7 @@ public interface Texture {
      */
     String getId();
 
-    Map<String, String> getMetadata();
+    @Nullable Metadata getMetadata();
 
     byte[] getBytes() throws IOException;
 }

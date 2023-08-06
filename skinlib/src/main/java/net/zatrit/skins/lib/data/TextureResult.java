@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Texture;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @AllArgsConstructor

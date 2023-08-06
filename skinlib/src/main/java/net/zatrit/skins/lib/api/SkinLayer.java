@@ -1,7 +1,8 @@
 package net.zatrit.skins.lib.api;
 
-import net.zatrit.skins.lib.data.TextureResult;
+import lombok.val;
 import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.data.TextureResult;
 import net.zatrit.skins.lib.layer.ImageLayer;
 import net.zatrit.skins.lib.layer.ScaleCapeLayer;
 
@@ -13,6 +14,16 @@ public interface SkinLayer extends Layer<TextureResult> {
 
     Collection<SkinLayer> DEFAULT_LAYERS = Collections.singleton(new ImageLayer(
             Collections.singleton(CAPE_LAYER),
-            Collections.singleton(TextureType.CAPE)
+            // Applies only to static cape textures.
+            texture -> {
+                val metadata = texture.getTexture().getMetadata();
+                val cape = texture.getType() == TextureType.CAPE;
+
+                if (metadata == null) {
+                    return cape;
+                }
+
+                return cape && !metadata.isAnimated();
+            }
     ));
 }

@@ -10,6 +10,7 @@ import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
-import java.util.EnumMap;
 
 @AllArgsConstructor
 public class OptifineResolver implements Resolver {
@@ -33,7 +32,7 @@ public class OptifineResolver implements Resolver {
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
+        val textures = new Textures<BytesTexture>();
         val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
         val connection = (HttpURLConnection) url.openConnection();
 
@@ -41,7 +40,7 @@ public class OptifineResolver implements Resolver {
             @Cleanup val stream = connection.getInputStream();
             val content = ByteStreams.toByteArray(stream);
             val id = Hashing.murmur3_128().hashBytes(content).toString();
-            val texture = new BytesTexture(id, content, Collections.emptyMap());
+            val texture = new BytesTexture(id, content, new Metadata());
 
             textures.getTextures().put(TextureType.CAPE, texture);
         }

@@ -40,6 +40,19 @@ public final class SkinsClient implements ClientModInitializer {
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
             false);
 
+    public static boolean refresh() {
+        val client = MinecraftClient.getInstance();
+        if (client.world != null) {
+            client.world.getPlayers().stream()
+                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
+                    .filter(Objects::nonNull)
+                    .forEach(e -> ((Refreshable) e).skins$refresh());
+
+            return true;
+        }
+        return false;
+    }
+
     private void applyConfig(@NotNull SkinsConfig config) {
         val path = (HasAssetPath) MinecraftClient.getInstance();
 
@@ -59,19 +72,6 @@ public final class SkinsClient implements ClientModInitializer {
         if (config.isRefreshOnConfigSave()) {
             refresh();
         }
-    }
-
-    public static boolean refresh() {
-        val client = MinecraftClient.getInstance();
-        if (client.world != null) {
-            client.world.getPlayers().stream()
-                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
-                    .filter(Objects::nonNull)
-                    .forEach(e -> ((Refreshable) e).skins$refresh());
-
-            return true;
-        }
-        return false;
     }
 
     @Override
