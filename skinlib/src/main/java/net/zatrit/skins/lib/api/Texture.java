@@ -16,5 +16,11 @@ public interface Texture {
 
     @Nullable Metadata getMetadata();
 
+    /**
+     * May contain I/O operations, as usage implies execution in
+     * a parallel game thread so that the game does not freeze.
+     *
+     * @return the texture image as a byte array.
+     */
     byte[] getBytes() throws IOException;
 }

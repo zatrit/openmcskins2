@@ -1,8 +1,7 @@
 package net.zatrit.skins.util.command;
 
 import com.google.common.collect.Lists;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
@@ -26,7 +25,7 @@ import java.util.function.UnaryOperator;
  * @see Text
  * @see ToText
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public final class TextUtil {
     private static final List<?> SKIP_ELEMENTS = Lists.newArrayList(
             null,

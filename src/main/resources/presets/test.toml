@@ -1,2 +1,4 @@
 type = 'NAMED_HTTP'
-properties = { base_url = 'http://127.0.0.1:8000/textures/' }
+
+[properties]
+base_url = 'http://127.0.0.1:8000/textures/'

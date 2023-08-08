@@ -2,23 +2,21 @@ package net.zatrit.skins.util;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.logging.LoggerPrintStream;
 
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExceptionConsumerImpl implements ExceptionConsumer<Void> {
+    private static final LoggerPrintStream printStream = new LoggerPrintStream(
+            "OpenMCSkins", System.out);
     private boolean verbose;
 
     @Override
-    public void accept(@NotNull Throwable error) {
-        if (this.verbose) {
-            error.printStackTrace();
-        }
-    }
-
-    @Override
     public Void apply(Throwable error) {
-        this.accept(error);
+        if (this.verbose) {
+            error.printStackTrace(printStream);
+        }
+
         return null;
     }
 }

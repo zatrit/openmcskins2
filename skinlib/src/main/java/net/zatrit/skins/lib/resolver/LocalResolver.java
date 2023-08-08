@@ -1,5 +1,6 @@
 package net.zatrit.skins.lib.resolver;
 
+import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
 import lombok.var;
@@ -17,21 +18,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.EnumMap;
-import java.util.Map;
 
-import static net.andreinc.aleph.AlephFormatter.str;
-
+@AllArgsConstructor
 public class LocalResolver implements Resolver {
     private final Config config;
     private final Path directory;
-
-    public LocalResolver(
-            Config config, String directory, Map<String, ?> replaces) {
-        this.config = config;
-        this.directory = Paths.get(str(directory).args(replaces).fmt());
-    }
 
     @Override
     public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)

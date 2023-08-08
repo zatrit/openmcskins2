@@ -1,7 +1,6 @@
 package net.zatrit.skins.config;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
 import net.zatrit.skins.SkinsClient;
@@ -11,9 +10,12 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+import static net.andreinc.aleph.AlephFormatter.str;
+
+@UtilityClass
 public final class Resolvers {
     public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
         val props = entry.getProperties();
@@ -28,7 +30,7 @@ public final class Resolvers {
                     Validate.notNull(baseUrl);
 
                     yield switch (entry.getType()) {
-                        case OPTIFINE -> new OptifineResolver(config, baseUrl);
+                        case OPTIFINE -> new OptifineResolver(baseUrl);
                         case NAMED_HTTP -> new NamedHTTPResolver(
                                 config,
                                 baseUrl
@@ -37,14 +39,17 @@ public final class Resolvers {
                     };
                 }
                 case LOCAL -> {
-                    val directory = (String) props.get("directory");
+                    val directoryPattern = (String) props.get("directory");
                     val replaces = new HashMap<String, Object>();
                     replaces.put(
                             "configDir",
-                            FabricLoader.getInstance().getConfigDir().toString()
+                            FabricLoader.getInstance().getConfigDir()
                     );
 
-                    yield new LocalResolver(config, directory, replaces);
+                    val directory = Path.of(str(directoryPattern).args(replaces)
+                                                    .fmt());
+
+                    yield new LocalResolver(config, directory);
                 }
             };
         } catch (Exception ex) {

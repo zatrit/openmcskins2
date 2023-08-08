@@ -1,6 +1,7 @@
 package net.zatrit.skins.lib.api;
 
 import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.data.TextureResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,6 @@ public interface Resolver {
          * @return texture of specified type if
          * present (check via {@link #hasTexture}).
          */
-        @Nullable Texture getTexture(TextureType type) throws IOException;
+        @Nullable TextureResult getTexture(TextureType type) throws IOException;
     }
 }

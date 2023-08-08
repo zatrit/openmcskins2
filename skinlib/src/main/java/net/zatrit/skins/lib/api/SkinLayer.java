@@ -9,9 +9,19 @@ import net.zatrit.skins.lib.layer.ScaleCapeLayer;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * A layer that somehow changes the {@link TextureResult}.
+ */
 public interface SkinLayer extends Layer<TextureResult> {
+    /**
+     * Layer used to fix the resolution of static capes.
+     */
     ScaleCapeLayer CAPE_LAYER = new ScaleCapeLayer();
 
+    /**
+     * List of layers that can be used by default
+     * for correct rendering of capes and other fixes.
+     */
     Collection<SkinLayer> DEFAULT_LAYERS = Collections.singleton(new ImageLayer(
             Collections.singleton(CAPE_LAYER),
             // Applies only to static cape textures.

@@ -1,2 +1,4 @@
 type = 'OPTIFINE'
-properties = { base_url = 'http://35.190.10.249' }
+
+[properties]
+base_url = 'http://35.190.10.249'

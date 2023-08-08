@@ -19,10 +19,6 @@ public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
         this.cache = cacheProvider != null ? cacheProvider.getSkinCache() : null;
     }
 
-    /**
-     * Download texture from its URL.
-     * {@inheritDoc}
-     */
     @Override
     protected Texture wrapTexture(@NotNull T sourceTexture) {
         val texture = super.wrapTexture(sourceTexture);

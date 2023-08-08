@@ -1,2 +1,4 @@
 type = 'OPTIFINE'
-properties = { base_url = 'http://s.optifine.net' }
+
+[properties]
+base_url = 'http://s.optifine.net'

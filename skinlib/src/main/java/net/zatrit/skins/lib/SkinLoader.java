@@ -75,12 +75,7 @@ public class SkinLoader {
                                         .map(sneaky(pair -> {
                                             // Convert texture into TextureResult
                                             val loader = pair.getValue();
-                                            val texture = loader.getTexture(type);
-
-                                            return layers.apply(new TextureResult(
-                                                    texture,
-                                                    type
-                                            ));
+                                            return layers.apply(loader.getTexture(type));
                                         })))
                                                       // Filter and unwrap Optionals
                                                       .filter(Optional::isPresent)

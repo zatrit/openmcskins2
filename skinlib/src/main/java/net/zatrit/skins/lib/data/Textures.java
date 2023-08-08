@@ -10,7 +10,6 @@ import java.util.EnumMap;
 
 @Getter
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Textures<T extends Texture> {
-    private EnumMap<TextureType, T> textures = new EnumMap<>(TextureType.class);
+    private EnumMap<TextureType, T> textures;
 }

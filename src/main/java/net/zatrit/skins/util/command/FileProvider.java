@@ -2,6 +2,7 @@ package net.zatrit.skins.util.command;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -16,10 +17,10 @@ public interface FileProvider {
     /**
      * @return a collection of file names.
      */
-    Collection<String> listFiles();
+    Collection<String> listFiles() throws IOException;
 
     /**
      * Opens an InputStream from an abstract file.
      */
-    @Nullable InputStream getFile(String path);
+    @Nullable InputStream getFile(String path) throws IOException;
 }

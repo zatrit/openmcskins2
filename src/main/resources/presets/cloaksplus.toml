@@ -1,2 +1,4 @@
 type = 'OPTIFINE'
-properties = { base_url = 'https://server.cloaksplus.com' }
+
+[properties]
+base_url = 'https://server.cloaksplus.com'

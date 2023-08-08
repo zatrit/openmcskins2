@@ -33,6 +33,7 @@ public class AnimatedTexture extends AbstractTexture {
         this.framesCount = this.image.getHeight() / frameHeight;
         this.ids = new int[this.framesCount];
 
+        // Generates a buffer with frame IDs.
         GL11.glGenTextures(this.ids);
 
         for (int i = 0; i < this.framesCount; i++) {
@@ -63,6 +64,7 @@ public class AnimatedTexture extends AbstractTexture {
         val frameIndex = (int) (deltaTime / this.frameTime) % this.framesCount;
 
         this.glId = this.ids[frameIndex];
+
         super.bindTexture();
     }
 

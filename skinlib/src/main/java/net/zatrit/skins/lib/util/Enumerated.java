@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Index-value pair.
+ */
 @Getter
 @AllArgsConstructor
 public class Enumerated<T> {

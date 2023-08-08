@@ -1,3 +1,5 @@
 # MOD DEVELOPER DOES NOT SUPPORT PIRACY!!!!
 type = 'NAMED_HTTP'
-properties = { base_url = 'https://auth.tlauncher.org/skin/profile/texture/login/' }
+
+[properties]
+base_url = 'https://auth.tlauncher.org/skin/profile/texture/login/'

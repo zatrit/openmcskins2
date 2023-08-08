@@ -1,7 +1,10 @@
 package net.zatrit.skins.lib.texture;
 
 import com.google.common.io.ByteStreams;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.val;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Metadata;
 

@@ -1,8 +1,8 @@
 package net.zatrit.skins.util.command;
 
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.val;
-import net.zatrit.skins.SkinsClient;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,30 +25,23 @@ public class IndexedResourceProvider implements FileProvider {
     private final ClassLoader classLoader;
 
     @Override
-    public Collection<String> listFiles() {
+    public Collection<String> listFiles() throws IOException {
         val url = classLoader.getResource(path + ".index");
 
         if (url != null) {
-            try (val indexFile = url.openStream()) {
-                return IOUtils.readLines(indexFile, Charset.defaultCharset());
-            } catch (IOException e) {
-                SkinsClient.getErrorHandler().accept(e);
-            }
+            @Cleanup val indexFile = url.openStream();
+            return IOUtils.readLines(indexFile, Charset.defaultCharset());
         }
 
         return Collections.emptyList();
     }
 
     @Override
-    public @Nullable InputStream getFile(String name) {
+    public @Nullable InputStream getFile(String name) throws IOException {
         val url = classLoader.getResource(this.path + "/" + name);
 
         if (url != null) {
-            try {
-                return url.openStream();
-            } catch (IOException e) {
-                SkinsClient.getErrorHandler().accept(e);
-            }
+            return url.openStream();
         }
 
         return null;

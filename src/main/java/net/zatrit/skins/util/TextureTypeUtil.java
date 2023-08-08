@@ -1,14 +1,13 @@
 package net.zatrit.skins.util;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public final class TextureTypeUtil {
     /**
      * Converts texture type from {@link TextureType}

@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A class that describes texture parameters
+ * such as the model and whether it is animated.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

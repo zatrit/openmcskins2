@@ -78,13 +78,13 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
-        if (!SkinsClient.refresh()) {
+        if (SkinsClient.refresh()) {
+            return 0;
+        } else {
             context.getSource().sendError(Text.translatable(
                     "openmcskins.command.unableToRefresh"));
             return -1;
         }
-
-        return 0;
     }
 
     @SneakyThrows

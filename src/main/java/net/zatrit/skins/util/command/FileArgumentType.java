@@ -3,22 +3,21 @@ package net.zatrit.skins.util.command;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.val;
 import net.minecraft.text.Text;
+import net.zatrit.skins.SkinsClient;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -38,13 +37,18 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     private final Collection<String> files = new HashSet<>();
 
     @Override
-    @SneakyThrows
-    public InputStream parse(@NotNull StringReader reader) {
+    public InputStream parse(@NotNull StringReader reader)
+            throws CommandSyntaxException {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
-            val stream = Arrays.stream(this.providers)
-                                 .map(p -> p.getFile(file))
-                                 .filter(Objects::nonNull).findFirst();
+            val stream = Arrays.stream(this.providers).map(p -> {
+                try {
+                    return p.getFile(file);
+                } catch (IOException e) {
+                    SkinsClient.getErrorHandler().accept(e);
+                    return null;
+                }
+            }).filter(Objects::nonNull).findFirst();
 
             if (stream.isPresent()) {
                 return stream.get();
@@ -76,8 +80,15 @@ public class FileArgumentType implements ArgumentType<InputStream> {
 
         val set = new HashSet<String>();
 
-        Arrays.stream(providers).map(FileProvider::listFiles)
-                .forEach(set::addAll);
+        Arrays.stream(this.providers).map(fileProvider -> {
+            try {
+                return fileProvider.listFiles();
+            } catch (IOException e) {
+                SkinsClient.getErrorHandler().accept(e);
+                return Collections.<String>emptySet();
+            }
+        }).forEach(set::addAll);
+
         set.stream().filter(f -> FilenameUtils.isExtension(f, this.extension))
                 .map(FilenameUtils::removeExtension).forEach(this.files::add);
     }
