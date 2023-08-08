@@ -30,7 +30,7 @@ public final class Resolvers {
                     Validate.notNull(baseUrl);
 
                     yield switch (entry.getType()) {
-                        case OPTIFINE -> new OptifineResolver(baseUrl);
+                        case OPTIFINE -> new OptifineResolver(config, baseUrl);
                         case NAMED_HTTP -> new NamedHTTPResolver(
                                 config,
                                 baseUrl

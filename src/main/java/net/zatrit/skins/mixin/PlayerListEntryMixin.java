@@ -10,10 +10,12 @@ import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.util.Enumerated;
 import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
 import net.zatrit.skins.util.TextureTypeUtil;
@@ -56,7 +58,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) getProfile();
-        val skinLoader = SkinsClient.getSkinLoader();
+        val skinlib = SkinsClient.getSkinlib();
         val resolvers = SkinsClient.getResolvers();
 
         val config = SkinsClient.getConfigHolder().getConfig();
@@ -82,10 +84,16 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             profileTask = CompletableFuture.completedFuture(profile);
         }
 
-        profileTask.thenApplyAsync(profile1 -> skinLoader.resolveAsync(
-                        resolvers,
-                        profile1
-                ).join()).orTimeout(timeout, TimeUnit.MILLISECONDS)
+        val errorHandler = SkinsClient.getErrorHandler();
+
+        profileTask.thenApplyAsync(profile1 -> {
+                    val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
+                    val futures = skinlib.resolveAsync(resolvers, profile1)
+                                          // Added error handling in all futures
+                                          .map(f -> f.exceptionally(handler));
+
+                    return skinlib.fetchTexturesAsync(futures.toList()).join();
+                }).orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .whenComplete((result, error) -> {
                     if (error != null) {
                         SkinsClient.getErrorHandler().accept(error);
@@ -94,7 +102,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                     for (val texture : result) {
                         this.loadTexture(texture);
                     }
-                }).exceptionally(SkinsClient.getErrorHandler().andReturn(null));
+                }).exceptionally(errorHandler.andReturn(null));
     }
 
     @Unique

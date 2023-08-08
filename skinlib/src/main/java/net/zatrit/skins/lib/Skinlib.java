@@ -3,16 +3,16 @@ package net.zatrit.skins.lib;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import net.zatrit.skins.lib.api.Layer;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.data.TextureResult;
 import net.zatrit.skins.lib.util.Enumerated;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
@@ -21,45 +21,45 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
  * OpenMCSkins simple loader implementation.
  */
 @AllArgsConstructor
-public class SkinLoader {
+public class Skinlib {
     private final @Getter Config config;
-    private final @Getter Collection<SkinLayer> layers;
+
+    /*
+     * There are more comments than the rest of the code,
+     * because this is a very complex implementation.
+     */
 
     /**
-     * Asynchronously load player skins from specific resolvers.
+     * Asynchronously fetches loaders and numbers them from specific resolvers.
      */
-    public CompletableFuture<TextureResult[]> resolveAsync(
+    public Stream<CompletableFuture<Enumerated<PlayerLoader>>> resolveAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
-        val loaders = new LinkedList<Enumerated<Resolver.PlayerLoader>>();
+        return Enumerated.enumerate(resolvers).stream()
+                       .map(pair -> CompletableFuture.supplyAsync(
+                               /*
+                                * This function may throw an exception,
+                                * but it's a CompletableFuture, so
+                                * an exception won't crash the game.
+                                */
+                               sneaky(() -> {
+                                   val resolver = pair.getValue();
+                                   val loader = resolver.resolve(profile);
 
-        // https://stackoverflow.com/a/44521687/12245612
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
-        val layers = this.layers.stream().map(l -> (Layer<TextureResult>) l)
-                             .reduce(Layer::andThen).get();
+                                   return pair.withValue(loader);
+                               }), this.config.getExecutor()));
+    }
 
-        /*
-         * There are more comments than the rest of the code,
-         * because this is a very complex implementation.
-         */
-        val futures = Enumerated.enumerate(resolvers).stream()
-                              .map(pair -> CompletableFuture.supplyAsync(
-                                      /*
-                                       * This function may throw an exception,
-                                       * but it's a CompletableFuture, so
-                                       * an exception won't crash the game.
-                                       */
-                                      sneaky(() -> {
-                                          val resolver = pair.getValue();
-                                          val loader = resolver.resolve(profile);
+    /**
+     * Asynchronously fetches textures from a list of numbered futures returning loaders.
+     * <p>
+     * Use {@link #resolveAsync} to obtain futures list.
+     */
+    public CompletableFuture<TextureResult[]> fetchTexturesAsync(
+            @NotNull Collection<CompletableFuture<Enumerated<PlayerLoader>>> loaderFutures) {
+        val loaders = new LinkedList<Enumerated<PlayerLoader>>();
 
-                                          return pair.withValue(loader);
-                                      }), this.config.getExecutor()).thenAccept(
-                                      /*
-                                       * I don't know, how to pass
-                                       * loaders to futures so it just,
-                                       * stores them into list.
-                                       */
-                                      loaders::add).exceptionally(e -> null))
+        val futures = loaderFutures.stream().map(l -> l.thenAccept(loaders::add)
+                                                              .exceptionally(e -> null))
                               .toArray(CompletableFuture[]::new);
 
         val allFutures = CompletableFuture.allOf(futures);
@@ -75,7 +75,7 @@ public class SkinLoader {
                                         .map(sneaky(pair -> {
                                             // Convert texture into TextureResult
                                             val loader = pair.getValue();
-                                            return layers.apply(loader.getTexture(type));
+                                            return loader.getTexture(type);
                                         })))
                                                       // Filter and unwrap Optionals
                                                       .filter(Optional::isPresent)

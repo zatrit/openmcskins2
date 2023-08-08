@@ -18,14 +18,11 @@ import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.TomlConfigHolder;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.SkinLoader;
+import net.zatrit.skins.lib.Skinlib;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpClient;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public final class SkinsClient implements ClientModInitializer {
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
     private static @Getter TomlConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config loaderConfig;
-    private static @Getter SkinLoader skinLoader;
+    private static @Getter Skinlib skinlib;
     private static @Getter HttpClient httpClient;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
             false);
@@ -79,7 +76,7 @@ public final class SkinsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         loaderConfig = new Config();
-        skinLoader = new SkinLoader(loaderConfig, SkinLayer.DEFAULT_LAYERS);
+        skinlib = new Skinlib(loaderConfig);
 
         val configPath = FabricLoader.getInstance().getConfigDir()
                                  .resolve("openmcskins.toml");

@@ -7,6 +7,7 @@ import lombok.var;
 import net.zatrit.skins.lib.BasePlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.Texture;
@@ -26,7 +27,7 @@ public class LocalResolver implements Resolver {
     private final Path directory;
 
     @Override
-    public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val name = profile.getName();
         val textures = new EnumMap<TextureType, Texture>(TextureType.class);
@@ -60,6 +61,9 @@ public class LocalResolver implements Resolver {
             textures.put(type, new URLTexture(url, metadata));
         }
 
-        return new BasePlayerLoader<>(new Textures<>(textures));
+        return new BasePlayerLoader<>(
+                new Textures<>(textures),
+                this.config.getLayers()
+        );
     }
 }

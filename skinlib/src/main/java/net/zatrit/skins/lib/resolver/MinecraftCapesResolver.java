@@ -6,6 +6,7 @@ import lombok.val;
 import net.zatrit.skins.lib.BasePlayerLoader;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MCCapesResponse;
@@ -26,13 +27,12 @@ public class MinecraftCapesResolver implements Resolver {
     private final Config config;
 
     @Override
-    public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val url = BASE_URL + profile.getId().toString().replace("-", "");
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
-        val response = this.config.getGson().fromJson(
-                reader,
-                MCCapesResponse.class
+        val response = this.config.getGson().fromJson(reader,
+                                                      MCCapesResponse.class
         );
         val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
 
@@ -48,10 +48,9 @@ public class MinecraftCapesResolver implements Resolver {
                     metadata.setAnimated(response.isAnimatedCape());
                 }
 
-                val texture = new BytesTexture(
-                        textureData,
-                        decoder.decode(textureData),
-                        metadata
+                val texture = new BytesTexture(textureData,
+                                               decoder.decode(textureData),
+                                               metadata
                 );
 
                 textures.getTextures().put(type, texture);
@@ -60,6 +59,6 @@ public class MinecraftCapesResolver implements Resolver {
 
         /* Since you can't resolve a list of textures without
         fetching those textures, they may not be cached */
-        return new BasePlayerLoader<>(textures);
+        return new BasePlayerLoader<>(textures, this.config.getLayers());
     }
 }

@@ -6,6 +6,7 @@ import lombok.Cleanup;
 import lombok.val;
 import net.zatrit.skins.lib.CachedPlayerLoader;
 import net.zatrit.skins.lib.Config;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
@@ -31,7 +32,7 @@ public final class MojangResolver implements Resolver {
     @SuppressWarnings("unchecked")
     @Override
     @Contract("_ -> new")
-    public @NotNull Resolver.PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val gson = this.config.getGson();
         val url = "https://sessionserver.mojang.com/session/minecraft/profile/" +
@@ -54,7 +55,8 @@ public final class MojangResolver implements Resolver {
         val type = TypeToken.getParameterized(Textures.class, URLTexture.class);
 
         return new CachedPlayerLoader<>(
-                config.getCacheProvider(),
+                this.config.getCacheProvider(),
+                this.config.getLayers(),
                 (Textures<URLTexture>) gson.fromJson(bytesReader, type)
         );
     }
