@@ -37,6 +37,7 @@ public class HostEntry implements TextUtil.ToText {
         MINECRAFT_CAPES,
         MOJANG,
         NAMED_HTTP,
-        OPTIFINE
+        OPTIFINE,
+        VALHALLA,
     }
 }

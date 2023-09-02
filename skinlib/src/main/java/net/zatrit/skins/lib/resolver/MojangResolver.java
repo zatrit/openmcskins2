@@ -27,11 +27,12 @@ import java.util.Base64;
  */
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
+    public static final TypeToken<?> URL_TEXTURES =
+            TypeToken.getParameterized(Textures.class, URLTexture.class);
     private final Config config;
 
-    @SuppressWarnings("unchecked")
     @Override
-    @Contract("_ -> new")
+    @SuppressWarnings("unchecked")
     public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val gson = this.config.getGson();
@@ -52,12 +53,11 @@ public final class MojangResolver implements Resolver {
         @Cleanup
         val bytesReader = new InputStreamReader(new ByteArrayInputStream(
                 textureData));
-        val type = TypeToken.getParameterized(Textures.class, URLTexture.class);
 
         return new CachedPlayerLoader<>(
                 this.config.getCacheProvider(),
                 this.config.getLayers(),
-                (Textures<URLTexture>) gson.fromJson(bytesReader, type)
+                (Textures<URLTexture>) gson.fromJson(bytesReader, URL_TEXTURES)
         );
     }
 }

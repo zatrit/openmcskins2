@@ -27,6 +27,7 @@ public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
     protected Texture wrapTexture(@NotNull T sourceTexture) {
         val texture = super.wrapTexture(sourceTexture);
 
+        // If there is no cache, it returns the texture in its original form.
         if (this.cache == null) {
             return texture;
         }

@@ -58,10 +58,12 @@ public class Skinlib {
             @NotNull Collection<CompletableFuture<Enumerated<PlayerLoader>>> loaderFutures) {
         val loaders = new LinkedList<Enumerated<PlayerLoader>>();
 
-        val futures = loaderFutures.stream().map(l -> l.thenAccept(loaders::add)
-                                                              .exceptionally(e -> null))
+        val futures = loaderFutures.stream()
+                              // Add the loader to the list and
+                              // do nothing if unsuccessful
+                              .map(l -> l.thenAccept(loaders::add)
+                                                .exceptionally(e -> null))
                               .toArray(CompletableFuture[]::new);
-
         val allFutures = CompletableFuture.allOf(futures);
 
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(

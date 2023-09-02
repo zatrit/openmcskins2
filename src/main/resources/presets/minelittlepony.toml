@@ -1,0 +1,4 @@
+type = 'VALHALLA'
+
+[properties]
+base_url = 'https://skins.minelittlepony-mod.com/api/v1/user/'

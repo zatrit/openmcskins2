@@ -102,7 +102,6 @@ public class ModMenuIntegration implements ModMenuApi {
                                        "openmcskins.option.uuidMode")).build());
     }
 
-    @Contract("_ -> new")
     private @NotNull Text formatMode(@NotNull UuidMode mode) {
         return translatable("openmcskins.option.uuidMode." +
                                     mode.toString().toLowerCase());

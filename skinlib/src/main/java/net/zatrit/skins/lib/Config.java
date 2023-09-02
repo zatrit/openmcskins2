@@ -1,12 +1,13 @@
 package net.zatrit.skins.lib;
 
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
+import net.zatrit.skins.lib.util.AnyCaseEnumDeserializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,12 +17,15 @@ import java.util.concurrent.Executors;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public final class Config {
     private @Nullable CacheProvider cacheProvider;
     private @NotNull Collection<SkinLayer> layers = SkinLayer.DEFAULT_LAYERS;
-    private @NotNull Gson gson = new Gson();
+    // Very cool Gson that parses TextureType ignoring case
+    private @NotNull Gson gson = new GsonBuilder().registerTypeAdapter(
+            TextureType.class,
+            new AnyCaseEnumDeserializer<>()
+    ).create();
     private @NotNull Executor executor = Executors.newFixedThreadPool(
             // All available processors are used, because parallelism is cool.
             Runtime.getRuntime().availableProcessors());

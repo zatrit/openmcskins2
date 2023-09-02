@@ -25,12 +25,12 @@ public final class Resolvers {
             return switch (entry.getType()) {
                 case MOJANG -> new MojangResolver(config);
                 case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
-                case NAMED_HTTP, OPTIFINE -> {
+                case NAMED_HTTP, OPTIFINE, VALHALLA -> {
                     val baseUrl = (String) props.get("base_url");
-                    Validate.notNull(baseUrl);
 
                     yield switch (entry.getType()) {
                         case OPTIFINE -> new OptifineResolver(config, baseUrl);
+                        case VALHALLA -> new ValhallaResolver(config, baseUrl);
                         case NAMED_HTTP -> new NamedHTTPResolver(
                                 config,
                                 baseUrl
