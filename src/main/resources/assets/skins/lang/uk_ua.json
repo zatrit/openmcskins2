@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": "Налаштовані хости:",
+  "openmcskins.command.moved": "Хост був успішно перенесений з %d до %d.",
+  "openmcskins.options.title": "Налаштування OpenMCSkins",
+  "openmcskins.category.general": "Загальні",
+  "openmcskins.option.cacheTextures": "Кешування текстур",
+  "openmcskins.option.verboseLogs": "Детальний звіт",
+  "openmcskins.option.loaderTimeout": "Час очікування завантажувача",
+  "openmcskins.option.refreshOnConfigSave": "Оновити при збереженні конфігурації",
+  "openmcskins.option.uuidMode": "Оновити UUID",
+  "openmcskins.option.uuidMode.never": "Ніколи",
+  "openmcskins.option.uuidMode.always": "Завжди",
+  "openmcskins.option.uuidMode.offline": "Коли не в мережі",
+  "openmcskins.command.noPreset": "Шаблонів не знайдено.",
+  "openmcskins.command.invalidFileFormat": "Невірний формат файлу.",
+  "openmcskins.command.unableToRefresh": "Не вдалося оновити скіни."
+}
