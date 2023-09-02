@@ -24,7 +24,7 @@ public final class Config {
     // Very cool Gson that parses TextureType ignoring case
     private @NotNull Gson gson = new GsonBuilder().registerTypeAdapter(
             TextureType.class,
-            new AnyCaseEnumDeserializer<>()
+            new AnyCaseEnumDeserializer<>(TextureType.values())
     ).create();
     private @NotNull Executor executor = Executors.newFixedThreadPool(
             // All available processors are used, because parallelism is cool.

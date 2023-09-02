@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import lombok.AllArgsConstructor;
 import lombok.val;
 
 import java.lang.reflect.Type;
@@ -14,7 +15,10 @@ import java.util.Arrays;
 /**
  * Json adapter for deserializing enums ignoring case.
  */
+@AllArgsConstructor
 public class AnyCaseEnumDeserializer<T extends Enum<?>> implements JsonDeserializer<T> {
+    private final T[] enumConstants;
+
     @Override
     public T deserialize(
             JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -28,9 +32,8 @@ public class AnyCaseEnumDeserializer<T extends Enum<?>> implements JsonDeseriali
                     "Expecting a String JsonPrimitive, getting " + json);
         }
 
-        @SuppressWarnings("unchecked") val tClass = (Class<T>) typeOfT;
         val asString = json.getAsString().toLowerCase();
-        val variant = Arrays.stream(tClass.getEnumConstants())
+        val variant = Arrays.stream(this.enumConstants)
                               .filter(v -> v.toString().toLowerCase()
                                                    .equals(asString))
                               .findFirst();
