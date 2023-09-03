@@ -31,30 +31,34 @@ public class MinecraftCapesResolver implements Resolver {
             throws IOException {
         val url = BASE_URL + profile.getId().toString().replace("-", "");
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
-        val response = this.config.getGson().fromJson(reader,
-                                                      MCCapesResponse.class
+        val response = this.config.getGson().fromJson(
+                reader,
+                MCCapesResponse.class
         );
         val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
 
-        for (val type : TextureType.values()) {
-            val typeName = type.toString().toLowerCase();
-            val textureData = response.getTextures().get(typeName);
+        for (val entry : response.getTextures().entrySet()) {
+            val type = entry.getKey();
+            val textureData = entry.getValue();
 
-            if (textureData != null) {
-                val metadata = new Metadata();
-                val decoder = Base64.getDecoder();
-
-                if (type == TextureType.CAPE) {
-                    metadata.setAnimated(response.isAnimatedCape());
-                }
-
-                val texture = new BytesTexture(textureData,
-                                               decoder.decode(textureData),
-                                               metadata
-                );
-
-                textures.getTextures().put(type, texture);
+            if (textureData == null) {
+                continue;
             }
+
+            val metadata = new Metadata();
+            val decoder = Base64.getDecoder();
+
+            if (type == TextureType.CAPE) {
+                metadata.setAnimated(response.isAnimatedCape());
+            }
+
+            val texture = new BytesTexture(
+                    textureData,
+                    decoder.decode(textureData),
+                    metadata
+            );
+
+            textures.getTextures().put(type, texture);
         }
 
         /* Since you can't resolve a list of textures without

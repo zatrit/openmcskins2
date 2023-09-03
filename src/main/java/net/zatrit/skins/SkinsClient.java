@@ -43,8 +43,8 @@ public final class SkinsClient implements ClientModInitializer {
         val client = MinecraftClient.getInstance();
         if (client.world != null) {
             client.world.getPlayers().stream()
-                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo())
-                    .filter(Objects::nonNull)
+                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo()).filter(
+                            Objects::nonNull)
                     .forEach(e -> ((Refreshable) e).skins$refresh());
 
             return true;
@@ -78,8 +78,8 @@ public final class SkinsClient implements ClientModInitializer {
         loaderConfig = new Config();
         skinlib = new Skinlib(loaderConfig);
 
-        val configPath = FabricLoader.getInstance().getConfigDir()
-                                 .resolve("openmcskins.toml");
+        val configPath = FabricLoader.getInstance().getConfigDir().resolve(
+                "openmcskins.toml");
 
         configHolder = new TomlConfigHolder<>(configPath, new SkinsConfig());
         configHolder.addSaveListener(this::applyConfig);
