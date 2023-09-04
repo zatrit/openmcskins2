@@ -21,9 +21,12 @@ public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener
     }
 
     @Override
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void reload(@NotNull ResourceManager manager) {
         val elytraId = new Identifier("textures/entity/elytra.png");
-        try (val stream = manager.open(elytraId)) {
+
+        try (val stream = manager.getAllResources(elytraId).stream().findFirst()
+                                  .get().getInputStream()) {
             val elytraImage = ImageIO.read(stream);
 
             SkinLayer.CAPE_LAYER.setElytraTexture(elytraImage);

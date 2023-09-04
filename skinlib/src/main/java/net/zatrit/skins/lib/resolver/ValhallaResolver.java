@@ -1,7 +1,5 @@
 package net.zatrit.skins.lib.resolver;
 
-import com.google.common.collect.Maps;
-import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;

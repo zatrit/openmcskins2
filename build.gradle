@@ -23,7 +23,7 @@ configurations.modApi {
 
 dependencies {
     var apiModules = ['fabric-resource-loader-v0',
-                      'fabric-command-api-v2',
+                      'fabric-command-api-v1',
                       'fabric-screen-api-v1',
                       'fabric-key-binding-api-v1',
                       'fabric-lifecycle-events-v1']
@@ -38,16 +38,15 @@ dependencies {
         modImplementation(fabricApi.module(it, project.fabric_version))
     }
 
-    modApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
     modApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
     shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_formatter_version}"
-
     shadow(project(':skinlib')) { transitive false }
 
     // It is necessary to run the game client, because otherwise
@@ -118,7 +117,8 @@ allprojects {
         }
     }
 
-    if (project.hasProperty('no-debug-info')) {
+    if (project.hasProperty('no-debug-info'))
+    {
         // Disabling all debugging information
         compileJava {
             options.compilerArgs << '-g:none'

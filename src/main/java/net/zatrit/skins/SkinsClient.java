@@ -5,7 +5,7 @@ import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -31,6 +31,7 @@ import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
+    @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
     private static @Getter TomlConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config loaderConfig;
@@ -81,7 +82,11 @@ public final class SkinsClient implements ClientModInitializer {
         val configPath = FabricLoader.getInstance().getConfigDir().resolve(
                 "openmcskins.toml");
 
-        configHolder = new TomlConfigHolder<>(configPath, new SkinsConfig());
+        configHolder = new TomlConfigHolder<>(
+                configPath,
+                new SkinsConfig(),
+                SkinsConfig.class
+        );
         configHolder.addSaveListener(this::applyConfig);
         configHolder.load();
 
@@ -92,7 +97,7 @@ public final class SkinsClient implements ClientModInitializer {
 
         val commands = new SkinsCommands(configHolder);
 
-        ClientCommandRegistrationCallback.EVENT.register(commands);
+        CommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
                              .build();

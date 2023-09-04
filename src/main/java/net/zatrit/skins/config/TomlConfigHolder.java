@@ -2,12 +2,8 @@ package net.zatrit.skins.config;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
-import dev.isxander.yacl3.config.ConfigInstance;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.val;
+import lombok.*;
 import net.zatrit.skins.SkinsClient;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,20 +13,15 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
- * TOML implementation for {@link ConfigInstance} and {@link ConfigHolder}.
+ * TOML implementation for {@link ConfigHolder}.
  */
-public class TomlConfigHolder<T> extends ConfigInstance<T> implements ConfigHolder<T> {
+@RequiredArgsConstructor
+public class TomlConfigHolder<T> implements ConfigHolder<T> {
     private final Collection<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter Path file;
     private final @Getter T defaults;
-
-    @SuppressWarnings("unchecked")
-    public TomlConfigHolder(Path file, @NotNull T defaultConfig) {
-        super((Class<T>) defaultConfig.getClass());
-
-        this.file = file;
-        this.defaults = defaultConfig;
-    }
+    private final @Getter Class<T> configClass;
+    private @Getter @Setter T config;
 
     /**
      * {@inheritDoc}

@@ -3,6 +3,7 @@ package net.zatrit.skins.config;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -26,7 +27,7 @@ public class HostEntry implements TextUtil.ToText {
         map.put("type", this.getType());
         map.put("properties", this.getProperties());
 
-        text.append(Text.literal("HostEntry")
+        text.append(new LiteralText("HostEntry")
                             .styled(style -> style.withFormatting(Formatting.RESET)));
 
         TextUtil.mapToText(text, map);

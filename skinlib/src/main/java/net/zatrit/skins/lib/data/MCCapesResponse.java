@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
 
-import java.util.EnumMap;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
 public class MCCapesResponse {
     private boolean animatedCape;
-    private EnumMap<TextureType, String> textures;
+    private Map<TextureType, String> textures;
 }

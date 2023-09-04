@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.zatrit.skins.SkinsClient;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 @AllArgsConstructor
 public class FileArgumentType implements ArgumentType<InputStream> {
     private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("openmcskins.command.noPreset"));
+            new TranslatableText("openmcskins.command.noPreset"));
     private final FileProvider[] providers;
     private final @Getter String extension;
     private final Collection<String> files = new HashSet<>();

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -42,7 +43,7 @@ public final class TextUtil {
         val specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
                 Formatting.GRAY);
 
-        text.append(Text.literal("{").styled(specialStyle));
+        text.append(new LiteralText("{").styled(specialStyle));
 
         boolean first = true;
         for (val entry : map.entrySet()) {
@@ -53,13 +54,13 @@ public final class TextUtil {
             }
 
             if (!first) {
-                text.append(Text.literal(", ").styled(specialStyle));
+                text.append(new LiteralText(", ").styled(specialStyle));
             }
             first = false;
 
-            text.append(Text.literal(entry.getKey())
+            text.append(new LiteralText(entry.getKey())
                                 .styled(style -> style.withFormatting(Formatting.RESET)));
-            text.append(Text.literal(" = ").styled(specialStyle));
+            text.append(new LiteralText(" = ").styled(specialStyle));
 
             if (value instanceof Map) {
                 mapToText(text, (Map<String, ?>) value);
@@ -67,7 +68,7 @@ public final class TextUtil {
                 ((ToText) value).toText(text);
             } else {
                 val stringValue = value.toString();
-                var mutableText = Text.literal(stringValue)
+                var mutableText = new LiteralText(stringValue)
                                           .styled(style -> style.withFormatting(
                                                   Formatting.GREEN));
 
@@ -84,7 +85,7 @@ public final class TextUtil {
             }
         }
 
-        text.append(Text.literal("}").styled(specialStyle));
+        text.append(new LiteralText("}").styled(specialStyle));
     }
 
     /**
@@ -93,7 +94,7 @@ public final class TextUtil {
      * @see Formatting
      */
     public static MutableText formatNumber(Number n) {
-        return Text.literal(String.valueOf(n)).formatted(Formatting.GREEN);
+        return new LiteralText(String.valueOf(n)).formatted(Formatting.GREEN);
     }
 
     /**
@@ -114,7 +115,7 @@ public final class TextUtil {
         void toText(@NotNull MutableText text);
 
         default Text toText() {
-            val text = Text.empty();
+            val text = new LiteralText("");
             this.toText(text);
 
             return text;

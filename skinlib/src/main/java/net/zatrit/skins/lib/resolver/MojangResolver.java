@@ -12,12 +12,12 @@ import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
 import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.URLTexture;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Base64;
 
@@ -27,8 +27,10 @@ import java.util.Base64;
  */
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
-    public static final TypeToken<?> URL_TEXTURES =
-            TypeToken.getParameterized(Textures.class, URLTexture.class);
+    public static final Type URL_TEXTURES = TypeToken.getParameterized(
+            Textures.class,
+            URLTexture.class
+    ).getType();
     private final Config config;
 
     @Override
@@ -57,7 +59,10 @@ public final class MojangResolver implements Resolver {
         return new CachedPlayerLoader<>(
                 this.config.getCacheProvider(),
                 this.config.getLayers(),
-                (Textures<URLTexture>) gson.fromJson(bytesReader, URL_TEXTURES)
+                (Textures<URLTexture>) gson.fromJson(
+                        bytesReader,
+                        URL_TEXTURES
+                )
         );
     }
 }

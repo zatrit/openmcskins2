@@ -28,11 +28,10 @@
     }
   ],
   "depends": {
-    "yet_another_config_lib_v3": "*",
     "fabric-resource-loader-v0": "*",
-    "fabric-command-api-v2": "*",
+    "fabric-command-api-v1": "*",
     "fabricloader": ">=0.14.11",
-    "minecraft": ">=1.19",
+    "minecraft": "~1.18",
     "java": ">=17"
   },
   "suggests": {
@@ -41,6 +40,6 @@
   "contributors": [
     "Wayturns",
     "HeyItzCarlos",
-    "hocbmyke",
+    "hocbmyke"
   ]
 }
