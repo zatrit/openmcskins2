@@ -47,7 +47,7 @@ dependencies {
 
     shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_formatter_version}"
-    shadow(project(':skinlib')) { transitive false }
+    shadow('com.github.zatrit.openmcskins2:skinlib:main-SNAPSHOT') { transitive false }
 
     // It is necessary to run the game client, because otherwise
     // all dependencies of shadow type will not be loaded.
