@@ -5,7 +5,7 @@ import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -97,8 +97,7 @@ public final class SkinsClient implements ClientModInitializer {
         this.applyConfig(configHolder.getConfig());
 
         val commands = new SkinsCommands(configHolder);
-
-        CommandRegistrationCallback.EVENT.register(commands);
+        commands.register(ClientCommandManager.DISPATCHER);
 
         httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
                              .build();

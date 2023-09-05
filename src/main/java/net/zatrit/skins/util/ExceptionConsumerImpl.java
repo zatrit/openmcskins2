@@ -2,7 +2,6 @@ package net.zatrit.skins.util;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import net.minecraft.util.logging.LoggerPrintStream;
 
 @AllArgsConstructor
 @NoArgsConstructor

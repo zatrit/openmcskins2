@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -26,13 +25,11 @@ import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
 
 @AllArgsConstructor
-public class SkinsCommands implements CommandRegistrationCallback {
+public class SkinsCommands {
     private final ConfigHolder<SkinsConfig> configHolder;
 
-    @Override
     public void register(
-            @NotNull CommandDispatcher<ServerCommandSource> dispatcher,
-            boolean dedicated) {
+            @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
         val presetsPath = FabricLoader.getInstance().getConfigDir().resolve(
                 "openmcskins");
 
@@ -76,7 +73,7 @@ public class SkinsCommands implements CommandRegistrationCallback {
         dispatcher.register(literal("omcs").redirect(command.build()));
     }
 
-    private int refresh(@NotNull CommandContext<ServerCommandSource> context) {
+    private int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
         if (SkinsClient.refresh()) {
             return 0;
         } else {
@@ -87,7 +84,7 @@ public class SkinsCommands implements CommandRegistrationCallback {
     }
 
     @SneakyThrows
-    public int addHost(@NotNull CommandContext<ServerCommandSource> context) {
+    public int addHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         @Cleanup val stream = context.getArgument("preset", InputStream.class);
         int id = 0;
 
@@ -102,7 +99,7 @@ public class SkinsCommands implements CommandRegistrationCallback {
 
         if (entry.getType() == null) {
             context.getSource().sendError(new TranslatableText(
-                    "openmcskins.command.invalidFileFormat"));
+                    "openmcskins.command" + ".invalidFileFormat"));
             return -1;
         }
 
@@ -114,12 +111,12 @@ public class SkinsCommands implements CommandRegistrationCallback {
         context.getSource().sendFeedback(new TranslatableText(
                 "openmcskins.command.added",
                 entry.toText()
-        ), false);
+        ));
 
         return 0;
     }
 
-    private int listHosts(@NotNull CommandContext<ServerCommandSource> context) {
+    private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
         val entries = this.configHolder.getConfig().getHosts().stream().map(
                 TextUtil.ToText::toText).toArray(Text[]::new);
         var result = new TranslatableText("openmcskins.command.list");
@@ -132,12 +129,12 @@ public class SkinsCommands implements CommandRegistrationCallback {
             )));
         }
 
-        context.getSource().sendFeedback(result, false);
+        context.getSource().sendFeedback(result);
 
         return 0;
     }
 
-    private int removeHost(@NotNull CommandContext<ServerCommandSource> context) {
+    private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val id = context.getArgument("id", Integer.class);
 
         @SuppressWarnings("CodeBlock2Expr")
@@ -148,12 +145,12 @@ public class SkinsCommands implements CommandRegistrationCallback {
         context.getSource().sendFeedback(new TranslatableText(
                 "openmcskins.command.removed",
                 entry.toText()
-        ), false);
+        ));
 
         return 0;
     }
 
-    private int moveHost(@NotNull CommandContext<ServerCommandSource> context) {
+    private int moveHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val from = context.getArgument("from", Integer.class);
         val to = context.getArgument("to", Integer.class);
 
@@ -168,7 +165,7 @@ public class SkinsCommands implements CommandRegistrationCallback {
                 "openmcskins.command.moved",
                 TextUtil.formatNumber(from),
                 TextUtil.formatNumber(to)
-        ), false);
+        ));
 
         return 0;
     }

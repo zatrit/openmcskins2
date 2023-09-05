@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.val;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.zatrit.skins.util.command.TextUtil;
 import org.jetbrains.annotations.NotNull;
