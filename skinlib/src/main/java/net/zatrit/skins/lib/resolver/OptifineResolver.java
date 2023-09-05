@@ -33,7 +33,7 @@ public class OptifineResolver implements Resolver {
     @Override
     public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
+        val textures = new Textures<BytesTexture>();
         val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
         val connection = (HttpURLConnection) url.openConnection();
 

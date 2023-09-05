@@ -15,13 +15,13 @@ import java.util.function.Consumer;
 /**
  * TOML implementation for {@link ConfigHolder}.
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TomlConfigHolder<T> implements ConfigHolder<T> {
     private final Collection<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter Path file;
+    private @Getter @Setter T config;
     private final @Getter T defaults;
     private final @Getter Class<T> configClass;
-    private @Getter @Setter T config;
 
     /**
      * {@inheritDoc}

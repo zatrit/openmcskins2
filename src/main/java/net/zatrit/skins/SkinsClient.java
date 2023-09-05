@@ -85,10 +85,11 @@ public final class SkinsClient implements ClientModInitializer {
         configHolder = new TomlConfigHolder<>(
                 configPath,
                 new SkinsConfig(),
+                new SkinsConfig(),
                 SkinsConfig.class
         );
-        configHolder.addSaveListener(this::applyConfig);
         configHolder.load();
+        configHolder.addSaveListener(this::applyConfig);
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
                 .registerReloadListener(new ElytraTextureFix(SkinsClient::refresh));

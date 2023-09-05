@@ -1,6 +1,7 @@
 package net.zatrit.skins;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.val;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
@@ -14,11 +15,10 @@ import java.io.IOException;
 @AllArgsConstructor
 public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener {
     private final Runnable refresh;
-
-    @Override
-    public Identifier getFabricId() {
-        return new Identifier("skins", "elytra_texture_fix");
-    }
+    private final @Getter Identifier fabricId = new Identifier(
+            "skins",
+            "elytra_texture_fix"
+    );
 
     @Override
     @SuppressWarnings("OptionalGetWithoutIsPresent")
