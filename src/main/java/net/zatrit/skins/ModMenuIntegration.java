@@ -12,7 +12,6 @@ import lombok.val;
 import net.minecraft.text.Text;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.UuidMode;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.text.Text.translatable;

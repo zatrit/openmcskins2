@@ -69,6 +69,7 @@ public class Skinlib {
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
                         type -> loaders.stream().parallel()
                                         // Remains only loaders that has texture
+                                        .filter(Objects::nonNull)
                                         .filter(pair -> pair.getValue() != null &&
                                                                 pair.getValue()
                                                                         .hasTexture(type))

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
-import java.util.EnumMap;
 
 @AllArgsConstructor
 public class MinecraftCapesResolver implements Resolver {
@@ -35,7 +34,7 @@ public class MinecraftCapesResolver implements Resolver {
                 reader,
                 MCCapesResponse.class
         );
-        val textures = new Textures<BytesTexture>(new EnumMap<>(TextureType.class));
+        val textures = new Textures<BytesTexture>();
 
         for (val entry : response.getTextures().entrySet()) {
             val type = entry.getKey();

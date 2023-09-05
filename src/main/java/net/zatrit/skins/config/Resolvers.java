@@ -6,7 +6,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.*;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

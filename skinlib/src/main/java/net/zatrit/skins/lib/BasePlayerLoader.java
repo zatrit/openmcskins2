@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.PlayerLoader;
