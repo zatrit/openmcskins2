@@ -66,7 +66,8 @@ processResources {
 remapJar {
     dependsOn(shadowJar)
     //noinspection GroovyAssignabilityCheck
-    inputFile.set shadowJar.archiveFile
+    inputFile = shadowJar.archiveFile
+    archiveAppendix = project.minecraft_version
 }
 
 shadowJar {
@@ -95,8 +96,9 @@ shadowJar {
     }
 
     configurations = [project.configurations.shadow]
-    archiveBaseName.set archives_base_name
-    archiveClassifier.set 'dev'
+    archiveBaseName = archives_base_name
+    archiveClassifier = 'dev'
+    archiveAppendix = project.minecraft_version
 }
 
 java {
