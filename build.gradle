@@ -55,7 +55,7 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
 
     filesMatching('fabric.mod.json') {
         expand 'version': project.version
@@ -64,8 +64,8 @@ processResources {
 
 remapJar {
     dependsOn(shadowJar)
-    //noinspection GroovyAssignabilityCheck
-    inputFile.set shadowJar.archiveFile
+    inputFile = shadowJar.archiveFile
+    archiveAppendix = project.minecraft_version
 }
 
 shadowJar {
@@ -94,8 +94,9 @@ shadowJar {
     }
 
     configurations = [project.configurations.shadow]
-    archiveBaseName.set archives_base_name
-    archiveClassifier.set 'dev'
+    archiveBaseName = archives_base_name
+    archiveClassifier = 'dev'
+    archiveAppendix = project.minecraft_version
 }
 
 java {
@@ -114,14 +115,6 @@ allprojects {
                 //noinspection GroovyAssignabilityCheck
                 from components.java
             }
-        }
-    }
-
-    if (project.hasProperty('no-debug-info'))
-    {
-        // Disabling all debugging information
-        compileJava {
-            options.compilerArgs << '-g:none'
         }
     }
 }
