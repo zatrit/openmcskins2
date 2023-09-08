@@ -14,8 +14,8 @@ public class SkinsConfig {
     public boolean refreshOnConfigSave = true;
     public float loaderTimeout = 5f;
     public UuidMode uuidMode = UuidMode.OFFLINE;
-    public List<HostEntry> hosts = Lists.newArrayList(new HostEntry(
-            HostEntry.HostType.MOJANG,
-            null
-    ));
+    public List<HostEntry> hosts = Lists.newArrayList(
+            new HostEntry(HostEntry.HostType.MOJANG),
+            new HostEntry(HostEntry.HostType.FALLBACK)
+    );
 }

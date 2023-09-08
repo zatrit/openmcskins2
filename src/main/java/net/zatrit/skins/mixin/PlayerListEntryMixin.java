@@ -14,7 +14,7 @@ import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Metadata;
-import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.util.Enumerated;
 import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
@@ -57,7 +57,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.textures.clear();
         this.applyMetadata(TextureType.SKIN, new Metadata());
 
-        val profile = (Profile) getProfile();
+        val profile = (Profile) this.getProfile();
         val skinlib = SkinsClient.getSkinlib();
         val resolvers = SkinsClient.getResolvers();
 
@@ -107,7 +107,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
     @Unique
     @SneakyThrows
-    private void loadTexture(@NotNull TextureResult result) {
+    private void loadTexture(@NotNull TypedTexture result) {
         val type = TextureTypeUtil.toAuthlibType(result.getType());
 
         // Doesn't create a texture if no matching type is found.

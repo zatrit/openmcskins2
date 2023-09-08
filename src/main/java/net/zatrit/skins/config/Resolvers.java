@@ -3,6 +3,8 @@ package net.zatrit.skins.config;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.zatrit.skins.FallbackResolver;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.*;
@@ -22,6 +24,10 @@ public final class Resolvers {
 
         try {
             return switch (entry.getType()) {
+                case FALLBACK -> new FallbackResolver(
+                        config,
+                        MinecraftClient.getInstance().getSessionService()
+                );
                 case MOJANG -> new MojangResolver(config);
                 case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
                 case NAMED_HTTP, OPTIFINE, VALHALLA -> {
