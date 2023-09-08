@@ -1,8 +1,6 @@
 package net.zatrit.skins.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.val;
+import lombok.*;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,10 +12,10 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-@SuppressWarnings("ClassCanBeRecord")
+@RequiredArgsConstructor
 public class HostEntry implements TextUtil.ToText {
     private final HostType type;
-    private final Map<String, ?> properties;
+    private Map<String, ?> properties;
 
     @Override
     public void toText(@NotNull MutableText text) {
@@ -39,5 +37,6 @@ public class HostEntry implements TextUtil.ToText {
         NAMED_HTTP,
         OPTIFINE,
         VALHALLA,
+        FALLBACK,
     }
 }

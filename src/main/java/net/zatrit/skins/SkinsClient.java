@@ -43,7 +43,7 @@ public final class SkinsClient implements ClientModInitializer {
         val client = MinecraftClient.getInstance();
         if (client.world != null) {
             client.world.getPlayers().stream()
-                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo()).filter(
+                    .map(t -> ((HasPlayerListEntry) t).getPlayerListEntry()).filter(
                             Objects::nonNull)
                     .forEach(e -> ((Refreshable) e).skins$refresh());
 

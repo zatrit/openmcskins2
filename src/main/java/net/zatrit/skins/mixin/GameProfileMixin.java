@@ -1,6 +1,7 @@
 package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -22,11 +23,8 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile {
-    @Override
-    public abstract @Shadow UUID getId();
-
-    @Override
-    public abstract @Shadow String getName();
+    @Shadow
+    public abstract PropertyMap getProperties();
 
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
@@ -36,23 +34,27 @@ public abstract class GameProfileMixin implements Profile {
                                                      .sendAsync(
                                                              request,
                                                              HttpResponse.BodyHandlers.ofInputStream()
-                                                     ).join())
-                       .thenApply(HttpResponse::body)
-                       .thenApply(sneaky(stream -> {
-                           @Cleanup val reader = new InputStreamReader(stream);
-                           val map = SkinsClient.getLoaderConfig().getGson()
-                                             .fromJson(reader, Map.class);
+                                                     ).join()).thenApply(
+                        HttpResponse::body).thenApply(sneaky(stream -> {
+                    @Cleanup val reader = new InputStreamReader(stream);
+                    val map = SkinsClient.getLoaderConfig().getGson().fromJson(
+                            reader,
+                            Map.class
+                    );
 
-                           val id = String.valueOf(map.get("id")).replaceAll(
-                                   "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                                   "$1-$2-$3-$4-$5"
-                           );
+                    val id = String.valueOf(map.get("id")).replaceAll(
+                            "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                            "$1-$2-$3-$4-$5"
+                    );
 
-                           return (Profile) new GameProfile(
-                                   UUID.fromString(id),
-                                   this.getName()
-                           );
-                       }));
+                    val profile = new GameProfile(
+                            UUID.fromString(id),
+                            this.getName()
+                    );
+                    profile.getProperties().putAll(this.getProperties());
+
+                    return (Profile) profile;
+                }));
     }
 
     @Unique

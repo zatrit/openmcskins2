@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.SkinLayer;
-import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.texture.LazyTexture;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,16 +22,16 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class ImageLayer implements SkinLayer {
     private final Collection<Layer<Image>> sublayers;
-    private Predicate<TextureResult> texturePredicate = texture -> true;
+    private Predicate<TypedTexture> texturePredicate = texture -> true;
 
     @Override
-    public TextureResult apply(@NotNull TextureResult input) {
+    public TypedTexture apply(@NotNull TypedTexture input) {
         if (!this.texturePredicate.test(input)) {
             return input;
         }
 
         val texture = input.getTexture();
-        return new TextureResult(new LazyTexture(
+        return new TypedTexture(new LazyTexture(
                 texture.getId(),
                 texture.getMetadata(),
                 () -> {

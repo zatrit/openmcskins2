@@ -6,7 +6,7 @@ import lombok.val;
 import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.util.Enumerated;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +54,7 @@ public class Skinlib {
      * <p>
      * Use {@link #resolveAsync} to obtain futures list.
      */
-    public CompletableFuture<TextureResult[]> fetchTexturesAsync(
+    public CompletableFuture<TypedTexture[]> fetchTexturesAsync(
             @NotNull Collection<CompletableFuture<Enumerated<PlayerLoader>>> loaderFutures) {
         val loaders = new LinkedList<Enumerated<PlayerLoader>>();
 
@@ -83,6 +83,6 @@ public class Skinlib {
                                                       // Filter and unwrap Optionals
                                                       .filter(Optional::isPresent)
                                                       .map(Optional::get)
-                                                      .toArray(TextureResult[]::new));
+                                                      .toArray(TypedTexture[]::new));
     }
 }

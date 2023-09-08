@@ -9,7 +9,7 @@ import net.zatrit.skins.lib.api.Texture;
 @Getter
 @Setter
 @AllArgsConstructor
-public class TextureResult {
+public class TypedTexture {
     private final Texture texture;
     private final TextureType type;
 }

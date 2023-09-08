@@ -1,9 +1,6 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Metadata {
     private boolean animated = false;
     private @Nullable String model;

@@ -6,7 +6,7 @@ import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
-import net.zatrit.skins.lib.data.TextureResult;
+import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.data.Textures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class BasePlayerLoader<T extends Texture> implements PlayerLoader {
     }
 
     @Override
-    public @Nullable TextureResult getTexture(TextureType type) {
+    public @Nullable TypedTexture getTexture(TextureType type) {
         if (!this.hasTexture(type)) {
             return null;
         }
@@ -41,10 +41,10 @@ public class BasePlayerLoader<T extends Texture> implements PlayerLoader {
 
         // https://stackoverflow.com/a/44521687/12245612
         @SuppressWarnings("OptionalGetWithoutIsPresent")
-        val layers = this.layers.stream().map(l -> (Layer<TextureResult>) l)
+        val layers = this.layers.stream().map(l -> (Layer<TypedTexture>) l)
                              .reduce(Layer::andThen).get();
 
-        return layers.apply(new TextureResult(texture, type));
+        return layers.apply(new TypedTexture(texture, type));
     }
 
     protected Texture wrapTexture(@NotNull T texture) {
