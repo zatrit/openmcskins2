@@ -19,7 +19,13 @@ import java.util.function.Consumer;
 public class TomlConfigHolder<T> implements ConfigHolder<T> {
     private final Collection<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter Path file;
+    /**
+     * Current config.
+     */
     private @Getter @Setter T config;
+    /**
+     * Default config. Should not be mutated.
+     */
     private final @Getter T defaults;
     private final @Getter Class<T> configClass;
 
