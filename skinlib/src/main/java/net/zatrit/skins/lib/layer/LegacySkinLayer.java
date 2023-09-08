@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+/**
+ * Layer for legacy skins to work correctly.
+ */
 public class LegacySkinLayer implements Layer<Image> {
     @Override
     public Image apply(@NotNull Image input) {

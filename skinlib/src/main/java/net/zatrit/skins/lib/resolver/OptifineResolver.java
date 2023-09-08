@@ -19,6 +19,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * <a href="https://optifine.readthedocs.io/capes.html">Optifine API</a>
+ * resolver for OpenMCSkins.
+ * <p>
+ * Does not cache skins, because connecting to API already loads textures.
+ */
 @AllArgsConstructor
 public class OptifineResolver implements Resolver {
     private final Config config;
@@ -40,10 +46,9 @@ public class OptifineResolver implements Resolver {
         if (connection.getResponseCode() / 100 == 2) {
             @Cleanup val stream = connection.getInputStream();
             val content = ByteStreams.toByteArray(stream);
-            val texture = new BytesTexture(
-                    url.toString(),
-                    content,
-                    new Metadata()
+            val texture = new BytesTexture(url.toString(),
+                                           content,
+                                           new Metadata()
             );
 
             textures.getTextures().put(TextureType.CAPE, texture);

@@ -18,11 +18,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+/**
+ * A layer that creates a {@link Image} and applies all layers on it.
+ */
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class ImageLayer implements SkinLayer {
     private final Collection<Layer<Image>> sublayers;
-    private Predicate<TypedTexture> texturePredicate = texture -> true;
+    private Predicate<TypedTexture> texturePredicate;
 
     @Override
     public TypedTexture apply(@NotNull TypedTexture input) {

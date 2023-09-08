@@ -20,6 +20,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
 
+/**
+ * Resolver for <a href="https://minecraftcapes.net/">Minecraft Capes</a>
+ * based on the behavior of the Minecraft Capes mod. Connects to the API at
+ * {@code https://api.minecraftcapes.net/}
+ * <p>
+ * Does not cache skins, because connecting to API already loads textures.
+ */
 @AllArgsConstructor
 public class MinecraftCapesResolver implements Resolver {
     private static final String BASE_URL = "https://api.minecraftcapes.net/profile/";

@@ -11,6 +11,9 @@ import net.zatrit.skins.lib.data.Metadata;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * A texture that loads its content at a given {@link URL}.
+ */
 @AllArgsConstructor
 public class URLTexture implements Texture {
     private final String url;

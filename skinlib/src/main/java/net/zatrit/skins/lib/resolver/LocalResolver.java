@@ -21,6 +21,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumMap;
 
+/**
+ * Resolver for the local directory, which has a similar format to the skin
+ * server, i.e. loads by name from the {@code textures/} and
+ * {@code metadata/} folders.
+ */
 @AllArgsConstructor
 public class LocalResolver implements Resolver {
     private final Config config;

@@ -10,6 +10,11 @@ import net.zatrit.skins.lib.api.Texture;
 
 import java.util.Map;
 
+/**
+ * Container for player textures
+ *
+ * @param <T> texture type.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

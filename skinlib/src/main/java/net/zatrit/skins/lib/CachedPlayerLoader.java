@@ -1,6 +1,7 @@
 package net.zatrit.skins.lib;
 
 import lombok.val;
+import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.api.cache.Cache;
@@ -12,6 +13,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
+/**
+ * Implementation of {@link PlayerLoader} with caching support with
+ * { @link CacheProvider}.
+ *
+ * @param <T> texture type.
+ */
 public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
     private final @Nullable Cache cache;
 

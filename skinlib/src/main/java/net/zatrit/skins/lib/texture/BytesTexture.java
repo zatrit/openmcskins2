@@ -5,6 +5,9 @@ import lombok.Getter;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Metadata;
 
+/**
+ * A texture wrapping an array of bytes.
+ */
 @Getter
 @AllArgsConstructor
 public class BytesTexture implements Texture {
