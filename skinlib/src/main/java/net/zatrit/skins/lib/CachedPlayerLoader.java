@@ -15,9 +15,10 @@ import java.util.Collection;
 
 /**
  * Implementation of {@link PlayerLoader} with caching support with
- * { @link CacheProvider}.
+ * {@link CacheProvider}.
  *
  * @param <T> texture type.
+ * @see PlayerLoader
  */
 public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
     private final @Nullable Cache cache;
