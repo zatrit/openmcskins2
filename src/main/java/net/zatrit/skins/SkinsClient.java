@@ -55,16 +55,16 @@ public final class SkinsClient implements ClientModInitializer {
     private void applyConfig(@NotNull SkinsConfig config) {
         val path = (HasAssetPath) MinecraftClient.getInstance();
 
-        errorHandler = new ExceptionConsumerImpl(config.verboseLogs);
+        errorHandler = new ExceptionConsumerImpl(config.isVerboseLogs());
 
         resolvers.clear();
-        resolvers.addAll(config.hosts.stream().parallel()
+        resolvers.addAll(config.getHosts().stream().parallel()
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
         val loaderConfig = getLoaderConfig();
 
-        loaderConfig.setCacheProvider(config.cacheTextures ?
+        loaderConfig.setCacheProvider(config.isCacheTextures() ?
                                               new AssetCacheProvider(path) :
                                               null);
 

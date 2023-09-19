@@ -1,7 +1,7 @@
 package net.zatrit.skins.mixin;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import lombok.SneakyThrows;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
@@ -35,10 +35,9 @@ import java.util.concurrent.TimeUnit;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
-    @Shadow private boolean texturesLoaded;
-    @Shadow @Final
-    private Map<MinecraftProfileTexture.Type, Identifier> textures;
-    @Shadow @Nullable private String model;
+    private @Shadow boolean texturesLoaded;
+    private @Shadow @Nullable String model;
+    private @Shadow @Final Map<Type, Identifier> textures;
 
     @Shadow
     public abstract GameProfile getProfile();
@@ -118,9 +117,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(
-                getProfile().getName(),
-                result.getType()
+        val textureId = new TextureIdentifier(getProfile().getName(),
+                                              result.getType()
         );
 
         TextureLoader.create(texture).getTexture(textureId, id -> {
