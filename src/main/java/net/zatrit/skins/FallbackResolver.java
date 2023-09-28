@@ -17,6 +17,7 @@ import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.URLTexture;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -40,8 +41,9 @@ public class FallbackResolver implements Resolver {
 
         for (val entry : textures.entrySet()) {
             val texture = entry.getValue();
-            val metadataMap = ((HasMetadata) texture).getMetadata();
-            val metadata = new Metadata(
+            @Nullable val metadataMap = ((HasMetadata) texture).getMetadata();
+
+            val metadata = metadataMap == null ? new Metadata() : new Metadata(
                     Boolean.parseBoolean(metadataMap.getOrDefault(
                             "animated",
                             "false"

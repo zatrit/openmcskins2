@@ -12,13 +12,18 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.command.*;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
@@ -27,6 +32,7 @@ import static net.zatrit.skins.util.command.CommandUtil.literal;
 @AllArgsConstructor
 public class SkinsCommands {
     private final ConfigHolder<SkinsConfig> configHolder;
+    private final HasAssetPath assetPath;
 
     public void register(
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
@@ -45,6 +51,8 @@ public class SkinsCommands {
         val command = literal("openmcskins")
                               // omcs refresh
                               .then(literal("refresh").executes(this::refresh))
+                              // omcs clean
+                              .then(literal("clean").executes(this::clean))
                               // omcs add (preset (e.g. mojang)) [id]
                               .then(literal("add").then(argument(
                                       "preset",
@@ -99,7 +107,7 @@ public class SkinsCommands {
 
         if (entry.getType() == null) {
             context.getSource().sendError(new TranslatableText(
-                    "openmcskins.command" + ".invalidFileFormat"));
+                    "openmcskins.command.invalidFileFormat"));
             return -1;
         }
 
@@ -166,6 +174,21 @@ public class SkinsCommands {
                 TextUtil.formatNumber(from),
                 TextUtil.formatNumber(to)
         ));
+
+        return 0;
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("resource")
+    private int clean(@NotNull CommandContext<FabricClientCommandSource> context) {
+        Files.list(Path.of(assetPath.getAssetPath()).resolve("skins"))
+                .map(Path::toFile).parallel().forEach(directory -> {
+                    try {
+                        FileUtils.deleteDirectory(directory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
         return 0;
     }

@@ -96,7 +96,10 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHolder.getConfig());
 
-        val commands = new SkinsCommands(configHolder);
+        val commands = new SkinsCommands(
+                configHolder,
+                (HasAssetPath) MinecraftClient.getInstance()
+        );
         commands.register(ClientCommandManager.DISPATCHER);
 
         httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
