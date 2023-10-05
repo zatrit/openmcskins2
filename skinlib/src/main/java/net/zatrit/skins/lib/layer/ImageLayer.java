@@ -2,7 +2,6 @@ package net.zatrit.skins.lib.layer;
 
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.SkinLayer;

@@ -42,8 +42,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                 "openmcskins");
 
         val presetsType = new FileArgumentType(new FileProvider[]{
-                new IndexedResourceProvider("presets",
-                                            getClass().getClassLoader()
+                new IndexedResourceProvider(
+                        "presets",
+                        getClass().getClassLoader()
                 ),
                 new DirectoryFileProvider(presetsPath)
         }, "toml");
@@ -55,22 +56,27 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                               // omcs clean
                               .then(literal("clean").executes(this::clean))
                               // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument("preset",
-                                                                 presetsType
-                              ).executes(this::addHost).then(argument("id",
-                                                                      integer(0)
+                              .then(literal("add").then(argument(
+                                      "preset",
+                                      presetsType
+                              ).executes(this::addHost).then(argument(
+                                      "id",
+                                      integer(0)
                               ).executes(this::addHost))))
                               // omcs list
                               .then(literal("list").executes(this::listHosts))
                               // omcs remove (id)
-                              .then(literal("remove").then(argument("id",
-                                                                    integer(0)
+                              .then(literal("remove").then(argument(
+                                      "id",
+                                      integer(0)
                               ).executes(this::removeHost)))
                               // omcs move (from) (to)
-                              .then(literal("move").then(argument("from",
-                                                                  integer(0)
-                              ).then(argument("to",
-                                              integer(0)
+                              .then(literal("move").then(argument(
+                                      "from",
+                                      integer(0)
+                              ).then(argument(
+                                      "to",
+                                      integer(0)
                               ).executes(this::moveHost))));
 
         dispatcher.register(command);
@@ -112,8 +118,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return null;
         });
 
-        context.getSource().sendFeedback(Text.translatable("openmcskins.command.added",
-                                                           entry.toText()
+        context.getSource().sendFeedback(Text.translatable(
+                "openmcskins.command.added",
+                entry.toText()
         ));
 
         return 0;
@@ -145,8 +152,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return config.getHosts().remove(id.intValue());
         });
 
-        context.getSource().sendFeedback(Text.translatable("openmcskins.command.removed",
-                                                           entry.toText()
+        context.getSource().sendFeedback(Text.translatable(
+                "openmcskins.command.removed",
+                entry.toText()
         ));
 
         return 0;
@@ -180,7 +188,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                     try {
                         FileUtils.deleteDirectory(directory);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        SkinsClient.getErrorHandler().accept(e);
                     }
                 });
 
