@@ -38,5 +38,6 @@ public class HostEntry implements TextUtil.ToText {
         OPTIFINE,
         VALHALLA,
         FALLBACK,
+        DIRECT,
     }
 }

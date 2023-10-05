@@ -1,0 +1,5 @@
+type = 'DIRECT'
+
+[properties]
+types = ['CAPE']
+base_url = 'https://api.cosmetica.cc/get/cloak?username={name}&nothirdparty'

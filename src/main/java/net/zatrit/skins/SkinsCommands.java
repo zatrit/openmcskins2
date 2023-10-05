@@ -186,7 +186,7 @@ public class SkinsCommands {
                     try {
                         FileUtils.deleteDirectory(directory);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        SkinsClient.getErrorHandler().accept(e);
                     }
                 });
 
