@@ -37,6 +37,8 @@ public final class Resolvers {
                     return new MojangResolver(config);
                 case MINECRAFT_CAPES:
                     return new MinecraftCapesResolver(config);
+                case FIVEZIG:
+                    return new FiveZigResolver(config);
                 case NAMED_HTTP:
                 case OPTIFINE:
                 case VALHALLA:
