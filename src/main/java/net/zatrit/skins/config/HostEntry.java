@@ -34,13 +34,14 @@ public class HostEntry implements TextUtil.ToText {
     }
 
     public enum HostType {
+        DIRECT,
+        FALLBACK,
+        FIVEZIG,
         LOCAL,
         MINECRAFT_CAPES,
         MOJANG,
         NAMED_HTTP,
         OPTIFINE,
         VALHALLA,
-        FALLBACK,
-        DIRECT,
     }
 }

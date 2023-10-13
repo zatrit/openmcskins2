@@ -30,6 +30,7 @@ public final class Resolvers {
                                                       MinecraftClient.getInstance()
                                                               .getSessionService()
                 );
+                case FIVEZIG -> new FiveZigResolver(config);
                 case MOJANG -> new MojangResolver(config);
                 case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
                 case NAMED_HTTP, OPTIFINE, VALHALLA, DIRECT -> {
