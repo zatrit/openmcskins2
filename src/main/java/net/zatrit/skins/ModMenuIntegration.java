@@ -45,14 +45,6 @@ public class ModMenuIntegration implements ModMenuApi {
                             ).setDefaultValue(defaults::isRefreshOnConfigSave)
                                       .setSaveConsumer(config::setRefreshOnConfigSave)
                                       .build())
-                    .addEntry(entryBuilder.startFloatField(
-                                    new TranslatableText(
-                                            "openmcskins.option.loaderTimeout"),
-                                    config.getLoaderTimeout()
-                            ).setMax(60f).setMin(0.5f)
-                                      .setDefaultValue(defaults::getLoaderTimeout)
-                                      .setSaveConsumer(config::setLoaderTimeout)
-                                      .build())
                     .addEntry(entryBuilder.startEnumSelector(
                                     new TranslatableText("openmcskins.option.uuidMode"),
                                     UuidMode.class,

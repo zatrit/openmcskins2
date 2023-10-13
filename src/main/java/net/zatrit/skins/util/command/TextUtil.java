@@ -3,6 +3,7 @@ package net.zatrit.skins.util.command;
 import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import lombok.var;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;

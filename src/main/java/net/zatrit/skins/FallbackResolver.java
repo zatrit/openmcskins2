@@ -29,13 +29,13 @@ public class FallbackResolver implements Resolver {
 
     @Override
     public @NotNull PlayerLoader resolve(Profile profile) {
-        if (!(profile instanceof GameProfile gameProfile)) {
+        if (!(profile instanceof GameProfile)) {
             return new BasePlayerLoader<>(
                     new Textures<>(),
                     Collections.emptyList()
             );
         }
-
+        val gameProfile = (GameProfile) profile;
         val textures = this.sessionService.getTextures(gameProfile, false);
         val newTextures = new EnumMap<TextureType, URLTexture>(TextureType.class);
 

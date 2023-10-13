@@ -12,9 +12,10 @@ import net.zatrit.skins.lib.resolver.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.andreinc.aleph.AlephFormatter.str;
 
@@ -25,45 +26,53 @@ public final class Resolvers {
         val config = SkinsClient.getLoaderConfig();
 
         try {
-            return switch (entry.getType()) {
-                case FALLBACK -> new FallbackResolver(config,
-                                                      MinecraftClient.getInstance()
-                                                              .getSessionService()
-                );
-                case MOJANG -> new MojangResolver(config);
-                case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
-                case NAMED_HTTP, OPTIFINE, VALHALLA, DIRECT -> {
+            switch (entry.getType()) {
+                case FALLBACK:
+                    return new FallbackResolver(
+                            config,
+                            MinecraftClient.getInstance()
+                                    .getSessionService()
+                    );
+                case MOJANG:
+                    return new MojangResolver(config);
+                case MINECRAFT_CAPES:
+                    return new MinecraftCapesResolver(config);
+                case NAMED_HTTP:
+                case OPTIFINE:
+                case VALHALLA:
+                case DIRECT:
                     val baseUrl = (String) props.get("base_url");
 
-                    yield switch (entry.getType()) {
-                        case OPTIFINE -> new OptifineResolver(config, baseUrl);
-                        case VALHALLA -> new ValhallaResolver(config, baseUrl);
-                        case NAMED_HTTP -> new NamedHTTPResolver(config,
-                                                                 baseUrl
-                        );
-                        case DIRECT -> {
+                    switch (entry.getType()) {
+                        case OPTIFINE:
+                            return new OptifineResolver(config, baseUrl);
+                        case VALHALLA:
+                            return new ValhallaResolver(config, baseUrl);
+                        case NAMED_HTTP:
+                            return new NamedHTTPResolver(
+                                    config,
+                                    baseUrl
+                            );
+                        case DIRECT:
                             @SuppressWarnings("unchecked")
                             val types = ((List<String>) props.get("types")).stream()
                                                 .map(TextureType::valueOf)
-                                                .toList();
-                            yield new DirectResolver(config, baseUrl, types);
-                        }
-                        default -> null;
-                    };
-                }
-                case LOCAL -> {
+                                                .collect(Collectors.toList());
+                            return new DirectResolver(config, baseUrl, types);
+                    }
+                case LOCAL:
                     val directoryPattern = (String) props.get("directory");
                     val replaces = new HashMap<String, Object>();
-                    replaces.put("configDir",
-                                 FabricLoader.getInstance().getConfigDir()
+                    replaces.put(
+                            "configDir",
+                            FabricLoader.getInstance().getConfigDir()
                     );
-
-                    val directory = Path.of(str(directoryPattern).args(replaces)
-                                                    .fmt());
-
-                    yield new LocalResolver(config, directory);
-                }
-            };
+                    val directory = Paths.get(str(directoryPattern).args(replaces)
+                                                      .fmt());
+                    return new LocalResolver(config, directory);
+                default:
+                    throw new IllegalArgumentException();
+            }
         } catch (Exception ex) {
             SkinsClient.getErrorHandler().accept(ex);
             return null;

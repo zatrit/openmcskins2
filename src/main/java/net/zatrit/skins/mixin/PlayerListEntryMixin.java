@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
@@ -42,7 +42,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
     @Shadow
     public abstract GameProfile getProfile();
 
-    /* I could use @Overwrite the but SpongePowered Mixin
+    /* I could use @Overwrite but SpongePowered Mixin
      * wiki says I shouldn't use it when possibly. */
     @Inject(method = "loadTextures", at = @At("HEAD"), cancellable = true)
     public synchronized void loadTextures(@NotNull CallbackInfo ci) {
@@ -61,18 +61,18 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val resolvers = SkinsClient.getResolvers();
 
         val config = SkinsClient.getConfigHolder().getConfig();
-        val timeout = (int) (config.getLoaderTimeout() * 1000);
-        val refreshUuid = switch (config.getUuidMode()) {
-            case NEVER -> false;
-            case ALWAYS -> true;
-            case OFFLINE -> {
+        boolean refreshUuid = false;
+        switch (config.getUuidMode()) {
+            case ALWAYS:
+                refreshUuid = true;
+                break;
+            case OFFLINE:
                 val client = MinecraftClient.getInstance();
                 val networkHandler = client.getNetworkHandler();
-
-                yield networkHandler != null &&
-                              !networkHandler.getConnection().isEncrypted();
-            }
-        };
+                refreshUuid = networkHandler != null &&
+                                      !networkHandler.getConnection()
+                                               .isEncrypted();
+        }
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
@@ -86,22 +86,22 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val errorHandler = SkinsClient.getErrorHandler();
 
         profileTask.thenApplyAsync(profile1 -> {
-                    val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
-                    val futures = skinlib.resolveAsync(resolvers, profile1)
-                                          // Added error handling in all futures
-                                          .map(f -> f.exceptionally(handler));
+            val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
+            val futures = skinlib.resolveAsync(resolvers, profile1)
+                                  // Added error handling in all futures
+                                  .map(f -> f.exceptionally(handler));
 
-                    return skinlib.fetchTexturesAsync(futures.toList()).join();
-                }).orTimeout(timeout, TimeUnit.MILLISECONDS)
-                .whenComplete((result, error) -> {
-                    if (error != null) {
-                        SkinsClient.getErrorHandler().accept(error);
-                    }
+            return skinlib.fetchTexturesAsync(futures.collect(Collectors.toList()))
+                           .join();
+        }).whenComplete((result, error) -> {
+            if (error != null) {
+                SkinsClient.getErrorHandler().accept(error);
+            }
 
-                    for (val texture : result) {
-                        this.loadTexture(texture);
-                    }
-                }).exceptionally(errorHandler.andReturn(null));
+            for (val texture : result) {
+                this.loadTexture(texture);
+            }
+        }).exceptionally(errorHandler.andReturn(null));
     }
 
     @Unique
@@ -117,8 +117,9 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(getProfile().getName(),
-                                              result.getType()
+        val textureId = new TextureIdentifier(
+                getProfile().getName(),
+                result.getType()
         );
 
         TextureLoader.create(texture).getTexture(textureId, id -> {

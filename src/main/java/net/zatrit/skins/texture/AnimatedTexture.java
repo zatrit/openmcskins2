@@ -1,11 +1,10 @@
 package net.zatrit.skins.texture;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.TextureUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.TextureUtil;
 import net.minecraft.resource.ResourceManager;
 import org.lwjgl.opengl.GL11;
 
@@ -37,7 +36,7 @@ public class AnimatedTexture extends AbstractTexture {
         GL11.glGenTextures(this.ids);
 
         for (int i = 0; i < this.framesCount; i++) {
-            TextureUtil.prepareImage(
+            TextureUtil.allocate(
                     this.ids[i],
                     this.image.getWidth(),
                     frameHeight
@@ -75,10 +74,8 @@ public class AnimatedTexture extends AbstractTexture {
 
     @Override
     public void clearGlId() {
-        GlStateManager._deleteTextures(this.ids);
-
         for (int id : this.ids) {
-            TextureUtil.releaseTextureId(id);
+            TextureUtil.deleteId(id);
         }
     }
 }

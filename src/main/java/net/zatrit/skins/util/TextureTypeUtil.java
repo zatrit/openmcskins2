@@ -3,6 +3,7 @@ package net.zatrit.skins.util;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.experimental.UtilityClass;
 import net.zatrit.skins.lib.TextureType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,22 +14,29 @@ public final class TextureTypeUtil {
      * to {@link MinecraftProfileTexture.Type}.
      */
     public static MinecraftProfileTexture.@Nullable Type toAuthlibType(@NotNull TextureType type) {
-        return switch (type) {
-            case SKIN -> MinecraftProfileTexture.Type.SKIN;
-            case CAPE -> MinecraftProfileTexture.Type.CAPE;
-            default -> null;
-        };
+        switch (type) {
+            case SKIN:
+                return MinecraftProfileTexture.Type.SKIN;
+            case CAPE:
+                return MinecraftProfileTexture.Type.CAPE;
+            default:
+                return null;
+        }
     }
 
     /**
      * Converts texture type from {@link MinecraftProfileTexture.Type}
      * to {@link TextureType}.
      */
-    public static TextureType fromAuthlibType(MinecraftProfileTexture.@NotNull Type type) {
-        return switch (type) {
-            case SKIN -> TextureType.SKIN;
-            case CAPE -> TextureType.CAPE;
-            default -> null;
-        };
+    @Contract(pure = true)
+    public static @Nullable TextureType fromAuthlibType(MinecraftProfileTexture.@NotNull Type type) {
+        switch (type) {
+            case SKIN:
+                return TextureType.SKIN;
+            case CAPE:
+                return TextureType.CAPE;
+            default:
+                return null;
+        }
     }
 }

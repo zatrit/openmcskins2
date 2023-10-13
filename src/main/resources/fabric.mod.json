@@ -31,8 +31,8 @@
     "fabric-resource-loader-v0": "*",
     "fabric-command-api-v1": "*",
     "fabricloader": ">=0.14.11",
-    "minecraft": "~1.18",
-    "java": ">=17"
+    "minecraft": "~1.16",
+    "java": ">=8"
   },
   "suggests": {
     "modmenu": "*"

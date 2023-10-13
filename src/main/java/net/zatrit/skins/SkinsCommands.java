@@ -2,11 +2,9 @@ package net.zatrit.skins;
 
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import lombok.AllArgsConstructor;
-import lombok.Cleanup;
-import lombok.SneakyThrows;
-import lombok.val;
+import lombok.*;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
@@ -18,12 +16,14 @@ import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.command.*;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
@@ -48,37 +48,37 @@ public class SkinsCommands {
         }, "toml");
         presetsType.refresh();
 
-        val command = literal("openmcskins")
-                              // omcs refresh
-                              .then(literal("refresh").executes(this::refresh))
-                              // omcs clean
-                              .then(literal("clean").executes(this::clean))
-                              // omcs add (preset (e.g. mojang)) [id]
-                              .then(literal("add").then(argument(
-                                      "preset",
-                                      presetsType
-                              ).executes(this::addHost).then(argument(
-                                      "id",
-                                      integer(0)
-                              ).executes(this::addHost))))
-                              // omcs list
-                              .then(literal("list").executes(this::listHosts))
-                              // omcs remove (id)
-                              .then(literal("remove").then(argument(
-                                      "id",
-                                      integer(0)
-                              ).executes(this::removeHost)))
-                              // omcs move (from) (to)
-                              .then(literal("move").then(argument(
-                                      "from",
-                                      integer(0)
-                              ).then(argument(
-                                      "to",
-                                      integer(0)
-                              ).executes(this::moveHost))));
+        dispatcher.register(registerCommand(presetsType, literal("openmcskins")));
+        dispatcher.register(registerCommand(presetsType, literal("omcs")));
+    }
 
-        dispatcher.register(command);
-        dispatcher.register(literal("omcs").redirect(command.build()));
+    @Contract("_, _ -> param2")
+    private @NotNull LiteralArgumentBuilder<FabricClientCommandSource> registerCommand(
+            FileArgumentType presetsType,
+            @NotNull LiteralArgumentBuilder<FabricClientCommandSource> literal) {
+        literal
+                // omcs refresh
+                .then(literal("refresh").executes(this::refresh))
+                // omcs clean
+                .then(literal("clean").executes(this::clean))
+                // omcs add (preset (e.g. mojang)) [id]
+                .then(literal("add").then(argument(
+                        "preset",
+                        presetsType
+                ).executes(this::addHost).then(argument(
+                        "id",
+                        integer(0)
+                ).executes(this::addHost))))
+                // omcs list
+                .then(literal("list").executes(this::listHosts))
+                // omcs remove (id)
+                .then(literal("remove").then(argument("id", integer(0)).executes(
+                        this::removeHost)))
+                // omcs move (from) (to)
+                .then(literal("move").then(argument("from", integer(0)).then(
+                        argument("to", integer(0)).executes(this::moveHost))));
+
+        return literal;
     }
 
     private int refresh(@NotNull CommandContext<FabricClientCommandSource> context) {
@@ -181,7 +181,7 @@ public class SkinsCommands {
     @SneakyThrows
     @SuppressWarnings("resource")
     private int clean(@NotNull CommandContext<FabricClientCommandSource> context) {
-        Files.list(Path.of(assetPath.getAssetPath()).resolve("skins"))
+        Files.list(Paths.get(assetPath.getAssetPath()).resolve("skins"))
                 .map(Path::toFile).parallel().forEach(directory -> {
                     try {
                         FileUtils.deleteDirectory(directory);
