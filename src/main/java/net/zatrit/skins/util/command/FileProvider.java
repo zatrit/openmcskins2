@@ -1,10 +1,13 @@
 package net.zatrit.skins.util.command;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * An interface for reading and listing abstract files.
@@ -22,5 +25,5 @@ public interface FileProvider {
     /**
      * Opens an InputStream from an abstract file.
      */
-    @Nullable InputStream getFile(String path) throws IOException;
+    @NotNull Optional<Path> getFile(String path);
 }

@@ -21,7 +21,6 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -93,7 +92,10 @@ public class SkinsCommands {
 
     @SneakyThrows
     public int addHost(@NotNull CommandContext<FabricClientCommandSource> context) {
-        @Cleanup val stream = context.getArgument("preset", InputStream.class);
+        @Cleanup val stream = Files.newInputStream(context.getArgument(
+                "preset",
+                Path.class
+        ));
         int id = 0;
 
         try {
