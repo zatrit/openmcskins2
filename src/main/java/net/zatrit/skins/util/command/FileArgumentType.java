@@ -16,7 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
  * @see DirectoryFileProvider
  */
 @AllArgsConstructor
-public class FileArgumentType implements ArgumentType<InputStream> {
+public class FileArgumentType implements ArgumentType<Path> {
     private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
             Text.translatable("openmcskins.command.noPreset"));
     private final FileProvider[] providers;
@@ -37,21 +37,16 @@ public class FileArgumentType implements ArgumentType<InputStream> {
     private final Collection<String> files = new HashSet<>();
 
     @Override
-    public InputStream parse(@NotNull StringReader reader)
+    public Path parse(@NotNull StringReader reader)
             throws CommandSyntaxException {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
-            val stream = Arrays.stream(this.providers).map(p -> {
-                try {
-                    return p.getFile(file);
-                } catch (IOException e) {
-                    SkinsClient.getErrorHandler().accept(e);
-                    return null;
-                }
-            }).filter(Objects::nonNull).findFirst();
+            val path = Arrays.stream(this.providers).map(p -> p.getFile(file))
+                               .filter(Optional::isPresent).map(Optional::get)
+                               .findFirst();
 
-            if (stream.isPresent()) {
-                return stream.get();
+            if (path.isPresent()) {
+                return path.get();
             }
         }
 

@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class DirectoryFileProvider implements FileProvider {
@@ -23,8 +24,8 @@ public class DirectoryFileProvider implements FileProvider {
     }
 
     @Override
-    public @Nullable InputStream getFile(String name) throws IOException {
+    public @NotNull Optional<Path> getFile(String name) {
         val path = this.path.resolve(name);
-        return Files.newInputStream(path);
+        return Files.isRegularFile(path) ? Optional.of(path) : Optional.empty();
     }
 }
