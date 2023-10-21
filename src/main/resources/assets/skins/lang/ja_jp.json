@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": "設定したホスト：",
+  "openmcskins.command.moved": "ホストは%dから%dへ移動されました。",
+  "openmcskins.options.title": "OpenMCSkinsの設定",
+  "openmcskins.category.general": "一般",
+  "openmcskins.option.cacheTextures": "テクスチャのキャッシュ",
+  "openmcskins.option.verboseLogs": "詳細なログ",
+  "openmcskins.option.loaderTimeout": "ローダーのタイムアウト",
+  "openmcskins.option.refreshOnConfigSave": "設定の保存時に更新",
+  "openmcskins.option.uuidMode": "UUIDを更新",
+  "openmcskins.option.uuidMode.never": "常に無効",
+  "openmcskins.option.uuidMode.always": "常に有効",
+  "openmcskins.option.uuidMode.offline": "オフライン時",
+  "openmcskins.command.noPreset": "プリセットが見つかりませんでした。",
+  "openmcskins.command.invalidFileFormat": "無効な入力ファイル形式です。",
+  "openmcskins.command.unableToRefresh": "スキンを更新できません。"
+}

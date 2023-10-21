@@ -1,0 +1,17 @@
+{
+  "openmcskins.command.list": ":sʇsoɥ pǝɹnᵷᴉɟuoƆ",
+  "openmcskins.command.moved": "˙ʎꞁꞁnɟssǝɔɔns %d oʇ %d ɯoɹɟ pǝʌoɯ sɐʍ ʇsoɥ Ɐ",
+  "openmcskins.options.title": "suoᴉʇdo suᴉʞSƆWuǝdO",
+  "openmcskins.category.general": "ꞁɐɹǝuǝ⅁",
+  "openmcskins.option.cacheTextures": "ᵷuᴉɥɔɐɔ ǝɹnʇxǝ⟘",
+  "openmcskins.option.verboseLogs": "sᵷoꞁ ǝsoqɹǝɅ",
+  "openmcskins.option.loaderTimeout": "ʇnoǝɯᴉʇ ɹǝpɐoꞀ",
+  "openmcskins.option.refreshOnConfigSave": "ǝʌɐs ᵷᴉɟuoɔ uo ɥsǝɹɟǝᴚ",
+  "openmcskins.option.uuidMode": "ᗡI∩∩ ɥsǝɹɟǝᴚ",
+  "openmcskins.option.uuidMode.never": "ɹǝʌǝN",
+  "openmcskins.option.uuidMode.always": "sʎɐʍꞁⱯ",
+  "openmcskins.option.uuidMode.offline": "ǝuᴉꞁɟɟo uǝɥM",
+  "openmcskins.command.noPreset": "˙punoɟ ʇǝsǝɹd oN",
+  "openmcskins.command.invalidFileFormat": "˙ʇɐɯɹoɟ ǝꞁᴉɟ ʇnduᴉ pᴉꞁɐʌuI",
+  "openmcskins.command.unableToRefresh": "˙suᴉʞs ɥsǝɹɟǝɹ oʇ ǝꞁqɐu∩"
+}
