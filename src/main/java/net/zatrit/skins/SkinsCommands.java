@@ -116,7 +116,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }
 
         this.configHolder.patchConfig(config -> {
-            config.hosts.add(finalId, entry);
+            config.getHosts().add(finalId, entry);
             return null;
         });
 

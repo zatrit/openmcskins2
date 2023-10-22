@@ -53,7 +53,7 @@ public class ModMenuIntegration implements ModMenuApi {
                        .option(Option.<Boolean>createBuilder()
                                        .controller(BooleanControllerBuilder::create)
                                        .binding(
-                                               defaults.cacheTextures,
+                                               defaults.isCacheTextures(),
                                                config::isCacheTextures,
                                                config::setCacheTextures
                                        ).name(translatable(
@@ -62,7 +62,7 @@ public class ModMenuIntegration implements ModMenuApi {
                        .option(Option.<Boolean>createBuilder()
                                        .controller(BooleanControllerBuilder::create)
                                        .binding(
-                                               defaults.verboseLogs,
+                                               defaults.isVerboseLogs(),
                                                config::isVerboseLogs,
                                                config::setVerboseLogs
                                        ).name(translatable(
@@ -71,7 +71,7 @@ public class ModMenuIntegration implements ModMenuApi {
                        .option(Option.<Boolean>createBuilder()
                                        .controller(BooleanControllerBuilder::create)
                                        .binding(
-                                               defaults.refreshOnConfigSave,
+                                               defaults.isRefreshOnConfigSave(),
                                                config::isRefreshOnConfigSave,
                                                config::setRefreshOnConfigSave
                                        ).name(translatable(
@@ -82,7 +82,7 @@ public class ModMenuIntegration implements ModMenuApi {
                                                        option).range(0.5f, 60f)
                                                                      .step(0.5f))
                                        .binding(
-                                               defaults.loaderTimeout,
+                                               defaults.getLoaderTimeout(),
                                                config::getLoaderTimeout,
                                                config::setLoaderTimeout
                                        ).name(translatable(
@@ -94,7 +94,7 @@ public class ModMenuIntegration implements ModMenuApi {
                                                                      .valueFormatter(
                                                                              this::formatMode))
                                        .binding(
-                                               defaults.uuidMode,
+                                               defaults.getUuidMode(),
                                                config::getUuidMode,
                                                config::setUuidMode
                                        ).name(translatable(
