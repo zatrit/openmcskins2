@@ -1,8 +1,11 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
 }
+
+apply from: 'scripts/index.gradle'
 
 archivesBaseName project.archives_base_name
 version project.mod_version
@@ -38,7 +41,7 @@ dependencies {
         modImplementation(fabricApi.module(it, project.fabric_version))
     }
 
-    modApi "com.github.Fallen-Breath:conditional-mixin:${project.conditional_mixin_version}"
+    include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
     modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
@@ -120,28 +123,6 @@ allprojects {
             }
         }
     }
-}
-
-// https://stackoverflow.com/a/52976567/12245612
-static createIndex(File path) {
-    def index = path.listFiles().findAll { it.isFile() }.name
-    return index.join('\n')
-}
-
-def indexDir(String resourceDir, String name) {
-    file("$resourceDir/$name").mkdirs()
-    def presetIndexFile = file("$resourceDir/${name}.index")
-    presetIndexFile.delete()
-
-    sourceSets.main.resources.srcDirs.path.forEach {
-        presetIndexFile << createIndex(file("$it/$name"))
-    }
-}
-
-tasks.register('createIndex') {
-    def resourceDir = "$buildDir/resources/main"
-
-    indexDir resourceDir, 'presets'
 }
 
 processResources.dependsOn createIndex

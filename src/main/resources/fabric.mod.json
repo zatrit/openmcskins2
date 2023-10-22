@@ -8,7 +8,9 @@
     "Zatrit156"
   ],
   "contact": {
-    "sources": "https://github.com/zatrit/openmcskins2"
+    "sources": "https://github.com/zatrit/openmcskins2",
+    "issues": "https://github.com/zatrit/openmcskins2/issues",
+    "homepage": "https://github.com/zatrit/openmcskins2"
   },
   "license": "Apache-2.0",
   "icon": "assets/skins/icon.png",
@@ -40,6 +42,7 @@
   "contributors": [
     "Wayturns",
     "HeyItzCarlos",
-    "hocbmyke"
+    "hocbmyke",
+    "GIFanimation"
   ]
 }
