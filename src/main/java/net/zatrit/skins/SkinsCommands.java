@@ -114,7 +114,7 @@ public class SkinsCommands {
         }
 
         this.configHolder.patchConfig(config -> {
-            config.hosts.add(finalId, entry);
+            config.getHosts().add(finalId, entry);
             return null;
         });
 

@@ -92,13 +92,12 @@ public final class SkinsClient implements ClientModInitializer {
         configHolder.addSaveListener(this::applyConfig);
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
-                .registerReloadListener(new ElytraTextureFix(SkinsClient::refresh));
+                .registerReloadListener(new ElytraTextureFix());
 
         this.applyConfig(configHolder.getConfig());
 
-        val commands = new SkinsCommands(
-                configHolder,
-                (HasAssetPath) MinecraftClient.getInstance()
+        val commands = new SkinsCommands(configHolder,
+                                         (HasAssetPath) MinecraftClient.getInstance()
         );
         commands.register(ClientCommandManager.DISPATCHER);
 

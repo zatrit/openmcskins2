@@ -1,0 +1,20 @@
+// https://stackoverflow.com/a/52976567/12245612
+static createIndex(File path) {
+    def index = path.listFiles().findAll { it.isFile() }.name
+    return index.join('\n')
+}
+
+def indexDir(String resourceDir, String name) {
+    file("$resourceDir/$name").mkdirs()
+    def presetIndexFile = file("$resourceDir/${name}.index")
+    presetIndexFile.delete()
+
+    sourceSets.main.resources.srcDirs.path.forEach {
+        presetIndexFile << createIndex(file("$it/$name"))
+    }
+}
+
+tasks.register('createIndex') {
+    def resourceDir = "$buildDir/resources/main"
+    indexDir resourceDir, 'presets'
+}
