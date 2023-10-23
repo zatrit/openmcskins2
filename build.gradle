@@ -7,6 +7,8 @@ plugins {
 
 apply from: 'scripts/index.gradle'
 
+processResources.dependsOn createIndex
+
 archivesBaseName project.archives_base_name
 version project.mod_version
 group project.maven_group
@@ -131,5 +133,3 @@ allprojects {
         }
     }
 }
-
-processResources.dependsOn createIndex

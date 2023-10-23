@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.val;
 import net.zatrit.skins.lib.api.PlayerLoader;
 import net.zatrit.skins.lib.api.Profile;
@@ -17,12 +16,9 @@ import java.util.stream.Stream;
 import static java.util.Arrays.stream;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
-/**
- * OpenMCSkins simple loader implementation.
- */
 @AllArgsConstructor
-public class Skinlib {
-    private final @Getter Config config;
+public class TextureDispatcher {
+    private final Config config;
 
     /*
      * There are more comments than the rest of the code,
@@ -55,10 +51,10 @@ public class Skinlib {
      * Use {@link #resolveAsync} to obtain futures list.
      */
     public CompletableFuture<TypedTexture[]> fetchTexturesAsync(
-            @NotNull Collection<CompletableFuture<Enumerated<PlayerLoader>>> loaderFutures) {
+            @NotNull Stream<CompletableFuture<Enumerated<PlayerLoader>>> loaderFutures) {
         val loaders = new LinkedList<Enumerated<PlayerLoader>>();
 
-        val futures = loaderFutures.stream()
+        val futures = loaderFutures
                               // Add the loader to the list and
                               // do nothing if unsuccessful
                               .map(l -> l.thenAccept(loaders::add)

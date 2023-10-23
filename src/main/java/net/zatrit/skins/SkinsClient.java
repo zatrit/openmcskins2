@@ -18,7 +18,7 @@ import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.TomlConfigHolder;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.Skinlib;
+import net.zatrit.skins.lib.TextureDispatcher;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
@@ -33,8 +33,8 @@ public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
     private static @Getter TomlConfigHolder<SkinsConfig> configHolder;
-    private static @Getter Config loaderConfig;
-    private static @Getter Skinlib skinlib;
+    private static @Getter Config skinlibConfig;
+    private static @Getter TextureDispatcher dispatcher;
     private static @Getter HttpClient httpClient;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
             false);
@@ -62,7 +62,7 @@ public final class SkinsClient implements ClientModInitializer {
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
-        val loaderConfig = getLoaderConfig();
+        val loaderConfig = getSkinlibConfig();
 
         loaderConfig.setCacheProvider(config.isCacheTextures() ?
                                               new AssetCacheProvider(path) :
@@ -75,8 +75,8 @@ public final class SkinsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        loaderConfig = new Config();
-        skinlib = new Skinlib(loaderConfig);
+        skinlibConfig = new Config();
+        dispatcher = new TextureDispatcher(skinlibConfig);
 
         val configPath = FabricLoader.getInstance().getConfigDir().resolve(
                 "openmcskins.toml");
@@ -90,13 +90,15 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHolder.getConfig());
 
-        val commands = new SkinsCommands(configHolder,
-                                         (HasAssetPath) MinecraftClient.getInstance()
+        val commands = new SkinsCommands(
+                configHolder,
+                (HasAssetPath) MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
-        httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
+        httpClient = HttpClient.newBuilder()
+                             .executor(skinlibConfig.getExecutor())
                              .build();
     }
 }

@@ -22,7 +22,7 @@ import static net.andreinc.aleph.AlephFormatter.str;
 public final class Resolvers {
     public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
         val props = entry.getProperties();
-        val config = SkinsClient.getLoaderConfig();
+        val config = SkinsClient.getSkinlibConfig();
 
         try {
             return switch (entry.getType()) {

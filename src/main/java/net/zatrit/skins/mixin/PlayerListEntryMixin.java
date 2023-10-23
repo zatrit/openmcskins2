@@ -42,7 +42,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
     @Shadow
     public abstract GameProfile getProfile();
 
-    /* I could use @Overwrite the but SpongePowered Mixin
+    /* I could use @Overwrite but SpongePowered Mixin
      * wiki says I shouldn't use it when possibly. */
     @Inject(method = "loadTextures", at = @At("HEAD"), cancellable = true)
     public synchronized void loadTextures(@NotNull CallbackInfo ci) {
@@ -57,7 +57,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) this.getProfile();
-        val skinlib = SkinsClient.getSkinlib();
+        val dispatcher = SkinsClient.getDispatcher();
         val resolvers = SkinsClient.getResolvers();
 
         val config = SkinsClient.getConfigHolder().getConfig();
@@ -87,11 +87,11 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         profileTask.thenApplyAsync(profile1 -> {
                     val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
-                    val futures = skinlib.resolveAsync(resolvers, profile1)
+                    val futures = dispatcher.resolveAsync(resolvers, profile1)
                                           // Added error handling in all futures
                                           .map(f -> f.exceptionally(handler));
 
-                    return skinlib.fetchTexturesAsync(futures.toList()).join();
+                    return dispatcher.fetchTexturesAsync(futures).join();
                 }).orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .whenComplete((result, error) -> {
                     if (error != null) {

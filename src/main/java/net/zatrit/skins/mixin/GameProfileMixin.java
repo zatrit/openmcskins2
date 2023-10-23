@@ -37,7 +37,7 @@ public abstract class GameProfileMixin implements Profile {
                                                      ).join()).thenApply(
                         HttpResponse::body).thenApply(sneaky(stream -> {
                     @Cleanup val reader = new InputStreamReader(stream);
-                    val map = SkinsClient.getLoaderConfig().getGson().fromJson(
+                    val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
                             reader,
                             Map.class
                     );
