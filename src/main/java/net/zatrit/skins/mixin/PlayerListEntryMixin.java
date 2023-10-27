@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Mixin(PlayerListEntry.class)
 public abstract class PlayerListEntryMixin implements Refreshable {
@@ -57,7 +56,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) this.getProfile();
-        val skinlib = SkinsClient.getSkinlib();
+        val dispatcher = SkinsClient.getDispatcher();
         val resolvers = SkinsClient.getResolvers();
 
         val config = SkinsClient.getConfigHolder().getConfig();
@@ -87,12 +86,11 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         profileTask.thenApplyAsync(profile1 -> {
             val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
-            val futures = skinlib.resolveAsync(resolvers, profile1)
+            val futures = dispatcher.resolveAsync(resolvers, profile1)
                                   // Added error handling in all futures
                                   .map(f -> f.exceptionally(handler));
 
-            return skinlib.fetchTexturesAsync(futures.collect(Collectors.toList()))
-                           .join();
+            return dispatcher.fetchTexturesAsync(futures).join();
         }).whenComplete((result, error) -> {
             if (error != null) {
                 SkinsClient.getErrorHandler().accept(error);
