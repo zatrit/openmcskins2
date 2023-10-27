@@ -10,6 +10,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,8 +55,9 @@ public class TomlConfigSerializer<T> extends ConfigSerializer<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public LoadResult loadSafely(Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
+    public LoadResult loadSafely(@NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
         try {
+            // TODO: Rewrite without using reflection
             @Cleanup val stream = Files.newInputStream(file);
             val configClass = this.config.configClass();
             val instance = new Toml().read(stream).to(configClass);
