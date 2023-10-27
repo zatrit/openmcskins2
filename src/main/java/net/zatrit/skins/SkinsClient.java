@@ -2,6 +2,7 @@ package net.zatrit.skins;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.api.ClientModInitializer;
@@ -11,12 +12,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.zatrit.skins.accessor.HasAssetPath;
-import net.zatrit.skins.accessor.HasPlayerListEntry;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
-import net.zatrit.skins.config.TomlConfigHolder;
+import net.zatrit.skins.config.TomlConfigSerializer;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureDispatcher;
 import net.zatrit.skins.lib.api.Resolver;
@@ -32,21 +32,17 @@ import java.util.Objects;
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
-    private static @Getter TomlConfigHolder<SkinsConfig> configHolder;
+    private static @Getter ConfigClassHandler<SkinsConfig> configHandler;
     private static @Getter Config skinlibConfig;
     private static @Getter TextureDispatcher dispatcher;
     private static @Getter HttpClient httpClient;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
-            false);
+            true);
 
     public static boolean refresh() {
-        val client = MinecraftClient.getInstance();
-        if (client.world != null) {
-            client.world.getPlayers().stream()
-                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo()).filter(
-                            Objects::nonNull)
-                    .forEach(e -> ((Refreshable) e).skins$refresh());
-
+        val provider = MinecraftClient.getInstance().getSkinProvider();
+        if (provider instanceof Refreshable refreshable) {
+            refreshable.skins$refresh();
             return true;
         }
         return false;
@@ -78,27 +74,32 @@ public final class SkinsClient implements ClientModInitializer {
         skinlibConfig = new Config();
         dispatcher = new TextureDispatcher(skinlibConfig);
 
-        val configPath = FabricLoader.getInstance().getConfigDir().resolve(
-                "openmcskins.toml");
-
-        configHolder = new TomlConfigHolder<>(configPath, new SkinsConfig());
-        configHolder.addSaveListener(this::applyConfig);
-        configHolder.load();
+        configHandler = ConfigClassHandler.createBuilder(SkinsConfig.class)
+                                .serializer(handler1 -> {
+                                    val serializer = new TomlConfigSerializer<>(
+                                            FabricLoader.getInstance()
+                                                    .getConfigDir()
+                                                    .resolve("openmcskins.toml"),
+                                            handler1
+                                    );
+                                    serializer.addSaveListener(this::applyConfig);
+                                    return serializer;
+                                }).build();
+        configHandler.load();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
                 .registerReloadListener(new ElytraTextureFix());
 
-        this.applyConfig(configHolder.getConfig());
+        this.applyConfig(configHandler.instance());
 
         val commands = new SkinsCommands(
-                configHolder,
+                configHandler,
                 (HasAssetPath) MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                             .executor(skinlibConfig.getExecutor())
-                             .build();
+                             .executor(skinlibConfig.getExecutor()).build();
     }
 }

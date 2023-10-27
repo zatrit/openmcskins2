@@ -16,9 +16,6 @@ public class AssetCache implements Cache {
     private final HasAssetPath pathProvider;
     private final String type;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @SneakyThrows
     @SuppressWarnings("ResultOfMethodCallIgnored")

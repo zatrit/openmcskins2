@@ -26,7 +26,5 @@ public final class Config {
             TextureType.class,
             new AnyCaseEnumDeserializer<>(TextureType.values())
     ).create();
-    private @NotNull Executor executor = Executors.newFixedThreadPool(
-            // All available processors are used, because parallelism is cool.
-            Runtime.getRuntime().availableProcessors());
+    private @NotNull Executor executor = Executors.newCachedThreadPool();
 }

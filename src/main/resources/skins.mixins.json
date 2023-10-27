@@ -4,11 +4,11 @@
   "package": "net.zatrit.skins.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "AbstractClientPlayerEntityMixin",
     "GameProfileMixin",
     "MinecraftClientMixin",
     "MinecraftProfileTextureMixin",
-    "PlayerListEntryMixin"
+    "PlayerListEntryMixin",
+    "PlayerSkinProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

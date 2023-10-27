@@ -3,6 +3,7 @@ package net.zatrit.skins;
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
@@ -13,7 +14,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.zatrit.skins.accessor.HasAssetPath;
-import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.command.*;
@@ -30,7 +30,7 @@ import static net.zatrit.skins.util.command.CommandUtil.literal;
 
 @AllArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
-    private final ConfigHolder<SkinsConfig> configHolder;
+    private final ConfigClassHandler<SkinsConfig> configHolder;
     private final HasAssetPath assetPath;
 
     @Override
@@ -115,10 +115,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        this.configHolder.patchConfig(config -> {
-            config.getHosts().add(finalId, entry);
-            return null;
-        });
+        val config = this.configHolder.instance();
+        config.getHosts().add(finalId, entry);
+        this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.added",
@@ -129,7 +128,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     private int listHosts(@NotNull CommandContext<FabricClientCommandSource> context) {
-        val entries = this.configHolder.getConfig().getHosts().stream().map(
+        val entries = this.configHolder.instance().getHosts().stream().map(
                 TextUtil.ToText::toText).toArray(Text[]::new);
         var result = Text.translatable("openmcskins.command.list");
 
@@ -149,10 +148,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val id = context.getArgument("id", Integer.class);
 
-        @SuppressWarnings("CodeBlock2Expr")
-        val entry = this.configHolder.patchConfig(config -> {
-            return config.getHosts().remove(id.intValue());
-        });
+        val config = this.configHolder.instance();
+        val entry = config.getHosts().remove(id.intValue());
+        this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.removed",
@@ -166,12 +164,10 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         val from = context.getArgument("from", Integer.class);
         val to = context.getArgument("to", Integer.class);
 
-        this.configHolder.patchConfig(config -> {
-            val entry = config.getHosts().remove(from.intValue());
-            config.getHosts().add(to, entry);
-
-            return null;
-        });
+        val config = this.configHolder.instance();
+        val entry = config.getHosts().remove(from.intValue());
+        config.getHosts().add(to, entry);
+        this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.moved",

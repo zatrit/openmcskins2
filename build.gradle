@@ -6,7 +6,6 @@ plugins {
 }
 
 apply from: 'scripts/index.gradle'
-
 processResources.dependsOn createIndex
 
 archivesBaseName project.archives_base_name
@@ -14,10 +13,9 @@ version project.mod_version
 group project.maven_group
 
 repositories {
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://maven.isxander.dev/releases' }
+    maven { url 'https://jitpack.io' }
 }
 
 configurations.modApi {
@@ -43,15 +41,19 @@ dependencies {
         modImplementation(fabricApi.module(it, project.fabric_version))
     }
 
-    include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
-    modApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
+    // https://github.com/isXander/YetAnotherConfigLib/issues/111
+    modApi("dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}") {
+        exclude group: 'org.quiltmc.parsers'
+        exclude group: 'com.twelvemonkeys.common'
+        exclude group: 'com.twelvemonkeys.imageio'
+    }
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
     shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-    shadow "net.andreinc:aleph:${project.aleph_formatter_version}"
+    shadow "net.andreinc:aleph:${project.aleph_version}"
 
     shadow(project(':skinlib')) { transitive false }
 
@@ -109,6 +111,10 @@ shadowJar {
 java {
     sourceCompatibility JavaVersion.VERSION_17
     targetCompatibility JavaVersion.VERSION_17
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/skins.accesswidener')
 }
 
 allprojects {
