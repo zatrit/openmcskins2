@@ -43,7 +43,7 @@ dependencies {
         modImplementation(fabricApi.module(it, project.fabric_version))
     }
 
-    include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
+    // include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
     modApi "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
@@ -51,7 +51,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
     shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-    shadow "net.andreinc:aleph:${project.aleph_formatter_version}"
+    shadow "net.andreinc:aleph:${project.aleph_version}"
     shadow('com.github.zatrit.openmcskins2:skinlib:main-SNAPSHOT') {
         transitive false
         changing true
@@ -111,6 +111,10 @@ shadowJar {
 java {
     sourceCompatibility JavaVersion.VERSION_17
     targetCompatibility JavaVersion.VERSION_17
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/skins.accesswidener")
 }
 
 allprojects {

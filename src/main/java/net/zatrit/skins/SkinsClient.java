@@ -11,7 +11,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.zatrit.skins.accessor.HasAssetPath;
-import net.zatrit.skins.accessor.HasPlayerListEntry;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.Resolvers;
@@ -42,10 +41,12 @@ public final class SkinsClient implements ClientModInitializer {
     public static boolean refresh() {
         val client = MinecraftClient.getInstance();
         if (client.world != null) {
-            client.world.getPlayers().stream()
-                    .map(t -> ((HasPlayerListEntry) t).getPlayerInfo()).filter(
-                            Objects::nonNull)
-                    .forEach(e -> ((Refreshable) e).skins$refresh());
+            for (val entity : client.world.getPlayers()) {
+                val entry = entity.getPlayerListEntry();
+                if (entry != null) {
+                    ((Refreshable) entry).skins$refresh();
+                }
+            }
 
             return true;
         }
@@ -98,7 +99,6 @@ public final class SkinsClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                             .executor(skinlibConfig.getExecutor())
-                             .build();
+                             .executor(skinlibConfig.getExecutor()).build();
     }
 }
