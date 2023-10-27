@@ -6,6 +6,7 @@
 
 ## License
 
-This project is licensed under the [Apache License 2.0](license/APACHE.txt), and also
-contains [toml4j](https://github.com/mwanji/toml4j) licensed under the [MIT License](license/MIT.txt) 
-and libraries from Apache licensed under the [Apache License 2.0](license/APACHE.txt).
+This mod is licensed under the [Apache License 2.0](license/APACHE.txt).
+
+Check [NOTICE](NOTICE.txt), [MIT](license/MIT.txt) and
+[APACHE](license/APACHE.txt) for further information.

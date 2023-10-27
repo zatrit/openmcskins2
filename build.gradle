@@ -130,12 +130,4 @@ allprojects {
             }
         }
     }
-
-    if (project.hasProperty('no-debug-info'))
-    {
-        // Disabling all debugging information
-        compileJava {
-            options.compilerArgs << '-g:none'
-        }
-    }
 }
