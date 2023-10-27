@@ -3,7 +3,6 @@ accessible class net/minecraft/client/texture/PlayerSkinProvider$Textures
 accessible class net/minecraft/client/texture/PlayerSkinProvider$Key
 
 accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry ()Lnet/minecraft/client/network/PlayerListEntry;
-accessible field net/minecraft/client/texture/PlayerSkinProvider cache Lcom/google/common/cache/LoadingCache;
 
 accessible field net/minecraft/client/util/SkinTextures texture Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/util/SkinTextures capeTexture Lnet/minecraft/util/Identifier;
