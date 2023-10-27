@@ -57,7 +57,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) this.getProfile();
-        val skinlib = SkinsClient.getSkinlib();
+        val dispatcher = SkinsClient.getDispatcher();
         val resolvers = SkinsClient.getResolvers();
 
         val config = SkinsClient.getConfigHolder().getConfig();
@@ -87,11 +87,11 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         profileTask.thenApplyAsync(profile1 -> {
                     val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
-                    val futures = skinlib.resolveAsync(resolvers, profile1)
+                    val futures = dispatcher.resolveAsync(resolvers, profile1)
                                           // Added error handling in all futures
                                           .map(f -> f.exceptionally(handler));
 
-                    return skinlib.fetchTexturesAsync(futures.toList()).join();
+                    return dispatcher.fetchTexturesAsync(futures).join();
                 }).orTimeout(timeout, TimeUnit.MILLISECONDS)
                 .whenComplete((result, error) -> {
                     if (error != null) {
@@ -117,8 +117,9 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(getProfile().getName(),
-                                              result.getType()
+        val textureId = new TextureIdentifier(
+                getProfile().getName(),
+                result.getType()
         );
 
         TextureLoader.create(texture).getTexture(textureId, id -> {
