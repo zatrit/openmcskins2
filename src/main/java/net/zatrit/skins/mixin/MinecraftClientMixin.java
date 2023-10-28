@@ -11,9 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Getter
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin implements HasAssetPath {
-    private @Unique @Getter String assetPath;
+    private @Unique String assetPath;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(@NotNull RunArgs args, CallbackInfo ci) {
