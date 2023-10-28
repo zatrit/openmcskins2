@@ -1,0 +1,13 @@
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = 'openmcskins'
+    versionNumber = "$version-$minecraft_version"
+    versionType = 'alpha'
+    uploadFile = remapJar
+    gameVersions = ["1.16", "1.18.1"]
+    loaders = ['fabric', 'quilt']
+    dependencies {
+        required.project 'fabric-api'
+        required.project 'cloth-config'
+    }
+}

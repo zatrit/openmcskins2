@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class DirectoryFileProvider implements FileProvider {
@@ -20,7 +21,8 @@ public class DirectoryFileProvider implements FileProvider {
     @Override
     public Collection<String> listFiles() throws IOException {
         @Cleanup val files = Files.list(this.path);
-        return files.map(p -> FilenameUtils.getName(p.toString())).toList();
+        return files.map(p -> FilenameUtils.getName(p.toString())).collect(
+                Collectors.toList());
     }
 
     @Override

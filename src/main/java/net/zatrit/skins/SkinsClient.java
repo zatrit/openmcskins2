@@ -10,7 +10,6 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.ActionResult;
@@ -24,21 +23,23 @@ import net.zatrit.skins.lib.TextureDispatcher;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
+    private static final @Getter HttpClient httpClient = HttpClients.createDefault();
     private static @Getter ConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config loaderConfig;
     private static @Getter TextureDispatcher dispatcher;
-    private static @Getter HttpClient httpClient;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
             false);
 
@@ -66,7 +67,8 @@ public final class SkinsClient implements ClientModInitializer {
         resolvers.clear();
         resolvers.addAll(config.getHosts().stream().parallel()
                                  .map(Resolvers::resolverFromEntry)
-                                 .filter(Objects::nonNull).toList());
+                                 .filter(Objects::nonNull)
+                                 .collect(Collectors.toList()));
 
         val loaderConfig = getLoaderConfig();
 
@@ -102,8 +104,5 @@ public final class SkinsClient implements ClientModInitializer {
                 (HasAssetPath) MinecraftClient.getInstance()
         );
         commands.register(ClientCommandManager.DISPATCHER);
-
-        httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
-                             .build();
     }
 }

@@ -5,7 +5,12 @@ plugins {
     id 'maven-publish'
 }
 
+apply from: 'scripts/modrinth.gradle'
 apply from: 'scripts/index.gradle'
+
+tasks.register 'publishMod'
+processResources.dependsOn createIndex
+publishMod.dependsOn modrinth
 
 archivesBaseName project.archives_base_name
 version project.mod_version
@@ -130,5 +135,3 @@ allprojects {
         }
     }
 }
-
-processResources.dependsOn createIndex

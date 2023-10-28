@@ -16,5 +16,8 @@ public class SkinsConfig implements ConfigData {
     private boolean verboseLogs = false;
     private boolean refreshOnConfigSave = true;
     private UuidMode uuidMode = UuidMode.OFFLINE;
-    private List<HostEntry> hosts = Lists.newArrayList(new HostEntry(HostEntry.HostType.FALLBACK));
+    private List<HostEntry> hosts = Lists.newArrayList(
+            new HostEntry(HostEntry.HostType.MOJANG),
+            new HostEntry(HostEntry.HostType.FALLBACK)
+    );
 }
