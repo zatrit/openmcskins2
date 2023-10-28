@@ -15,6 +15,6 @@ modrinth {
     loaders = ['fabric', 'quilt']
     dependencies {
         required.project 'fabric-api'
-        required.project 'cloth-config'
+        required.project 'yacl'
     }
 }

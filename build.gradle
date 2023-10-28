@@ -23,7 +23,6 @@ publishMod.dependsOn tasks.named('modrinth')
 
 repositories {
     maven { url 'https://jitpack.io' }
-    maven { url 'https://maven.shedaniel.me/' }
     maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://maven.isxander.dev/releases' }
 }
