@@ -4,7 +4,6 @@
   "package": "net.zatrit.skins.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "AbstractClientPlayerEntityMixin",
     "GameProfileMixin",
     "MinecraftClientMixin",
     "MinecraftProfileTextureMixin",

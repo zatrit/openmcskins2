@@ -6,6 +6,7 @@ import lombok.val;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.UuidMode;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ public class ModMenuIntegration implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
             val instance = SkinsClient.getConfigHolder();
-            val defaults = instance.getDefaults();
+            val defaults = new SkinsConfig();
             val config = instance.getConfig();
 
             val builder = ConfigBuilder.create().setParentScreen(parent)
