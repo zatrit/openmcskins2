@@ -1,9 +1,9 @@
+//file:noinspection GroovyAccessibility,GroovyAssignabilityCheck
 @SuppressWarnings('GrMethodMayBeStatic')
 def getEnv(String key, String value) {
     return System.getenv(key.toUpperCase()) ?: localProps.getProperty(key) ?: value
 }
 
-//file:noinspection GroovyAccessibility,GroovyAssignabilityCheck
 modrinth {
     token = getEnv('modrinth_token', '')
     projectId = getEnv('modrinth_id', 'openmcskins')

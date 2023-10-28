@@ -23,6 +23,7 @@ public class SkinsConfig {
     private UuidMode uuidMode = UuidMode.OFFLINE;
     @SerialEntry
     private List<HostEntry> hosts = Lists.newArrayList(
+            new HostEntry(HostEntry.HostType.MOJANG),
             new HostEntry(HostEntry.HostType.FALLBACK)
     );
 }
