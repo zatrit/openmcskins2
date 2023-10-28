@@ -23,8 +23,6 @@ import net.zatrit.skins.lib.TextureDispatcher;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
-    private static final @Getter HttpClient httpClient = HttpClients.createDefault();
     private static @Getter ConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config loaderConfig;
     private static @Getter TextureDispatcher dispatcher;

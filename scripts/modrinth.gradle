@@ -4,7 +4,7 @@ modrinth {
     versionNumber = "$version-$minecraft_version"
     versionType = 'alpha'
     uploadFile = remapJar
-    gameVersions = ["1.16", "1.18.1"]
+    gameVersions = ["1.16.4", "1.16.5"]
     loaders = ['fabric', 'quilt']
     dependencies {
         required.project 'fabric-api'

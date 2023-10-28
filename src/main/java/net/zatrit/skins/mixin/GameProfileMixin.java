@@ -7,12 +7,11 @@ import lombok.SneakyThrows;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.api.Profile;
-import org.apache.http.client.methods.HttpGet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.InputStreamReader;
-import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
@@ -30,14 +29,12 @@ public abstract class GameProfileMixin implements Profile {
     public CompletableFuture<Profile> refreshUuidAsync() {
         val url = "https://api.mojang.com/users/profiles/minecraft/" +
                           URLEncoder.encode(this.getName(), "UTF8");
-        val request = new HttpGet(new URI(url));
 
         return CompletableFuture.supplyAsync(
-                sneaky(() -> SkinsClient.getHttpClient().execute(request)),
+                sneaky(() -> new URL(url).openStream()),
                 SkinsClient.getLoaderConfig().getExecutor()
-        ).thenApply(sneaky(response -> {
-            val content = response.getEntity().getContent();
-            @Cleanup val reader = new InputStreamReader(content);
+        ).thenApply(sneaky(stream -> {
+            @Cleanup val reader = new InputStreamReader(stream);
             val map = SkinsClient.getLoaderConfig().getGson().fromJson(
                     reader,
                     Map.class
