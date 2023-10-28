@@ -1,0 +1,20 @@
+@SuppressWarnings('GrMethodMayBeStatic')
+def getEnv(String key, String value) {
+    return System.getenv(key.toUpperCase()) ?: localProps.getProperty(key) ?: value
+}
+
+//file:noinspection GroovyAccessibility,GroovyAssignabilityCheck
+modrinth {
+    token = getEnv('modrinth_token', '')
+    projectId = getEnv('modrinth_id', 'openmcskins')
+    versionName = "OpenMCSkins $version for $minecraft_version"
+    versionNumber = "$version-$minecraft_version"
+    versionType = 'alpha'
+    uploadFile = remapJar
+    gameVersions = ['1.18', '1.18.1', '1.18.2']
+    loaders = ['fabric', 'quilt']
+    dependencies {
+        required.project 'fabric-api'
+        required.project 'cloth-config'
+    }
+}

@@ -12,9 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
+@Getter
 @AllArgsConstructor
 public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener {
-    private final @Getter Identifier fabricId = new Identifier(
+    private final Identifier fabricId = new Identifier(
             "skins",
             "elytra_texture_fix"
     );

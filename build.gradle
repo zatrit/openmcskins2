@@ -5,11 +5,21 @@ plugins {
     id 'maven-publish'
 }
 
-apply from: 'scripts/index.gradle'
-
 archivesBaseName project.archives_base_name
 version project.mod_version
 group project.maven_group
+
+var localProps = new Properties()
+var localPropsFile = file("$projectDir/local.properties")
+if (localPropsFile.exists()) localProps.load(localPropsFile.newInputStream())
+ext.localProps = localProps
+
+apply from: 'scripts/modrinth.gradle'
+apply from: 'scripts/index.gradle'
+
+tasks.register 'publishMod'
+processResources.dependsOn createIndex
+publishMod.dependsOn tasks.named('modrinth')
 
 repositories {
     maven { url 'https://jitpack.io' }
