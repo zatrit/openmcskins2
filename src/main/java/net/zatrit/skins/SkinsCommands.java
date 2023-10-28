@@ -7,13 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
+import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.zatrit.skins.accessor.HasAssetPath;
-import net.zatrit.skins.config.ConfigHolder;
 import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.command.*;
@@ -113,10 +113,9 @@ public class SkinsCommands {
             return -1;
         }
 
-        this.configHolder.patchConfig(config -> {
-            config.getHosts().add(finalId, entry);
-            return null;
-        });
+        val config = this.configHolder.get();
+        config.getHosts().add(finalId, entry);
+        this.configHolder.save();
 
         context.getSource().sendFeedback(new TranslatableText(
                 "openmcskins.command.added",
@@ -147,10 +146,9 @@ public class SkinsCommands {
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val id = context.getArgument("id", Integer.class);
 
-        @SuppressWarnings("CodeBlock2Expr")
-        val entry = this.configHolder.patchConfig(config -> {
-            return config.getHosts().remove(id.intValue());
-        });
+        val config = this.configHolder.get();
+        val entry = config.getHosts().remove(id.intValue());
+        this.configHolder.save();
 
         context.getSource().sendFeedback(new TranslatableText(
                 "openmcskins.command.removed",
@@ -164,12 +162,10 @@ public class SkinsCommands {
         val from = context.getArgument("from", Integer.class);
         val to = context.getArgument("to", Integer.class);
 
-        this.configHolder.patchConfig(config -> {
-            val entry = config.getHosts().remove(from.intValue());
-            config.getHosts().add(to, entry);
-
-            return null;
-        });
+        val config = this.configHolder.get();
+        val entry = config.getHosts().remove(from.intValue());
+        config.getHosts().add(to, entry);
+        this.configHolder.save();
 
         context.getSource().sendFeedback(new TranslatableText(
                 "openmcskins.command.moved",

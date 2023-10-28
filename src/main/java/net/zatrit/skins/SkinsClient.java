@@ -4,18 +4,21 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.val;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.ActionResult;
 import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.cache.AssetCacheProvider;
 import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
-import net.zatrit.skins.config.TomlConfigHolder;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureDispatcher;
 import net.zatrit.skins.lib.api.Resolver;
@@ -32,7 +35,7 @@ public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
-    private static @Getter TomlConfigHolder<SkinsConfig> configHolder;
+    private static @Getter ConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config loaderConfig;
     private static @Getter TextureDispatcher dispatcher;
     private static @Getter HttpClient httpClient;
@@ -54,7 +57,8 @@ public final class SkinsClient implements ClientModInitializer {
         return false;
     }
 
-    private void applyConfig(@NotNull SkinsConfig config) {
+    private ActionResult applyConfig(
+            ConfigHolder<SkinsConfig> holder, @NotNull SkinsConfig config) {
         val path = (HasAssetPath) MinecraftClient.getInstance();
 
         errorHandler = new ExceptionConsumerImpl(config.isVerboseLogs());
@@ -73,6 +77,8 @@ public final class SkinsClient implements ClientModInitializer {
         if (config.isRefreshOnConfigSave()) {
             refresh();
         }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -80,22 +86,16 @@ public final class SkinsClient implements ClientModInitializer {
         loaderConfig = new Config();
         dispatcher = new TextureDispatcher(loaderConfig);
 
-        val configPath = FabricLoader.getInstance().getConfigDir().resolve(
-                "openmcskins.toml");
-
-        configHolder = new TomlConfigHolder<>(
-                configPath,
-                new SkinsConfig(),
-                new SkinsConfig(),
-                SkinsConfig.class
+        configHolder = AutoConfig.register(
+                SkinsConfig.class,
+                Toml4jConfigSerializer::new
         );
+        configHolder.registerSaveListener(this::applyConfig);
+        configHolder.registerLoadListener(this::applyConfig);
         configHolder.load();
-        configHolder.addSaveListener(this::applyConfig);
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
                 .registerReloadListener(new ElytraTextureFix());
-
-        this.applyConfig(configHolder.getConfig());
 
         val commands = new SkinsCommands(
                 configHolder,
