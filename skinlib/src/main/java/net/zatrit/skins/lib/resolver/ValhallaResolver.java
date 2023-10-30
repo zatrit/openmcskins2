@@ -21,7 +21,7 @@ import java.net.URL;
  * Read more <a href="https://skins.minelittlepony-mod.com/docs">here</a>.
  */
 @AllArgsConstructor
-public class ValhallaResolver implements Resolver {
+public final class ValhallaResolver implements Resolver {
     private final Config config;
     private final String baseUrl;
 
@@ -34,12 +34,12 @@ public class ValhallaResolver implements Resolver {
         @Cleanup val stream = new URL(url).openStream();
 
         return new CachedPlayerLoader<>(
-                this.config.getCacheProvider(),
-                this.config.getLayers(),
                 (Textures<URLTexture>) gson.fromJson(
                         new InputStreamReader(stream),
                         MojangResolver.URL_TEXTURES
-                )
+                ),
+                this.config.getLayers(),
+                this.config.getCacheProvider()
         );
     }
 }

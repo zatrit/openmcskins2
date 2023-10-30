@@ -24,7 +24,7 @@ import java.util.EnumMap;
  * for OpenMCSKins. Works for some other APIs.
  */
 @AllArgsConstructor
-public class NamedHTTPResolver implements Resolver {
+public final class NamedHTTPResolver implements Resolver {
     private final Config config;
     private final String baseUrl;
 
@@ -52,9 +52,9 @@ public class NamedHTTPResolver implements Resolver {
         ).getType();
 
         return new CachedPlayerLoader<>(
-                this.config.getCacheProvider(),
+                new Textures<>(this.config.getGson().fromJson(reader, type)),
                 this.config.getLayers(),
-                new Textures<>(this.config.getGson().fromJson(reader, type))
+                this.config.getCacheProvider()
         );
     }
 }

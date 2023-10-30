@@ -1,11 +1,19 @@
 package net.zatrit.skins.config;
 
-/** UUID refresh mode. */
+/**
+ * UUID refresh mode.
+ */
 public enum UuidMode {
-    /** Never refresh UUID. */
+    /**
+     * Never refresh UUID.
+     */
     NEVER,
-    /** Refresh UUID always before loading the skin. */
+    /**
+     * Refresh UUID always before loading the skin.
+     */
     ALWAYS,
-    /** Refresh UUID in offline mode only. */
+    /**
+     * Refresh UUID in offline mode only.
+     */
     OFFLINE
 }

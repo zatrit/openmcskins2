@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Metadata;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A texture wrapping an array of bytes.
@@ -12,6 +14,6 @@ import net.zatrit.skins.lib.data.Metadata;
 @AllArgsConstructor
 public class BytesTexture implements Texture {
     private final String id;
-    private final byte[] bytes;
-    private final Metadata metadata;
+    private final byte @NotNull [] bytes;
+    private final @Nullable Metadata metadata;
 }

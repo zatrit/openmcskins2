@@ -75,16 +75,16 @@ public final class SkinsClient implements ClientModInitializer {
         dispatcher = new TextureDispatcher(skinlibConfig);
 
         configHandler = ConfigClassHandler.createBuilder(SkinsConfig.class)
-                                .serializer(handler1 -> {
-                                    val serializer = new TomlConfigSerializer<>(
-                                            FabricLoader.getInstance()
-                                                    .getConfigDir()
-                                                    .resolve("openmcskins.toml"),
-                                            handler1
-                                    );
-                                    serializer.addSaveListener(this::applyConfig);
-                                    return serializer;
-                                }).build();
+                .serializer(handler1 -> {
+                    val serializer = new TomlConfigSerializer<>(
+                            FabricLoader.getInstance()
+                                    .getConfigDir()
+                                    .resolve("openmcskins.toml"),
+                            handler1
+                    );
+                    serializer.addSaveListener(this::applyConfig);
+                    return serializer;
+                }).build();
         configHandler.load();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
@@ -100,6 +100,6 @@ public final class SkinsClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                             .executor(skinlibConfig.getExecutor()).build();
+                .executor(skinlibConfig.getExecutor()).build();
     }
 }

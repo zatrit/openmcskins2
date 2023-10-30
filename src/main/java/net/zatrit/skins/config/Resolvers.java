@@ -15,17 +15,25 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static net.andreinc.aleph.AlephFormatter.str;
 
 @UtilityClass
 public final class Resolvers {
-    public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
+    public static @Nullable Resolver resolverFromEntry(
+            @NotNull HostEntry entry) {
         val props = entry.getProperties();
         val config = SkinsClient.getSkinlibConfig();
 
         try {
             return switch (entry.getType()) {
+                case GEYSER -> new GeyserResolver(
+                        config,
+                        (String) Objects.requireNonNull(
+                                props.get(
+                                        "floodgate_prefix"))
+                );
                 case FALLBACK -> new FallbackResolver(
                         config,
                         MinecraftClient.getInstance()
@@ -47,8 +55,7 @@ public final class Resolvers {
                         case DIRECT -> {
                             @SuppressWarnings("unchecked")
                             val types = ((List<String>) props.get("types")).stream()
-                                                .map(TextureType::valueOf)
-                                                .toList();
+                                    .map(TextureType::valueOf).toList();
                             yield new DirectResolver(config, baseUrl, types);
                         }
                         default -> null;

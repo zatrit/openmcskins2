@@ -39,8 +39,7 @@ public class PlayerSkinProviderMixin implements Refreshable {
             method = "fetchSkinTextures(Lcom/mojang/authlib/GameProfile;Lnet/minecraft/client/texture/PlayerSkinProvider$Textures;)Ljava/util/concurrent/CompletableFuture;",
             cancellable = true)
     public void fetchSkinTextures(
-            GameProfile profile2,
-            PlayerSkinProvider.Textures uselessTextures,
+            GameProfile profile2, PlayerSkinProvider.Textures uselessTextures,
             CallbackInfoReturnable<CompletableFuture<SkinTextures>> cir) {
         val profile = (Profile) profile2;
         val dispatcher = SkinsClient.getDispatcher();
@@ -56,15 +55,15 @@ public class PlayerSkinProviderMixin implements Refreshable {
                 val networkHandler = client.getNetworkHandler();
 
                 yield networkHandler != null &&
-                              !networkHandler.getConnection().isEncrypted();
+                        !networkHandler.getConnection().isEncrypted();
             }
         };
 
         CompletableFuture<Profile> profileFuture;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileFuture = profile.refreshUuidAsync()
-                                    .exceptionally(SkinsClient.getErrorHandler()
-                                                           .andReturn(profile));
+                    .exceptionally(SkinsClient.getErrorHandler()
+                                           .andReturn(profile));
         } else {
             profileFuture = CompletableFuture.completedFuture(profile);
         }
@@ -82,8 +81,8 @@ public class PlayerSkinProviderMixin implements Refreshable {
         val future = profileFuture.thenApplyAsync(profile1 -> {
             val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
             val futures = dispatcher.resolveAsync(resolvers, profile1)
-                                  // Added error handling in all futures
-                                  .map(f -> f.exceptionally(handler));
+                    // Added error handling in all futures
+                    .map(f -> f.exceptionally(handler));
 
             return dispatcher.fetchTexturesAsync(futures).join();
         }).orTimeout(timeout, TimeUnit.MILLISECONDS).thenApplyAsync(result -> {
@@ -102,8 +101,7 @@ public class PlayerSkinProviderMixin implements Refreshable {
     @Unique
     @SneakyThrows
     private void loadTexture(
-            @NotNull TypedTexture result,
-            SkinTextures textures,
+            @NotNull TypedTexture result, SkinTextures textures,
             @NotNull Profile profile) {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();

@@ -31,18 +31,18 @@ public class TextureDispatcher {
     public Stream<CompletableFuture<Enumerated<PlayerLoader>>> resolveAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
         return Enumerated.enumerate(resolvers).stream()
-                       .map(pair -> CompletableFuture.supplyAsync(
-                               /*
-                                * This function may throw an exception,
-                                * but it's a CompletableFuture, so
-                                * an exception won't crash the game.
-                                */
-                               sneaky(() -> {
-                                   val resolver = pair.getValue();
-                                   val loader = resolver.resolve(profile);
+                .map(pair -> CompletableFuture.supplyAsync(
+                        /*
+                         * This function may throw an exception,
+                         * but it's a CompletableFuture, so
+                         * an exception won't crash the game.
+                         */
+                        sneaky(() -> {
+                            val resolver = pair.getValue();
+                            val loader = resolver.resolve(profile);
 
-                                   return pair.withValue(loader);
-                               }), this.config.getExecutor()));
+                            return pair.withValue(loader);
+                        }), this.config.getExecutor()));
     }
 
     /**
@@ -55,30 +55,27 @@ public class TextureDispatcher {
         val loaders = new LinkedList<Enumerated<PlayerLoader>>();
 
         val futures = loaderFutures
-                              // Add the loader to the list and
-                              // do nothing if unsuccessful
-                              .map(l -> l.thenAccept(loaders::add)
-                                                .exceptionally(e -> null))
-                              .toArray(CompletableFuture[]::new);
+                // Add the loader to the list and
+                // do nothing if unsuccessful
+                .map(l -> l.thenAccept(loaders::add).exceptionally(e -> null))
+                .toArray(CompletableFuture[]::new);
         val allFutures = CompletableFuture.allOf(futures);
 
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
                         type -> loaders.stream().parallel()
-                                        // Remains only loaders that has texture
-                                        .filter(Objects::nonNull)
-                                        .filter(pair -> pair.getValue() != null &&
-                                                                pair.getValue()
-                                                                        .hasTexture(type))
-                                        // Find most prioritized loader and get its value
-                                        .min(Comparator.comparingInt(Enumerated::getIndex))
-                                        .map(sneaky(pair -> {
-                                            // Convert texture into TextureResult
-                                            val loader = pair.getValue();
-                                            return loader.getTexture(type);
-                                        })))
-                                                      // Filter and unwrap Optionals
-                                                      .filter(Optional::isPresent)
-                                                      .map(Optional::get)
-                                                      .toArray(TypedTexture[]::new));
+                                // Remains only loaders that has texture
+                                .filter(Objects::nonNull)
+                                .filter(pair -> pair.getValue() != null &&
+                                        pair.getValue().hasTexture(type))
+                                // Find most prioritized loader and get its value
+                                .min(Comparator.comparingInt(Enumerated::getIndex))
+                                .map(pair -> {
+                                    // Convert texture into TextureResult
+                                    val loader = pair.getValue();
+                                    return loader.getTexture(type);
+                                }))
+                // Filter and unwrap Optionals
+                .filter(Optional::isPresent).map(Optional::get)
+                .toArray(TypedTexture[]::new));
     }
 }

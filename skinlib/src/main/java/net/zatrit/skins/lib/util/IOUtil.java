@@ -5,16 +5,19 @@ import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.NoArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@ApiStatus.Internal
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class IOUtil {
-    public static @Nullable byte[] download(@NotNull URL url) throws IOException {
+    public static byte @Nullable [] download(@NotNull URL url)
+            throws IOException {
         val connection = url.openConnection();
 
         // An easy way to check that the code means OK (2XX).

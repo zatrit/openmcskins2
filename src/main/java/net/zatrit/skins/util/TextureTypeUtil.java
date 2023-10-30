@@ -2,7 +2,6 @@ package net.zatrit.skins.util;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.experimental.UtilityClass;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +11,8 @@ public final class TextureTypeUtil {
      * Converts texture type from {@link MinecraftProfileTexture.Type}
      * to {@link TextureType}.
      */
-    public static TextureType fromAuthlibType(MinecraftProfileTexture.@NotNull Type type) {
+    public static TextureType fromAuthlibType(
+            MinecraftProfileTexture.@NotNull Type type) {
         return switch (type) {
             case SKIN -> TextureType.SKIN;
             case CAPE -> TextureType.CAPE;

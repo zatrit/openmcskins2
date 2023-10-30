@@ -1,6 +1,9 @@
 package net.zatrit.skins.lib.data;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 /**

@@ -27,7 +27,7 @@ import java.util.EnumMap;
  * {@code metadata/} folders.
  */
 @AllArgsConstructor
-public class LocalResolver implements Resolver {
+public final class LocalResolver implements Resolver {
     private final Config config;
     private final Path directory;
 

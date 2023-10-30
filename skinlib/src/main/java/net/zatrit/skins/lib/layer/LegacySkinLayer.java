@@ -43,14 +43,8 @@ public class LegacySkinLayer implements Layer<Image> {
     }
 
     private void drawMirrored(
-            @NotNull BufferedImage src,
-            @NotNull Graphics2D graphics,
-            int sx,
-            int sy,
-            int dx,
-            int dy,
-            int w,
-            int h) {
+            @NotNull BufferedImage src, @NotNull Graphics2D graphics, int sx,
+            int sy, int dx, int dy, int w, int h) {
         graphics.drawImage(
                 src.getSubimage(sx, sy, w, h),
                 new AffineTransform(-1, 0, 0, 1, dx + w, dy),

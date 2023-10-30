@@ -55,7 +55,8 @@ public class TomlConfigSerializer<T> extends ConfigSerializer<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public LoadResult loadSafely(@NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
+    public LoadResult loadSafely(
+            @NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
         try {
             // TODO: Rewrite without using reflection
             @Cleanup val stream = Files.newInputStream(file);

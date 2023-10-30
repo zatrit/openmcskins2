@@ -21,14 +21,15 @@ import java.util.Collection;
 import java.util.HashMap;
 
 @AllArgsConstructor
-public class DirectResolver implements Resolver {
+public final class DirectResolver implements Resolver {
     private final Config config;
     private final String baseUrl;
     private final Collection<TextureType> types;
 
     @Override
     public boolean requiresUuid() {
-        return this.baseUrl.contains("{id}") || this.baseUrl.contains("shortId");
+        return this.baseUrl.contains("{id}") ||
+                this.baseUrl.contains("{shortId}");
     }
 
     @Override
@@ -38,19 +39,22 @@ public class DirectResolver implements Resolver {
         val replaces = new HashMap<String, Object>();
         replaces.put("id", profile.getId());
         replaces.put("name", profile.getName());
-        replaces.put("shortId", profile.getId().toString().replace("-", ""));
+        replaces.put("shortId", profile.getShortId());
 
         for (val type : this.types) {
             replaces.put("type", type);
 
             val url = new URL(AlephFormatter.str(this.baseUrl, replaces).fmt());
-            val texture = new BytesTexture(
-                    url.toString(),
-                    IOUtil.download(url),
-                    new Metadata()
-            );
+            val content = IOUtil.download(url);
+            if (content != null) {
+                val texture = new BytesTexture(
+                        url.toString(),
+                        content,
+                        new Metadata()
+                );
 
-            textures.getTextures().put(type, texture);
+                textures.getMap().put(type, texture);
+            }
         }
 
         /* Since you can't check for the existence/change of a

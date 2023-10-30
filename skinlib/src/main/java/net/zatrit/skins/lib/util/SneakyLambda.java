@@ -23,7 +23,8 @@ public class SneakyLambda {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static <T, R> @NotNull Function<T, R> sneaky(FunctionThrows<T, R> function) {
+    public static <T, R> @NotNull Function<T, R> sneaky(
+            FunctionThrows<T, R> function) {
         return new Function<T, R>() {
             @Override
             @SneakyThrows

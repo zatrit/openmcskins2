@@ -44,8 +44,8 @@ public class ImageLayer implements SkinLayer {
                     @SuppressWarnings(
                             "OptionalGetWithoutIsPresent")
                     val layers = this.sublayers.stream()
-                                         .reduce(Layer::andThen)
-                                         .get();
+                            .reduce(Layer::andThen)
+                            .get();
 
                     val image = (RenderedImage) layers.apply(
                             ImageIO.read(stream));

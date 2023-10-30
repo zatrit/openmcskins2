@@ -12,7 +12,8 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 
 @AllArgsConstructor
-public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener {
+public class ElytraTextureFix
+        implements SimpleSynchronousResourceReloadListener {
     @Override
     public Identifier getFabricId() {
         return new Identifier("skins", "elytra_texture_fix");

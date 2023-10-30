@@ -3,6 +3,7 @@ package net.zatrit.skins.lib.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
  * Index-value pair.
  */
 @Getter
+@ApiStatus.Internal
 @AllArgsConstructor
 public class Enumerated<T> {
     private final int index;
@@ -21,7 +23,8 @@ public class Enumerated<T> {
     /**
      * @return new list of numbered with values from input list.
      */
-    public static <T> @NotNull Collection<Enumerated<T>> enumerate(@NotNull List<T> list) {
+    public static <T> @NotNull Collection<Enumerated<T>> enumerate(
+            @NotNull List<T> list) {
         /* Predetermines the capacity of the list in advance
          * so as not to allocate memory during addition. */
         val list2 = new ArrayList<Enumerated<T>>(list.size());

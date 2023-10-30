@@ -27,6 +27,7 @@ public class PlayerListEntryMixin {
     private void customTexturesSupplier(
             PlayerListEntry instance, Supplier<SkinTextures> unused) {
         val provider = MinecraftClient.getInstance().getSkinProvider();
+
         texturesSupplier = () -> provider.fetchSkinTextures(profile).getNow(
                 DefaultSkinHelper.getSkinTextures(profile));
     }

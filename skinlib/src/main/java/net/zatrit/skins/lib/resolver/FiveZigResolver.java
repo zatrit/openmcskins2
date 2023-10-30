@@ -21,14 +21,14 @@ import java.util.Base64;
 import java.util.Map;
 
 @AllArgsConstructor
-public class FiveZigResolver implements Resolver {
-    private static final String BASE_URL = "https://textures.5zigreborn.eu/profile/";
+public final class FiveZigResolver implements Resolver {
+    private static final String FIVEZIG_API = "https://textures.5zigreborn.eu/profile/";
     private final Config config;
 
     @Override
     public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val url = BASE_URL + profile.getId().toString();
+        val url = FIVEZIG_API + profile.getId().toString();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
         val response = this.config.getGson().fromJson(reader, Map.class);
 
@@ -45,7 +45,7 @@ public class FiveZigResolver implements Resolver {
                     metadata
             );
 
-            textures.getTextures().put(TextureType.CAPE, texture);
+            textures.getMap().put(TextureType.CAPE, texture);
         }
 
         /* Since you can't resolve a list of textures without

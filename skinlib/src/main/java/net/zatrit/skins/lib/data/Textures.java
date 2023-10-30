@@ -1,10 +1,8 @@
 package net.zatrit.skins.lib.data;
 
 import com.google.common.collect.Maps;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.google.gson.annotations.SerializedName;
+import lombok.*;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Texture;
 
@@ -20,5 +18,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Textures<T extends Texture> {
-    private Map<TextureType, T> textures = Maps.newEnumMap(TextureType.class);
+    @SerializedName("textures")
+    private Map<TextureType, T> map = Maps.newEnumMap(TextureType.class);
 }

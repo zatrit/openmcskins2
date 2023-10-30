@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -15,8 +16,10 @@ import java.util.Arrays;
 /**
  * Json adapter for deserializing enums ignoring case.
  */
+@ApiStatus.Internal
 @AllArgsConstructor
-public class AnyCaseEnumDeserializer<T extends Enum<?>> implements JsonDeserializer<T> {
+public class AnyCaseEnumDeserializer<T extends Enum<?>> implements
+        JsonDeserializer<T> {
     private final T[] enumConstants;
 
     @Override
@@ -34,9 +37,9 @@ public class AnyCaseEnumDeserializer<T extends Enum<?>> implements JsonDeseriali
 
         val asString = json.getAsString().toLowerCase();
         val variant = Arrays.stream(this.enumConstants)
-                              .filter(v -> v.toString().toLowerCase()
-                                                   .equals(asString))
-                              .findFirst();
+                .filter(v -> v.toString().toLowerCase()
+                        .equals(asString))
+                .findFirst();
 
         if (!variant.isPresent()) {
             throw new JsonParseException(

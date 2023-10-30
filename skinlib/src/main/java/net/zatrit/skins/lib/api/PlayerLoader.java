@@ -4,8 +4,6 @@ import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-
 /**
  * Player-specific textures loader.
  */
@@ -19,5 +17,5 @@ public interface PlayerLoader {
      * @return texture of specified type if
      * present (check via {@link #hasTexture}).
      */
-    @Nullable TypedTexture getTexture(TextureType type) throws IOException;
+    @Nullable TypedTexture getTexture(TextureType type);
 }

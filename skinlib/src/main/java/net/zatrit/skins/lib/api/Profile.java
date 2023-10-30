@@ -14,6 +14,13 @@ public interface Profile {
     UUID getId();
 
     /**
+     * @return player UUID without minus characters.
+     */
+    default String getShortId() {
+        return this.getId().toString().replace("-", "");
+    }
+
+    /**
      * @return player name.
      */
     String getName();

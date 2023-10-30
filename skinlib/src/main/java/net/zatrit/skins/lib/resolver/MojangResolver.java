@@ -27,6 +27,7 @@ import java.util.Base64;
  */
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
+    private static final String MOJANG_SKIN_API = "https://sessionserver.mojang.com/session/minecraft/profile/";
     public static final Type URL_TEXTURES = TypeToken.getParameterized(
             Textures.class,
             URLTexture.class
@@ -38,8 +39,7 @@ public final class MojangResolver implements Resolver {
     public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
         val gson = this.config.getGson();
-        val url = "https://sessionserver.mojang.com/session/minecraft/profile/" +
-                          profile.getId().toString().replaceAll("-", "");
+        val url = MOJANG_SKIN_API + profile.getShortId();
 
         @Cleanup val stream = new URL(url).openStream();
         val response = gson.fromJson(
@@ -55,12 +55,9 @@ public final class MojangResolver implements Resolver {
                 textureData));
 
         return new CachedPlayerLoader<>(
-                this.config.getCacheProvider(),
+                (Textures<URLTexture>) gson.fromJson(bytesReader, URL_TEXTURES),
                 this.config.getLayers(),
-                (Textures<URLTexture>) gson.fromJson(
-                        bytesReader,
-                        URL_TEXTURES
-                )
+                this.config.getCacheProvider()
         );
     }
 }

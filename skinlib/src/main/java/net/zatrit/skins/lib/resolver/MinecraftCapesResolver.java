@@ -28,14 +28,14 @@ import java.util.Base64;
  * Does not cache skins, because connecting to API already loads textures.
  */
 @AllArgsConstructor
-public class MinecraftCapesResolver implements Resolver {
-    private static final String BASE_URL = "https://api.minecraftcapes.net/profile/";
+public final class MinecraftCapesResolver implements Resolver {
+    private static final String MINECRAFTCAPES_API = "https://api.minecraftcapes.net/profile/";
     private final Config config;
 
     @Override
     public @NotNull PlayerLoader resolve(@NotNull Profile profile)
             throws IOException {
-        val url = BASE_URL + profile.getId().toString().replace("-", "");
+        val url = MINECRAFTCAPES_API + profile.getShortId();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
         val response = this.config.getGson().fromJson(
                 reader,
@@ -64,7 +64,7 @@ public class MinecraftCapesResolver implements Resolver {
                     metadata
             );
 
-            textures.getTextures().put(type, texture);
+            textures.getMap().put(type, texture);
         }
 
         /* Since you can't resolve a list of textures without

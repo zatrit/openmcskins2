@@ -24,9 +24,8 @@ public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
     private final @Nullable Cache cache;
 
     public CachedPlayerLoader(
-            @Nullable CacheProvider cacheProvider,
-            @NotNull Collection<SkinLayer> layers,
-            @NotNull Textures<T> textures) {
+            @NotNull Textures<T> textures, @NotNull Collection<SkinLayer> layers,
+            @Nullable CacheProvider cacheProvider) {
         super(textures, layers);
         this.cache = cacheProvider != null ? cacheProvider.getSkinCache() : null;
     }
