@@ -41,10 +41,8 @@ public final class MojangResolver implements Resolver {
         val url = "https://sessionserver.mojang.com/session/minecraft/profile/" +
                           profile.getId().toString().replaceAll("-", "");
 
-        MojangResponse response;
         @Cleanup val stream = new URL(url).openStream();
-
-        response = gson.fromJson(
+        val response = gson.fromJson(
                 new InputStreamReader(stream),
                 MojangResponse.class
         );

@@ -26,9 +26,10 @@ public final class Resolvers {
 
         try {
             return switch (entry.getType()) {
-                case FALLBACK -> new FallbackResolver(config,
-                                                      MinecraftClient.getInstance()
-                                                              .getSessionService()
+                case FALLBACK -> new FallbackResolver(
+                        config,
+                        MinecraftClient.getInstance()
+                                .getSessionService()
                 );
                 case FIVEZIG -> new FiveZigResolver(config);
                 case MOJANG -> new MojangResolver(config);
@@ -39,8 +40,9 @@ public final class Resolvers {
                     yield switch (entry.getType()) {
                         case OPTIFINE -> new OptifineResolver(config, baseUrl);
                         case VALHALLA -> new ValhallaResolver(config, baseUrl);
-                        case NAMED_HTTP -> new NamedHTTPResolver(config,
-                                                                 baseUrl
+                        case NAMED_HTTP -> new NamedHTTPResolver(
+                                config,
+                                baseUrl
                         );
                         case DIRECT -> {
                             @SuppressWarnings("unchecked")
@@ -55,8 +57,9 @@ public final class Resolvers {
                 case LOCAL -> {
                     val directoryPattern = (String) props.get("directory");
                     val replaces = new HashMap<String, Object>();
-                    replaces.put("configDir",
-                                 FabricLoader.getInstance().getConfigDir()
+                    replaces.put(
+                            "configDir",
+                            FabricLoader.getInstance().getConfigDir()
                     );
 
                     val directory = Path.of(str(directoryPattern).args(replaces)

@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 @Mixin(PlayerSkinProvider.class)
 public class PlayerSkinProviderMixin implements Refreshable {
     @Shadow @Final
-    public LoadingCache<PlayerSkinProvider.Key, CompletableFuture<SkinTextures>> cache;
+    private LoadingCache<PlayerSkinProvider.Key, CompletableFuture<SkinTextures>> cache;
 
     @Inject(
             at = @At("HEAD"),
@@ -89,7 +89,7 @@ public class PlayerSkinProviderMixin implements Refreshable {
         }).orTimeout(timeout, TimeUnit.MILLISECONDS).thenApplyAsync(result -> {
             if (result != null) {
                 for (val texture : result) {
-                    this.loadTextures(texture, textures, profile);
+                    this.loadTexture(texture, textures, profile);
                 }
             }
 
@@ -101,7 +101,7 @@ public class PlayerSkinProviderMixin implements Refreshable {
 
     @Unique
     @SneakyThrows
-    private void loadTextures(
+    private void loadTexture(
             @NotNull TypedTexture result,
             SkinTextures textures,
             @NotNull Profile profile) {

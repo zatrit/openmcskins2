@@ -105,7 +105,6 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         } catch (IllegalArgumentException ignored) {
         }
 
-        val finalId = id;
         val toml = new Toml().read(stream);
         val entry = toml.to(HostEntry.class);
 
@@ -116,7 +115,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         }
 
         val config = this.configHolder.instance();
-        config.getHosts().add(finalId, entry);
+        config.getHosts().add(id, entry);
         this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
