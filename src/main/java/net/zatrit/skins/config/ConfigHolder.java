@@ -26,12 +26,4 @@ public interface ConfigHolder<T> {
     void load();
 
     T getConfig();
-
-    default <R> R patchConfig(@NotNull Function<T, R> callback) {
-        val config = this.getConfig();
-        val result = callback.apply(config);
-        this.save();
-
-        return result;
-    }
 }

@@ -99,13 +99,11 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
                 Path.class
         ));
         int id = 0;
-
         try {
             id = context.getArgument("id", Integer.class);
         } catch (IllegalArgumentException ignored) {
         }
 
-        val finalId = id;
         val toml = new Toml().read(stream);
         val entry = toml.to(HostEntry.class);
 
@@ -115,10 +113,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        this.configHolder.patchConfig(config -> {
-            config.getHosts().add(finalId, entry);
-            return null;
-        });
+        this.configHolder.getConfig().getHosts().add(id, entry);
+        this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.added",
@@ -149,10 +145,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     private int removeHost(@NotNull CommandContext<FabricClientCommandSource> context) {
         val id = context.getArgument("id", Integer.class);
 
-        @SuppressWarnings("CodeBlock2Expr")
-        val entry = this.configHolder.patchConfig(config -> {
-            return config.getHosts().remove(id.intValue());
-        });
+        val config = this.configHolder.getConfig();
+        val entry = config.getHosts().remove(id.intValue());
+        this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.removed",
@@ -166,12 +161,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         val from = context.getArgument("from", Integer.class);
         val to = context.getArgument("to", Integer.class);
 
-        this.configHolder.patchConfig(config -> {
-            val entry = config.getHosts().remove(from.intValue());
-            config.getHosts().add(to, entry);
-
-            return null;
-        });
+        val config = this.configHolder.getConfig();
+        val entry = config.getHosts().remove(from.intValue());
+        config.getHosts().add(to, entry);
 
         context.getSource().sendFeedback(Text.translatable(
                 "openmcskins.command.moved",

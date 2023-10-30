@@ -61,10 +61,12 @@ public final class TextUtil {
                                 .styled(style -> style.withFormatting(Formatting.RESET)));
             text.append(Text.literal(" = ").styled(specialStyle));
 
-            if (value instanceof Map) {
+            if (value instanceof Number numberValue) {
+                text.append(formatNumber(numberValue));
+            } else if (value instanceof Map) {
                 mapToText(text, (Map<String, ?>) value);
-            } else if (value instanceof ToText) {
-                ((ToText) value).toText(text);
+            } else if (value instanceof ToText textValue) {
+                textValue.toText(text);
             } else {
                 val stringValue = value.toString();
                 var mutableText = Text.literal(stringValue)
