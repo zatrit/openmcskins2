@@ -13,6 +13,7 @@ modrinth {
     uploadFile = remapJar
     gameVersions = ['1.16.5']
     loaders = ['fabric', 'quilt']
+    changelog = file('CHANGELOG.md').readLines().join '\n'
     dependencies {
         required.project 'fabric-api'
         required.project 'cloth-config'
