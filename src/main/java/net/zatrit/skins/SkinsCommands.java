@@ -103,7 +103,6 @@ public class SkinsCommands {
         } catch (IllegalArgumentException ignored) {
         }
 
-        val finalId = id;
         val toml = new Toml().read(stream);
         val entry = toml.to(HostEntry.class);
 
@@ -114,7 +113,7 @@ public class SkinsCommands {
         }
 
         val config = this.configHolder.get();
-        config.getHosts().add(finalId, entry);
+        config.getHosts().add(id, entry);
         this.configHolder.save();
 
         context.getSource().sendFeedback(new TranslatableText(
