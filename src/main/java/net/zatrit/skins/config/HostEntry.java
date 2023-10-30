@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HostEntry implements TextUtil.ToText {
     private final HostType type;
-    private Map<String, ?> properties;
+    private Map<String, Object> properties;
 
     @Override
     public void toText(@NotNull MutableText text) {
@@ -37,6 +37,7 @@ public class HostEntry implements TextUtil.ToText {
         DIRECT,
         FALLBACK,
         FIVEZIG,
+        GEYSER,
         LOCAL,
         MINECRAFT_CAPES,
         MOJANG,

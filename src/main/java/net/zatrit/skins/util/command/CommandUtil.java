@@ -16,7 +16,7 @@ public final class CommandUtil {
     public static @NotNull LiteralArgumentBuilder<FabricClientCommandSource> literal(
             final String name) {
         return LiteralArgumentBuilder.<FabricClientCommandSource>literal(name)
-                       .executes(CommandUtil::noArguments);
+                .executes(CommandUtil::noArguments);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
@@ -28,9 +28,10 @@ public final class CommandUtil {
         ).executes(CommandUtil::noArguments);
     }
 
-    public static int noArguments(@NotNull CommandContext<FabricClientCommandSource> context) {
-        context.getSource()
-                .sendError(Text.translatable("command.unknown.argument"));
+    public static int noArguments(
+            @NotNull CommandContext<FabricClientCommandSource> context) {
+        context.getSource().sendError(Text.translatable(
+                "command.unknown.argument"));
         return -1;
     }
 }
