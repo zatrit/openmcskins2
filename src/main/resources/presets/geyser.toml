@@ -1,0 +1,4 @@
+type = 'GEYSER'
+
+[properties]
+floodgate_prefix = '.'
