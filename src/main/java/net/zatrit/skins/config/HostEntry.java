@@ -1,6 +1,9 @@
 package net.zatrit.skins.config;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
@@ -34,6 +37,7 @@ public class HostEntry implements TextUtil.ToText {
         DIRECT,
         FALLBACK,
         FIVEZIG,
+        GEYSER,
         LOCAL,
         MINECRAFT_CAPES,
         MOJANG,

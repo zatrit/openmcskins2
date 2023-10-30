@@ -30,11 +30,11 @@ public abstract class GameProfileMixin implements Profile {
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public CompletableFuture<Profile> refreshUuidAsync() {
         return CompletableFuture.supplyAsync(this::apiRequest)
-                       .thenApply(request -> SkinsClient.getHttpClient()
-                                                     .sendAsync(
-                                                             request,
-                                                             HttpResponse.BodyHandlers.ofInputStream()
-                                                     ).join()).thenApply(
+                .thenApply(request -> SkinsClient.getHttpClient()
+                        .sendAsync(
+                                request,
+                                HttpResponse.BodyHandlers.ofInputStream()
+                        ).join()).thenApply(
                         HttpResponse::body).thenApply(sneaky(stream -> {
                     @Cleanup val reader = new InputStreamReader(stream);
                     val map = SkinsClient.getLoaderConfig().getGson().fromJson(

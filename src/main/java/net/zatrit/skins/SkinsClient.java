@@ -10,7 +10,6 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.ActionResult;
@@ -104,6 +103,6 @@ public final class SkinsClient implements ClientModInitializer {
         commands.register(ClientCommandManager.DISPATCHER);
 
         httpClient = HttpClient.newBuilder().executor(loaderConfig.getExecutor())
-                             .build();
+                .build();
     }
 }
