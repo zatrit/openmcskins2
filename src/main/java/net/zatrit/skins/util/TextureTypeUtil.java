@@ -13,7 +13,8 @@ public final class TextureTypeUtil {
      * Converts texture type from {@link TextureType}
      * to {@link MinecraftProfileTexture.Type}.
      */
-    public static MinecraftProfileTexture.@Nullable Type toAuthlibType(@NotNull TextureType type) {
+    public static MinecraftProfileTexture.@Nullable Type toAuthlibType(
+            @NotNull TextureType type) {
         switch (type) {
             case SKIN:
                 return MinecraftProfileTexture.Type.SKIN;
@@ -29,7 +30,8 @@ public final class TextureTypeUtil {
      * to {@link TextureType}.
      */
     @Contract(pure = true)
-    public static @Nullable TextureType fromAuthlibType(MinecraftProfileTexture.@NotNull Type type) {
+    public static @Nullable TextureType fromAuthlibType(
+            MinecraftProfileTexture.@NotNull Type type) {
         switch (type) {
             case SKIN:
                 return TextureType.SKIN;

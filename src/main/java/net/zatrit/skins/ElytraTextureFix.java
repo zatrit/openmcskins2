@@ -14,7 +14,8 @@ import java.io.IOException;
 
 @Getter
 @AllArgsConstructor
-public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener {
+public class ElytraTextureFix
+        implements SimpleSynchronousResourceReloadListener {
     private final Identifier fabricId = new Identifier(
             "skins",
             "elytra_texture_fix"
@@ -26,7 +27,7 @@ public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener
         val elytraId = new Identifier("textures/entity/elytra.png");
 
         try (val stream = manager.getAllResources(elytraId).stream().findFirst()
-                                  .get().getInputStream()) {
+                .get().getInputStream()) {
             val elytraImage = ImageIO.read(stream);
             SkinLayer.CAPE_LAYER.setElytraTexture(elytraImage);
         } catch (IOException e) {

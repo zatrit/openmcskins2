@@ -58,9 +58,9 @@ public class FallbackResolver implements Resolver {
         }
 
         return new CachedPlayerLoader<>(
-                config.getCacheProvider(),
+                new Textures<>(newTextures),
                 config.getLayers(),
-                new Textures<>(newTextures)
+                config.getCacheProvider()
         );
     }
 }

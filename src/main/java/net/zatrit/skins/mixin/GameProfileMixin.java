@@ -28,7 +28,7 @@ public abstract class GameProfileMixin implements Profile {
     @SneakyThrows
     public CompletableFuture<Profile> refreshUuidAsync() {
         val url = "https://api.mojang.com/users/profiles/minecraft/" +
-                          URLEncoder.encode(this.getName(), "UTF8");
+                URLEncoder.encode(this.getName(), "UTF8");
 
         return CompletableFuture.supplyAsync(
                 sneaky(() -> new URL(url).openStream()),

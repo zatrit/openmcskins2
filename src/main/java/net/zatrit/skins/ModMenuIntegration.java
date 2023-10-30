@@ -19,9 +19,9 @@ public class ModMenuIntegration implements ModMenuApi {
             val config = instance.getConfig();
 
             val builder = ConfigBuilder.create().setParentScreen(parent)
-                                  .setTitle(new TranslatableText(
-                                          "openmcskins.options.title"))
-                                  .setSavingRunnable(instance::save);
+                    .setTitle(new TranslatableText(
+                            "openmcskins.options.title"))
+                    .setSavingRunnable(instance::save);
             val entryBuilder = builder.entryBuilder();
 
             builder.getOrCreateCategory(new TranslatableText(

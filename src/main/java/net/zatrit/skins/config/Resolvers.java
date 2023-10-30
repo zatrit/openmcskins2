@@ -15,18 +15,27 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static net.andreinc.aleph.AlephFormatter.str;
 
 @UtilityClass
-public final class Resolvers {
-    public static @Nullable Resolver resolverFromEntry(@NotNull HostEntry entry) {
+public class Resolvers {
+    public static @Nullable Resolver resolverFromEntry(
+            @NotNull HostEntry entry) {
         val props = entry.getProperties();
         val config = SkinsClient.getLoaderConfig();
 
         try {
             switch (entry.getType()) {
+                case GEYSER:
+                    return new GeyserResolver(
+                            config,
+                            (String) Objects.requireNonNull(
+                                    props.get(
+                                            "floodgate_prefix"))
+                    );
                 case FALLBACK:
                     return new FallbackResolver(
                             config,
@@ -51,15 +60,12 @@ public final class Resolvers {
                         case VALHALLA:
                             return new ValhallaResolver(config, baseUrl);
                         case NAMED_HTTP:
-                            return new NamedHTTPResolver(
-                                    config,
-                                    baseUrl
-                            );
+                            return new NamedHTTPResolver(config, baseUrl);
                         case DIRECT:
                             @SuppressWarnings("unchecked")
                             val types = ((List<String>) props.get("types")).stream()
-                                                .map(TextureType::valueOf)
-                                                .collect(Collectors.toList());
+                                    .map(TextureType::valueOf)
+                                    .collect(Collectors.toList());
                             return new DirectResolver(config, baseUrl, types);
                     }
                 case LOCAL:

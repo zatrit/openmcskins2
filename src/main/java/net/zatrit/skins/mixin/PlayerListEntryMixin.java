@@ -69,15 +69,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 val client = MinecraftClient.getInstance();
                 val networkHandler = client.getNetworkHandler();
                 refreshUuid = networkHandler != null &&
-                                      !networkHandler.getConnection()
-                                               .isEncrypted();
+                        !networkHandler.getConnection()
+                                .isEncrypted();
         }
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileTask = profile.refreshUuidAsync()
-                                  .exceptionally(SkinsClient.getErrorHandler()
-                                                         .andReturn(profile));
+                    .exceptionally(SkinsClient.getErrorHandler()
+                                           .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
@@ -87,8 +87,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         profileTask.thenApplyAsync(profile1 -> {
             val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
             val futures = dispatcher.resolveAsync(resolvers, profile1)
-                                  // Added error handling in all futures
-                                  .map(f -> f.exceptionally(handler));
+                    // Added error handling in all futures
+                    .map(f -> f.exceptionally(handler));
 
             return dispatcher.fetchTexturesAsync(futures).join();
         }).whenComplete((result, error) -> {

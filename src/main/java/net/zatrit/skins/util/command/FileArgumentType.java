@@ -42,8 +42,8 @@ public class FileArgumentType implements ArgumentType<Path> {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
             val path = Arrays.stream(this.providers).map(p -> p.getFile(file))
-                               .filter(Optional::isPresent).map(Optional::get)
-                               .findFirst();
+                    .filter(Optional::isPresent).map(Optional::get)
+                    .findFirst();
 
             if (path.isPresent()) {
                 return path.get();
