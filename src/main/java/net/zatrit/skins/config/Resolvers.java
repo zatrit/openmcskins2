@@ -58,7 +58,7 @@ public final class Resolvers {
                             yield new DirectResolver(config, baseUrl, types);
                         }
                         default -> null;
-                    };
+                    }
                 }
                 case LOCAL -> {
                     val directoryPattern = (String) props.get("directory");

@@ -69,7 +69,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 val client = MinecraftClient.getInstance();
                 val networkHandler = client.getNetworkHandler();
 
-                yield networkHandler != null &&
+                yield networkHandler !=null &&
                         !networkHandler.getConnection().isEncrypted();
             }
         };
