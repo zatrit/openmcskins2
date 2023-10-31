@@ -6,8 +6,7 @@ import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Metadata;
 
 /**
- * A texture that loads its content using a given
- * {@link net.zatrit.skins.lib.util.SneakyLambda.SupplierThrows}.
+ * A texture that loads its content using {@link #getBytes()} method.
  */
 @Getter
 @AllArgsConstructor

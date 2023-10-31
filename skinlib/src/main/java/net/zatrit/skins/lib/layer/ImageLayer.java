@@ -36,7 +36,7 @@ public class ImageLayer implements SkinLayer {
         val old = input.getTexture();
         val texture = new LazyTexture(old.getId(), old.getMetadata()) {
             @Override
-            public byte[] getBytes() throws IOException {
+            public byte @NotNull [] getBytes() throws IOException {
                 @Cleanup val stream = new ByteArrayInputStream(old.getBytes());
 
                 // https://stackoverflow.com/a/44521687/12245612
