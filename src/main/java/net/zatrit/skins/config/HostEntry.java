@@ -22,7 +22,7 @@ public class HostEntry implements TextUtil.ToText {
 
     @Override
     public void toText(@NotNull MutableText text) {
-        val map = new HashMap<String, Object>();
+        val map = new HashMap<String, Object>(2, 1);
 
         map.put("type", this.getType());
         map.put("properties", this.getProperties());

@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,14 +62,11 @@ public final class Resolvers {
                 }
                 case LOCAL -> {
                     val directoryPattern = (String) props.get("directory");
-                    val replaces = new HashMap<String, Object>();
-                    replaces.put(
+                    val directory = Path.of(str(directoryPattern).arg(
                             "configDir",
-                            FabricLoader.getInstance().getConfigDir()
-                    );
-
-                    val directory = Path.of(str(directoryPattern).args(replaces)
-                                                    .fmt());
+                            FabricLoader.getInstance()
+                                    .getConfigDir()
+                    ).fmt());
 
                     yield new LocalResolver(config, directory);
                 }

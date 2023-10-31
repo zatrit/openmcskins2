@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
-public final class TextureTypeUtil {
+public class TextureTypeUtil {
     /**
      * Converts texture type from {@link TextureType}
      * to {@link MinecraftProfileTexture.Type}.
