@@ -41,10 +41,11 @@ public class CachedPlayerTextures<T extends Texture>
             return texture;
         }
 
-        return new LazyTexture(
-                texture.getId(),
-                texture.getMetadata(),
-                () -> this.cache.getOrLoad(texture.getId(), texture::getBytes)
-        );
+        return new LazyTexture(texture.getId(), texture.getMetadata()) {
+            @Override
+            public byte[] getBytes() {
+                return cache.getOrLoad(texture.getId(), texture::getBytes);
+            }
+        };
     }
 }
