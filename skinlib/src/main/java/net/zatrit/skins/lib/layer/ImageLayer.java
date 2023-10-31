@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
@@ -32,33 +33,24 @@ public class ImageLayer implements SkinLayer {
             return input;
         }
 
-        val texture = input.getTexture();
-        return new TypedTexture(new LazyTexture(
-                texture.getId(),
-                texture.getMetadata(),
-                () -> {
-                    @Cleanup
-                    val stream = new ByteArrayInputStream(
-                            texture.getBytes());
+        val old = input.getTexture();
+        val texture = new LazyTexture(old.getId(), old.getMetadata()) {
+            @Override
+            public byte[] getBytes() throws IOException {
+                @Cleanup val stream = new ByteArrayInputStream(old.getBytes());
 
-                    // https://stackoverflow.com/a/44521687/12245612
-                    val layers = this.sublayers.stream()
-                            .reduce(Layer::andThen)
-                            .orElseThrow(NoSuchElementException::new);
+                // https://stackoverflow.com/a/44521687/12245612
+                val layers = sublayers.stream().reduce(Layer::andThen)
+                        .orElseThrow(NoSuchElementException::new);
 
-                    val image = (RenderedImage) layers.apply(
-                            ImageIO.read(stream));
+                val image = (RenderedImage) layers.apply(ImageIO.read(stream));
 
-                    @Cleanup
-                    val outputStream = new ByteArrayOutputStream();
-                    ImageIO.write(
-                            image,
-                            "png",
-                            outputStream
-                    );
+                @Cleanup val outputStream = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", outputStream);
 
-                    return outputStream.toByteArray();
-                }
-        ), input.getType());
+                return outputStream.toByteArray();
+            }
+        };
+        return new TypedTexture(texture, input.getType());
     }
 }
