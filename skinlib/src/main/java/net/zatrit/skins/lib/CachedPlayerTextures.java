@@ -1,32 +1,34 @@
 package net.zatrit.skins.lib;
 
 import lombok.val;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
-import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.LazyTexture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * Implementation of {@link PlayerLoader} with caching support with
+ * Implementation of {@link PlayerTextures} with caching support with
  * {@link CacheProvider}.
  *
  * @param <T> texture type.
- * @see PlayerLoader
+ * @see PlayerTextures
  */
-public class CachedPlayerLoader<T extends Texture> extends BasePlayerLoader<T> {
+public class CachedPlayerTextures<T extends Texture>
+        extends BasePlayerTextures<T> {
     private final @Nullable Cache cache;
 
-    public CachedPlayerLoader(
-            @NotNull Textures<T> textures, @NotNull Collection<SkinLayer> layers,
+    public CachedPlayerTextures(
+            @NotNull Map<TextureType, T> map,
+            @NotNull Collection<SkinLayer> layers,
             @Nullable CacheProvider cacheProvider) {
-        super(textures, layers);
+        super(map, layers);
         this.cache = cacheProvider != null ? cacheProvider.getSkinCache() : null;
     }
 

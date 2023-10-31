@@ -1,17 +1,16 @@
 package net.zatrit.skins.lib.resolver;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
 import lombok.var;
-import net.zatrit.skins.lib.CachedPlayerLoader;
+import net.zatrit.skins.lib.CachedPlayerTextures;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.texture.URLTexture;
+import net.zatrit.skins.lib.data.MojangTextures;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -20,8 +19,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Map;
-
-import static net.zatrit.skins.lib.resolver.MojangResolver.URL_TEXTURES;
 
 /**
  * An implementation of the GeyserMC skin API based on
@@ -39,12 +36,11 @@ public final class GeyserResolver implements Resolver {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         var name = profile.getName();
-        Preconditions.checkState(name.startsWith(floodgatePrefix));
+        Verify.verify(name.startsWith(floodgatePrefix));
         name = name.substring(floodgatePrefix.length());
 
         val xuidUrl = new URL(GEYSER_XUID_API + name);
@@ -63,9 +59,11 @@ public final class GeyserResolver implements Resolver {
         val bytesReader = new InputStreamReader(new ByteArrayInputStream(
                 textureData));
 
-        return new CachedPlayerLoader<>(
-                (Textures<URLTexture>) config.getGson()
-                        .fromJson(bytesReader, URL_TEXTURES),
+        return new CachedPlayerTextures<>(
+                config.getGson().fromJson(
+                        bytesReader,
+                        MojangTextures.class
+                ).getMap(),
                 this.config.getLayers(),
                 this.config.getCacheProvider()
         );

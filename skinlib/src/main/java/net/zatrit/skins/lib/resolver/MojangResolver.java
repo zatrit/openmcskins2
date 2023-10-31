@@ -1,23 +1,20 @@
 package net.zatrit.skins.lib.resolver;
 
-import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
-import net.zatrit.skins.lib.CachedPlayerLoader;
+import net.zatrit.skins.lib.CachedPlayerTextures;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.MojangResponse;
-import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.texture.URLTexture;
+import net.zatrit.skins.lib.data.MojangTextures;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Base64;
 
@@ -28,15 +25,10 @@ import java.util.Base64;
 @AllArgsConstructor
 public final class MojangResolver implements Resolver {
     private static final String MOJANG_SKIN_API = "https://sessionserver.mojang.com/session/minecraft/profile/";
-    public static final Type URL_TEXTURES = TypeToken.getParameterized(
-            Textures.class,
-            URLTexture.class
-    ).getType();
     private final Config config;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val gson = this.config.getGson();
         val url = MOJANG_SKIN_API + profile.getShortId();
@@ -54,8 +46,11 @@ public final class MojangResolver implements Resolver {
         val bytesReader = new InputStreamReader(new ByteArrayInputStream(
                 textureData));
 
-        return new CachedPlayerLoader<>(
-                (Textures<URLTexture>) gson.fromJson(bytesReader, URL_TEXTURES),
+        return new CachedPlayerTextures<>(
+                gson.fromJson(
+                        bytesReader,
+                        MojangTextures.class
+                ).getMap(),
                 this.config.getLayers(),
                 this.config.getCacheProvider()
         );

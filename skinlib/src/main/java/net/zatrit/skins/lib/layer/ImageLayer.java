@@ -15,6 +15,7 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 /**
@@ -41,11 +42,9 @@ public class ImageLayer implements SkinLayer {
                             texture.getBytes());
 
                     // https://stackoverflow.com/a/44521687/12245612
-                    @SuppressWarnings(
-                            "OptionalGetWithoutIsPresent")
                     val layers = this.sublayers.stream()
                             .reduce(Layer::andThen)
-                            .get();
+                            .orElseThrow(NoSuchElementException::new);
 
                     val image = (RenderedImage) layers.apply(
                             ImageIO.read(stream));

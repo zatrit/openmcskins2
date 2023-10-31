@@ -3,15 +3,15 @@ package net.zatrit.skins.lib.resolver;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
-import net.zatrit.skins.lib.BasePlayerLoader;
+import net.zatrit.skins.lib.BasePlayerTextures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.MCCapesResponse;
 import net.zatrit.skins.lib.data.Metadata;
-import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Base64;
+import java.util.EnumMap;
 
 /**
  * Resolver for <a href="https://minecraftcapes.net/">Minecraft Capes</a>
@@ -33,7 +34,7 @@ public final class MinecraftCapesResolver implements Resolver {
     private final Config config;
 
     @Override
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val url = MINECRAFTCAPES_API + profile.getShortId();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
@@ -41,7 +42,7 @@ public final class MinecraftCapesResolver implements Resolver {
                 reader,
                 MCCapesResponse.class
         );
-        val textures = new Textures<BytesTexture>();
+        val textures = new EnumMap<TextureType, Texture>(TextureType.class);
 
         for (val entry : response.getTextures().entrySet()) {
             val type = entry.getKey();
@@ -64,11 +65,11 @@ public final class MinecraftCapesResolver implements Resolver {
                     metadata
             );
 
-            textures.getMap().put(type, texture);
+            textures.put(type, texture);
         }
 
         /* Since you can't resolve a list of textures without
         fetching those textures, they may not be cached */
-        return new BasePlayerLoader<>(textures, this.config.getLayers());
+        return new BasePlayerTextures<>(textures, this.config.getLayers());
     }
 }

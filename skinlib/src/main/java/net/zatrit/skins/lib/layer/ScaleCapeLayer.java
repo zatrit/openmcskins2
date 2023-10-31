@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.math.RoundingMode;
 
 /**
  * Calculates the smallest power of the number 2 that
@@ -23,10 +22,7 @@ public class ScaleCapeLayer implements Layer<Image> {
 
     @Override
     public BufferedImage apply(@NotNull Image image) {
-        // TODO: use IntMath.ceilingPowerOfTwo when it become stable
-        val power = IntMath.log2(image.getHeight(null), RoundingMode.UP);
-
-        val height = IntMath.pow(2, power);
+        val height = IntMath.ceilingPowerOfTwo(image.getHeight(null));
         val width = height * 2;
 
         val result = new BufferedImage(

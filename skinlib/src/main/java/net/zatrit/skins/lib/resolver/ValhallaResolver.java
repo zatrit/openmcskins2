@@ -3,13 +3,12 @@ package net.zatrit.skins.lib.resolver;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
-import net.zatrit.skins.lib.CachedPlayerLoader;
+import net.zatrit.skins.lib.CachedPlayerTextures;
 import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Textures;
-import net.zatrit.skins.lib.texture.URLTexture;
+import net.zatrit.skins.lib.data.MojangTextures;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,18 +25,17 @@ public final class ValhallaResolver implements Resolver {
     private final String baseUrl;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val url = this.baseUrl + profile.getId();
         val gson = this.config.getGson();
         @Cleanup val stream = new URL(url).openStream();
 
-        return new CachedPlayerLoader<>(
-                (Textures<URLTexture>) gson.fromJson(
+        return new CachedPlayerTextures<>(
+                gson.fromJson(
                         new InputStreamReader(stream),
-                        MojangResolver.URL_TEXTURES
-                ),
+                        MojangTextures.class
+                ).getMap(),
                 this.config.getLayers(),
                 this.config.getCacheProvider()
         );

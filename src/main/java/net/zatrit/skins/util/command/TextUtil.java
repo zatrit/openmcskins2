@@ -26,7 +26,7 @@ import java.util.function.UnaryOperator;
  * @see ToText
  */
 @UtilityClass
-public final class TextUtil {
+public class TextUtil {
     private static final List<?> SKIP_ELEMENTS = Lists.newArrayList(
             null,
             Collections.emptyMap(),

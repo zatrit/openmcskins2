@@ -3,7 +3,6 @@ package net.zatrit.skins.lib.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.val;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.List;
  * Index-value pair.
  */
 @Getter
-@ApiStatus.Internal
 @AllArgsConstructor
 public class Enumerated<T> {
     private final int index;

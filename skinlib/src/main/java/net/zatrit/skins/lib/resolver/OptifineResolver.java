@@ -2,14 +2,13 @@ package net.zatrit.skins.lib.resolver;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
-import net.zatrit.skins.lib.BasePlayerLoader;
+import net.zatrit.skins.lib.BasePlayerTextures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Metadata;
-import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import net.zatrit.skins.lib.util.IOUtil;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +35,7 @@ public final class OptifineResolver implements Resolver {
     }
 
     @Override
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
         val texture = new BytesTexture(
@@ -44,13 +43,12 @@ public final class OptifineResolver implements Resolver {
                 Objects.requireNonNull(IOUtil.download(url)),
                 new Metadata()
         );
-        val textures = new Textures<>(Collections.singletonMap(
-                TextureType.CAPE,
-                texture
-        ));
 
         /* Since you can't check for the existence/change of a
         texture without fetching that texture, it should not be cached. */
-        return new BasePlayerLoader<>(textures, this.config.getLayers());
+        return new BasePlayerTextures<>(Collections.singletonMap(
+                TextureType.CAPE,
+                texture
+        ), this.config.getLayers());
     }
 }

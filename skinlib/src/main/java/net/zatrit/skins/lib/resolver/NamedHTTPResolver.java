@@ -4,13 +4,12 @@ import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
-import net.zatrit.skins.lib.CachedPlayerLoader;
+import net.zatrit.skins.lib.CachedPlayerTextures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +37,7 @@ public final class NamedHTTPResolver implements Resolver {
     }
 
     @Override
-    public @NotNull PlayerLoader resolve(@NotNull Profile profile)
+    public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val url = new URL(this.baseUrl + profile.getName());
 
@@ -51,8 +50,8 @@ public final class NamedHTTPResolver implements Resolver {
                 URLTexture.class
         ).getType();
 
-        return new CachedPlayerLoader<>(
-                new Textures<>(this.config.getGson().fromJson(reader, type)),
+        return new CachedPlayerTextures<>(
+                this.config.getGson().fromJson(reader, type),
                 this.config.getLayers(),
                 this.config.getCacheProvider()
         );

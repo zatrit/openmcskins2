@@ -1,6 +1,8 @@
 package net.zatrit.skins.lib.util;
 
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +12,8 @@ import java.util.function.Supplier;
 /**
  * Similar to {@link lombok.SneakyThrows} wrapper for lambdas.
  */
+@UtilityClass
+@ApiStatus.Internal
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Supplier<T> sneaky(SupplierThrows<T> supplier) {

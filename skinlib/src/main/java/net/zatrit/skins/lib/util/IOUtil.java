@@ -1,9 +1,8 @@
 package net.zatrit.skins.lib.util;
 
 import com.google.common.io.ByteStreams;
-import lombok.AccessLevel;
 import lombok.Cleanup;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +12,9 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@UtilityClass
 @ApiStatus.Internal
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class IOUtil {
+public class IOUtil {
     public static byte @Nullable [] download(@NotNull URL url)
             throws IOException {
         val connection = url.openConnection();

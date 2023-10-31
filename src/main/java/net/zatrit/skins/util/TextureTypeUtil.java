@@ -6,7 +6,7 @@ import net.zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
-public final class TextureTypeUtil {
+public class TextureTypeUtil {
     /**
      * Converts texture type from {@link MinecraftProfileTexture.Type}
      * to {@link TextureType}.

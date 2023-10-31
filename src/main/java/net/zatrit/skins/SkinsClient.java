@@ -79,7 +79,8 @@ public final class SkinsClient implements ClientModInitializer {
                     val serializer = new TomlConfigSerializer<>(
                             FabricLoader.getInstance()
                                     .getConfigDir()
-                                    .resolve("openmcskins.toml"),
+                                    .resolve(
+                                            "openmcskins.toml"),
                             handler1
                     );
                     serializer.addSaveListener(this::applyConfig);

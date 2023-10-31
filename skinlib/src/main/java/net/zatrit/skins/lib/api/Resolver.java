@@ -19,6 +19,6 @@ public interface Resolver {
     /**
      * @return player-specific texture loader.
      */
-    @NotNull PlayerLoader resolve(Profile profile) throws IOException;
+    @NotNull PlayerTextures resolve(Profile profile) throws IOException;
 
 }

@@ -5,9 +5,9 @@ import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Player-specific textures loader.
+ * Player-specific textures container.
  */
-public interface PlayerLoader {
+public interface PlayerTextures {
     /**
      * @return true, if texture is present.
      */

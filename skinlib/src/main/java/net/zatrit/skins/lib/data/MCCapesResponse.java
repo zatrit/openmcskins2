@@ -3,6 +3,7 @@ package net.zatrit.skins.lib.data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zatrit.skins.lib.TextureType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import java.util.Map;
  */
 @Getter
 @AllArgsConstructor
+@ApiStatus.Internal
 public class MCCapesResponse {
     private boolean animatedCape;
     private Map<TextureType, String> textures;

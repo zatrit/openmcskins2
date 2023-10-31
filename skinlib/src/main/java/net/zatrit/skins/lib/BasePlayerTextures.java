@@ -1,36 +1,35 @@
 package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
-import net.zatrit.skins.lib.data.Textures;
 import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * Basic implementation of the player loader. Implies that the texture will
+ * Basic implementation of the player textures. Implies that the texture will
  * not be cached and should be used in cases where getting a player fully loads
- * the texture. In other cases {@link CachedPlayerLoader} should be used.
+ * the texture. In other cases {@link CachedPlayerTextures} should be used.
  *
- * @see PlayerLoader
- * @see CachedPlayerLoader
+ * @see PlayerTextures
+ * @see CachedPlayerTextures
  */
 @AllArgsConstructor
-public class BasePlayerLoader<T extends Texture> implements PlayerLoader {
-    private final @NotNull Textures<T> textures;
+public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
+    private final @NotNull Map<TextureType, T> map;
     private final @NotNull Collection<SkinLayer> layers;
 
     @Override
     public boolean hasTexture(TextureType type) {
-        return this.textures.getMap().containsKey(type);
+        return this.map.containsKey(type);
     }
 
     @Override
@@ -39,12 +38,11 @@ public class BasePlayerLoader<T extends Texture> implements PlayerLoader {
             return null;
         }
 
-        val texture = this.wrapTexture(this.textures.getMap().get(type));
+        val texture = this.wrapTexture(this.map.get(type));
 
         // https://stackoverflow.com/a/44521687/12245612
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
         val layers = this.layers.stream().map(l -> (Layer<TypedTexture>) l)
-                .reduce(Layer::andThen).get();
+                .reduce(Layer::andThen).orElseThrow(NullPointerException::new);
 
         return layers.apply(new TypedTexture(texture, type));
     }
