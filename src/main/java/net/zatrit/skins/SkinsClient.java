@@ -99,6 +99,6 @@ public final class SkinsClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                             .executor(skinlibConfig.getExecutor()).build();
+                .executor(skinlibConfig.getExecutor()).build();
     }
 }

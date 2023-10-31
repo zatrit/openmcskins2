@@ -7,12 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
-public final class TextureTypeUtil {
+public class TextureTypeUtil {
     /**
      * Converts texture type from {@link TextureType}
      * to {@link MinecraftProfileTexture.Type}.
      */
-    public static MinecraftProfileTexture.@Nullable Type toAuthlibType(@NotNull TextureType type) {
+    public static MinecraftProfileTexture.@Nullable Type toAuthlibType(
+            @NotNull TextureType type) {
         return switch (type) {
             case SKIN -> MinecraftProfileTexture.Type.SKIN;
             case CAPE -> MinecraftProfileTexture.Type.CAPE;

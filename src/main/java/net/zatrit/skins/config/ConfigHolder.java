@@ -1,10 +1,6 @@
 package net.zatrit.skins.config;
 
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * An interface similar to ConfigHolder from Cloth Config.

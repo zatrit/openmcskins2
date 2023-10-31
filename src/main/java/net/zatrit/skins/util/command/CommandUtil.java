@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
-public final class CommandUtil {
+public class CommandUtil {
     @Contract(value = "_ -> new", pure = true)
     public static @NotNull LiteralArgumentBuilder<FabricClientCommandSource> literal(
             final String name) {

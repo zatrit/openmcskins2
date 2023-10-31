@@ -8,7 +8,9 @@ import net.minecraft.util.logging.LoggerPrintStream;
 @NoArgsConstructor
 public class ExceptionConsumerImpl implements ExceptionConsumer<Void> {
     private static final LoggerPrintStream printStream = new LoggerPrintStream(
-            "OMCS", System.out);
+            "OMCS",
+            System.out
+    );
     private boolean verbose;
 
     @Override

@@ -14,7 +14,8 @@ import java.io.IOException;
 
 @Getter
 @AllArgsConstructor
-public class ElytraTextureFix implements SimpleSynchronousResourceReloadListener {
+public class ElytraTextureFix
+        implements SimpleSynchronousResourceReloadListener {
     private final Identifier fabricId = new Identifier(
             "skins",
             "elytra_texture_fix"

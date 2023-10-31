@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.PlayerLoader;
+import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.data.Metadata;
@@ -70,15 +70,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 val networkHandler = client.getNetworkHandler();
 
                 yield networkHandler != null &&
-                              !networkHandler.getConnection().isEncrypted();
+                        !networkHandler.getConnection().isEncrypted();
             }
         };
 
         CompletableFuture<Profile> profileTask;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileTask = profile.refreshUuidAsync()
-                                  .exceptionally(SkinsClient.getErrorHandler()
-                                                         .andReturn(profile));
+                    .exceptionally(SkinsClient.getErrorHandler()
+                                           .andReturn(profile));
         } else {
             profileTask = CompletableFuture.completedFuture(profile);
         }
@@ -86,10 +86,10 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val errorHandler = SkinsClient.getErrorHandler();
 
         profileTask.thenApplyAsync(profile1 -> {
-                    val handler = errorHandler.<Enumerated<PlayerLoader>>andReturn(null);
+                    val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
                     val futures = dispatcher.resolveAsync(resolvers, profile1)
-                                          // Added error handling in all futures
-                                          .map(f -> f.exceptionally(handler));
+                            // Added error handling in all futures
+                            .map(f -> f.exceptionally(handler));
 
                     return dispatcher.fetchTexturesAsync(futures).join();
                 }).orTimeout(timeout, TimeUnit.MILLISECONDS)
@@ -117,8 +117,9 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val texture = result.getTexture();
         val metadata = texture.getMetadata();
 
-        val textureId = new TextureIdentifier(getProfile().getName(),
-                                              result.getType()
+        val textureId = new TextureIdentifier(
+                getProfile().getName(),
+                result.getType()
         );
 
         TextureLoader.create(texture).getTexture(textureId, id -> {
