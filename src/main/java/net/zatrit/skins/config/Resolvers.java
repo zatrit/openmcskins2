@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -70,20 +69,17 @@ public class Resolvers {
                     }
                 case LOCAL:
                     val directoryPattern = (String) props.get("directory");
-                    val replaces = new HashMap<String, Object>();
-                    replaces.put(
+                    val directory = Paths.get(str(directoryPattern).arg(
                             "configDir",
-                            FabricLoader.getInstance().getConfigDir()
-                    );
-                    val directory = Paths.get(str(directoryPattern).args(replaces)
-                                                      .fmt());
+                            FabricLoader.getInstance()
+                                    .getConfigDir()
+                    ).fmt());
+
                     return new LocalResolver(config, directory);
-                default:
-                    throw new IllegalArgumentException();
             }
         } catch (Exception ex) {
             SkinsClient.getErrorHandler().accept(ex);
-            return null;
         }
+        return null;
     }
 }
