@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import net.zatrit.skins.accessor.HasMetadata;
 import net.zatrit.skins.lib.CachedPlayerTextures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
@@ -16,9 +15,9 @@ import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.texture.URLTexture;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class FallbackResolver implements Resolver {
@@ -35,14 +34,11 @@ public class FallbackResolver implements Resolver {
 
         for (val entry : textures.entrySet()) {
             val texture = entry.getValue();
-            @Nullable val metadataMap = ((HasMetadata) texture).getMetadata();
 
-            val metadata = metadataMap == null ? new Metadata() : new Metadata(
-                    Boolean.parseBoolean(metadataMap.getOrDefault(
-                            "animated",
-                            "false"
-                    )),
-                    metadataMap.getOrDefault("model", null)
+            val metadata = new Metadata(
+                    Optional.ofNullable(texture.getMetadata(
+                            "animated")).map(Boolean::valueOf).orElse(false),
+                    texture.getMetadata("model")
             );
 
             newTextures.put(

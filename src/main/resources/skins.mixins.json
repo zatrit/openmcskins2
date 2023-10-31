@@ -6,7 +6,6 @@
   "client": [
     "GameProfileMixin",
     "MinecraftClientMixin",
-    "MinecraftProfileTextureMixin",
     "PlayerListEntryMixin",
     "PlayerSkinProviderMixin"
   ],
