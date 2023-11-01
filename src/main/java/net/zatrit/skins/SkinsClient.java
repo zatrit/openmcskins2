@@ -63,7 +63,7 @@ public final class SkinsClient implements ClientModInitializer {
         errorHandler = new ExceptionConsumerImpl(config.isVerboseLogs());
 
         resolvers.clear();
-        resolvers.addAll(config.getHosts().stream().parallel()
+        resolvers.addAll(config.getHosts().parallelStream()
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
