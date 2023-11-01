@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "Когда оффлайн",
   "openmcskins.command.noPreset": "Предустановка не найдена.",
   "openmcskins.command.invalidFileFormat": "Неверный формат файла.",
-  "openmcskins.command.unableToRefresh": "Не удалось обновить скины."
+  "openmcskins.command.unableToRefresh": "Не удалось обновить скины.",
+  "openmcskins.command.cleanupAlready": "Кэш уже очищается.",
+  "openmcskins.command.cleanupSuccess": "Кэш успешно очищен.",
+  "openmcskins.command.cleanupFailed": "Не удалось очистить кэш: %s"
 }

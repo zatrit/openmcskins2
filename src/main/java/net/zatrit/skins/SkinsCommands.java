@@ -18,20 +18,24 @@ import net.zatrit.skins.util.command.*;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.CompletableFuture;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SkinsCommands {
     private final ConfigHolder<SkinsConfig> configHolder;
     private final HasAssetPath assetPath;
+    private @Nullable CompletableFuture<Void> cleanupFuture;
 
     public void register(
             @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
@@ -42,8 +46,7 @@ public class SkinsCommands {
                 new IndexedResourceProvider(
                         "presets",
                         getClass().getClassLoader()
-                ),
-                new DirectoryFileProvider(presetsPath)
+                ), new DirectoryFileProvider(presetsPath)
         }, "toml");
         presetsType.refresh();
 
@@ -187,14 +190,34 @@ public class SkinsCommands {
     @SuppressWarnings("resource")
     private int clean(
             @NotNull CommandContext<FabricClientCommandSource> context) {
-        Files.list(Paths.get(assetPath.getAssetPath()).resolve("skins"))
-                .map(Path::toFile).parallel().forEach(directory -> {
-                    try {
-                        FileUtils.deleteDirectory(directory);
-                    } catch (IOException e) {
-                        SkinsClient.getErrorHandler().accept(e);
-                    }
-                });
+        if (cleanupFuture != null && !cleanupFuture.isDone()) {
+            context.getSource().sendError(new TranslatableText(
+                    "openmcskins.command.cleanupAlready"));
+            return -1;
+        }
+
+        cleanupFuture = CompletableFuture.<Void>supplyAsync(sneaky(() -> {
+            Files.list(Paths.get(assetPath.getAssetPath()).resolve("skins")).map(
+                    Path::toFile).parallel().forEach(directory -> {
+                try {
+                    FileUtils.deleteDirectory(directory);
+                } catch (IOException e) {
+                    SkinsClient.getErrorHandler().accept(e);
+                }
+            });
+
+            return null;
+        })).whenComplete((r, e) -> {
+            if (e == null) {
+                context.getSource().sendFeedback(new TranslatableText(
+                        "openmcskins.command.cleanupSuccess"));
+            } else {
+                context.getSource().sendError(new TranslatableText(
+                        "openmcskins.command.cleanupFailed",
+                        e.getMessage()
+                ));
+            }
+        });
 
         return 0;
     }
