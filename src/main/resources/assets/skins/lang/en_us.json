@@ -16,5 +16,8 @@
   "openmcskins.command.noPreset": "No preset found.",
   "openmcskins.command.listEntry": "%d§7. %s",
   "openmcskins.command.invalidFileFormat": "Invalid input file format.",
-  "openmcskins.command.unableToRefresh": "Unable to refresh skins."
+  "openmcskins.command.unableToRefresh": "Unable to refresh skins.",
+  "openmcskins.command.cleanupAlready": "The cache is already clearing.",
+  "openmcskins.command.cleanupSuccess": "Cache successfully cleared.",
+  "openmcskins.command.cleanupFailed": "Unable to clear cache: %s"
 }
