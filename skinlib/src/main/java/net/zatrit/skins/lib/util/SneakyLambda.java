@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -16,12 +17,12 @@ import java.util.function.Supplier;
 @ApiStatus.Internal
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
-    public static <T> @NotNull Supplier<T> sneaky(SupplierThrows<T> supplier) {
+    public static <T> @NotNull Supplier<T> sneaky(Callable<T> supplier) {
         return new Supplier<T>() {
             @Override
             @SneakyThrows
             public T get() {
-                return supplier.get();
+                return supplier.call();
             }
         };
     }
@@ -36,11 +37,6 @@ public class SneakyLambda {
                 return function.apply(t);
             }
         };
-    }
-
-    @FunctionalInterface
-    public interface SupplierThrows<T> {
-        T get() throws Throwable;
     }
 
     @FunctionalInterface

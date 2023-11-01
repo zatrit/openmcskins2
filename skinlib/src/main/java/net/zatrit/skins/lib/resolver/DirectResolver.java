@@ -45,7 +45,7 @@ public final class DirectResolver implements Resolver {
         replaces.put("name", profile.getName());
         replaces.put("shortId", profile.getShortId());
 
-        types.stream().parallel().forEach(type -> textures.put(
+        types.parallelStream().forEach(type -> textures.put(
                 type,
                 downloadTexture(
                         replaces,

@@ -63,7 +63,7 @@ public class TextureDispatcher {
         val allFutures = CompletableFuture.allOf(futures);
 
         return allFutures.thenApply(unused -> stream(TextureType.values()).map(
-                        type -> results.stream().parallel()
+                        type -> results.parallelStream()
                                 // Remains only loaders that has texture
                                 .filter(Objects::nonNull)
                                 .filter(pair -> pair.getValue() != null &&
