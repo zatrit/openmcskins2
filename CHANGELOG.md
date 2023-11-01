@@ -1,3 +1,2 @@
-* Added GeyserMC API support.
-* Fixed Optifine-like resolvers bug.
-* Some code refactoring and optimization.
+* Improved performance by replacing some lambda-functions with AIC.
+* ``/omcs clean`` now has more feedback and works in a separate thread.
