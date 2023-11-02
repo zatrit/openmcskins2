@@ -1,4 +1,4 @@
-GU# History of OpenMCSkins
+# History of OpenMCSkins
 
 Most skin mods allow you to load skins from multiple hosts, but they either don't allow you to change the loading order,
 or it is customized by editing the configuration file through a text editor.
