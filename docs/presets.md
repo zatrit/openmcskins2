@@ -40,7 +40,7 @@ Properties:
 * ``base_url`` - the base URL to which the player's name will be appended (must end with ``/``).
 
 ### ``OPTIFINE``
-Implementation of [Optifine capes API](https://optifine.readthedocs.io/capes.html#technical-details).
+Implementation of [Optifine capes API](https://optifine.readthedocs.io/capes.html).
 
 Properties:
 * ``base_url`` - the base URL to which the player's name will be appended (must end with ``/``).
