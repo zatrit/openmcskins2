@@ -21,29 +21,24 @@ import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 public class TextureDispatcher {
     private final Config config;
 
-    /*
-     * There are more comments than the rest of the code,
-     * because this is a very complex implementation.
-     */
+    /* There are more comments than the rest of the code,
+     * because this is a very complex implementation. */
 
     /**
      * Asynchronously fetches loaders and numbers them from specific resolvers.
      */
     public Stream<CompletableFuture<Enumerated<PlayerTextures>>> resolveAsync(
             @NotNull List<Resolver> resolvers, Profile profile) {
-        return enumerate(resolvers).stream()
-                .map(pair -> CompletableFuture.supplyAsync(
-                        /*
-                         * This function may throw an exception,
-                         * but it's a CompletableFuture, so
-                         * an exception won't crash the game.
-                         */
-                        sneaky(() -> {
-                            val resolver = pair.getValue();
-                            val textures = resolver.resolve(profile);
+        return enumerate(resolvers).map(pair -> CompletableFuture.supplyAsync(
+                /* This function may throw an exception,
+                 * but it's a CompletableFuture, so
+                 * an exception won't crash the game. */
+                sneaky(() -> {
+                    val resolver = pair.getValue();
+                    val textures = resolver.resolve(profile);
 
-                            return pair.withValue(textures);
-                        }), this.config.getExecutor()));
+                    return pair.withValue(textures);
+                }), this.config.getExecutor()));
     }
 
     /**
@@ -56,8 +51,7 @@ public class TextureDispatcher {
         val results = new LinkedList<Enumerated<PlayerTextures>>();
 
         val futures = loaderFutures
-                // Add the loader to the list and
-                // do nothing if unsuccessful
+                // Add the loader to the list and do nothing if unsuccessful
                 .map(l -> l.thenAccept(results::add).exceptionally(e -> null))
                 .toArray(CompletableFuture[]::new);
         val allFutures = CompletableFuture.allOf(futures);

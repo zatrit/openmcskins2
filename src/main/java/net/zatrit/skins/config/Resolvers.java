@@ -30,8 +30,10 @@ public class Resolvers {
                 case GEYSER -> new GeyserResolver(
                         config,
                         (String) Objects.requireNonNull(
-                                props.get(
-                                        "floodgate_prefix"))
+                                props.getOrDefault(
+                                        "floodgate_prefix",
+                                        "."
+                                ))
                 );
                 case FALLBACK -> new FallbackResolver(
                         config,

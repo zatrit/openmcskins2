@@ -14,7 +14,6 @@ import java.util.function.Supplier;
  * Similar to {@link lombok.SneakyThrows} wrapper for lambdas.
  */
 @UtilityClass
-@ApiStatus.Internal
 public class SneakyLambda {
     @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Supplier<T> sneaky(Callable<T> supplier) {
