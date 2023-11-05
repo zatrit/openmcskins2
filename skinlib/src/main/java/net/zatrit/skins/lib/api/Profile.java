@@ -24,9 +24,4 @@ public interface Profile {
      * @return player name.
      */
     String getName();
-
-    /**
-     * Asynchronously refreshes UUID from Mojang API or other API.
-     */
-    CompletableFuture<Profile> refreshUuidAsync();
 }

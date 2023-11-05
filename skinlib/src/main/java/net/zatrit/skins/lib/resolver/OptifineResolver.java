@@ -36,7 +36,7 @@ public final class OptifineResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+            throws IOException, NullPointerException {
         val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
         val texture = new BytesTexture(
                 url.toString(),

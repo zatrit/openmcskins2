@@ -28,7 +28,7 @@ public final class FiveZigResolver implements Resolver {
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
-        val url = FIVEZIG_API + profile.getId().toString();
+        val url = FIVEZIG_API + profile.getId();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
         val response = this.config.getGson().fromJson(reader, Map.class);
 

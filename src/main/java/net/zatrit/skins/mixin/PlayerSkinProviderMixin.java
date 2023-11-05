@@ -9,6 +9,7 @@ import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.SkinTextures;
 import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
@@ -59,7 +60,7 @@ public class PlayerSkinProviderMixin implements Refreshable {
 
         CompletableFuture<Profile> profileFuture;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
-            profileFuture = profile.refreshUuidAsync()
+            profileFuture = ((AsyncUUIDRefresher) profile).skins$refreshUuid()
                     .exceptionally(SkinsClient.getErrorHandler()
                                            .andReturn(profile));
         } else {

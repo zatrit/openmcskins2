@@ -1,7 +1,5 @@
 package net.zatrit.skins.lib.data;
 
-import com.google.common.collect.Maps;
-import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +8,7 @@ import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -21,6 +20,5 @@ import java.util.Map;
 @AllArgsConstructor
 @ApiStatus.Internal
 public class MojangTextures {
-    @SerializedName("textures")
-    private Map<TextureType, URLTexture> map = Maps.newEnumMap(TextureType.class);
+    private Map<TextureType, URLTexture> textures = new EnumMap<>(TextureType.class);
 }

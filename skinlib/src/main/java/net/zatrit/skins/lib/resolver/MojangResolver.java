@@ -50,7 +50,7 @@ public final class MojangResolver implements Resolver {
                 gson.fromJson(
                         bytesReader,
                         MojangTextures.class
-                ).getMap(),
+                ).getTextures(),
                 this.config.getLayers(),
                 this.config.getCacheProvider()
         );

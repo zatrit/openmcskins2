@@ -58,11 +58,9 @@ public final class SkinsClient implements ClientModInitializer {
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
-        val loaderConfig = getSkinlibConfig();
-
-        loaderConfig.setCacheProvider(config.isCacheTextures() ?
-                                              new AssetCacheProvider(path) :
-                                              null);
+        skinlibConfig.setCacheProvider(config.isCacheTextures() ?
+                                               new AssetCacheProvider(path) :
+                                               null);
 
         if (config.isRefreshOnConfigSave()) {
             refresh();

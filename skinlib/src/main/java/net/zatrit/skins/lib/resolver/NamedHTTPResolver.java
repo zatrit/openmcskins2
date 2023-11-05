@@ -40,7 +40,6 @@ public final class NamedHTTPResolver implements Resolver {
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
             throws IOException {
         val url = new URL(this.baseUrl + profile.getName());
-
         @Cleanup val reader = new InputStreamReader(url.openStream());
 
         // Type for EnumMap<TextureType, URLTexture>
