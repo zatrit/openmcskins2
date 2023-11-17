@@ -6,7 +6,6 @@ import lombok.val;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.api.SkinLayer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -29,7 +28,7 @@ public class ElytraTextureFix
         try (val stream = manager.getAllResources(elytraId).stream().findFirst()
                 .get().getInputStream()) {
             val elytraImage = ImageIO.read(stream);
-            SkinLayer.CAPE_LAYER.setElytraTexture(elytraImage);
+            SkinsClient.getCapeLayer().setElytraTexture(elytraImage);
         } catch (IOException e) {
             SkinsClient.getErrorHandler().accept(e);
         }
