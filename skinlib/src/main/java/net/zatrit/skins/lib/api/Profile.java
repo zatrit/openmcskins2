@@ -1,7 +1,6 @@
 package net.zatrit.skins.lib.api;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * An abstract player profile containing

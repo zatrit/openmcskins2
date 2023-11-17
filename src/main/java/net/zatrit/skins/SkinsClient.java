@@ -19,19 +19,25 @@ import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.TomlConfigSerializer;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureDispatcher;
+import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Resolver;
+import net.zatrit.skins.lib.layer.awt.ImageLayer;
+import net.zatrit.skins.lib.layer.awt.LegacySkinLayer;
+import net.zatrit.skins.lib.layer.awt.ScaleCapeLayer;
 import net.zatrit.skins.util.ExceptionConsumer;
 import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.http.HttpClient;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
+    private static final @Getter ScaleCapeLayer capeLayer = new ScaleCapeLayer();
     private static @Getter ConfigClassHandler<SkinsConfig> configHandler;
     private static @Getter Config skinlibConfig;
     private static @Getter TextureDispatcher dispatcher;
@@ -71,6 +77,24 @@ public final class SkinsClient implements ClientModInitializer {
     public void onInitializeClient() {
         skinlibConfig = new Config();
         dispatcher = new TextureDispatcher(skinlibConfig);
+
+        skinlibConfig.setLayers(List.of(new ImageLayer(
+                Collections.singleton(capeLayer),
+                // Applies only to static cape textures.
+                texture -> {
+                    val metadata = texture.getTexture().getMetadata();
+                    val cape = texture.getType() == TextureType.CAPE;
+
+                    if (metadata == null) {
+                        return cape;
+                    }
+
+                    return cape && !metadata.isAnimated();
+                }
+        ), new ImageLayer(
+                Collections.singleton(new LegacySkinLayer()),
+                texture -> texture.getType() == TextureType.SKIN
+        )));
 
         configHandler = ConfigClassHandler.createBuilder(SkinsConfig.class)
                 .serializer(handler1 -> {

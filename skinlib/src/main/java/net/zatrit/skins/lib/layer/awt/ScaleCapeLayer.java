@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.layer;
+package net.zatrit.skins.lib.layer.awt;
 
 import com.google.common.math.IntMath;
 import lombok.Setter;

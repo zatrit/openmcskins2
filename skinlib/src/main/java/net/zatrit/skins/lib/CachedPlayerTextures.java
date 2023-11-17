@@ -1,11 +1,12 @@
 package net.zatrit.skins.lib;
 
 import lombok.val;
+import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.PlayerTextures;
-import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.api.cache.Cache;
 import net.zatrit.skins.lib.api.cache.CacheProvider;
+import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.texture.LazyTexture;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ public class CachedPlayerTextures<T extends Texture>
 
     public CachedPlayerTextures(
             @NotNull Map<TextureType, T> map,
-            @NotNull Collection<SkinLayer> layers,
+            @NotNull Collection<Layer<TypedTexture>> layers,
             @Nullable CacheProvider cacheProvider) {
         super(map, layers);
         this.cache = cacheProvider != null ? cacheProvider.getSkinCache() : null;

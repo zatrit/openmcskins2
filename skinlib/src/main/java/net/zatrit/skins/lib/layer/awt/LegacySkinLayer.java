@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.layer;
+package net.zatrit.skins.lib.layer.awt;
 
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.PlayerTextures;
-import net.zatrit.skins.lib.api.SkinLayer;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.Contract;
@@ -25,7 +24,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
     private final @NotNull Map<TextureType, T> map;
-    private final @NotNull Collection<SkinLayer> layers;
+    private final @NotNull Collection<Layer<TypedTexture>> layers;
 
     @Override
     public boolean hasTexture(TextureType type) {
@@ -41,8 +40,8 @@ public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
         val texture = this.wrapTexture(this.map.get(type));
 
         // https://stackoverflow.com/a/44521687/12245612
-        val layers = this.layers.stream().map(l -> (Layer<TypedTexture>) l)
-                .reduce(Layer::andThen).orElseThrow(NullPointerException::new);
+        val layers = this.layers.stream().reduce(Layer::andThen).orElseThrow(
+                NullPointerException::new);
 
         return layers.apply(new TypedTexture(texture, type));
     }
