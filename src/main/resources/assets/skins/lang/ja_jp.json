@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "オフライン時",
   "openmcskins.command.noPreset": "プリセットが見つかりませんでした。",
   "openmcskins.command.invalidFileFormat": "無効な入力ファイル形式です。",
-  "openmcskins.command.unableToRefresh": "スキンを更新できません。"
+  "openmcskins.command.unableToRefresh": "スキンを更新できません。",
+  "openmcskins.command.cleanupAlready": "キャッシュは既に消去されています。",
+  "openmcskins.command.cleanupSuccess": "キャッシュが正常に消去されました。",
+  "openmcskins.command.cleanupFailed": "キャッシュを消去できません：%s"
 }
