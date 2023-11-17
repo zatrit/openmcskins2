@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.PlayerTextures;
@@ -73,22 +74,22 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                                 .isEncrypted();
         }
 
-        CompletableFuture<Profile> profileTask;
+        CompletableFuture<Profile> profileFuture;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
-            profileTask = profile.refreshUuidAsync()
+            profileFuture = ((AsyncUUIDRefresher) profile).skins$refreshUuid()
                     .exceptionally(SkinsClient.getErrorHandler()
                                            .andReturn(profile));
         } else {
-            profileTask = CompletableFuture.completedFuture(profile);
+            profileFuture = CompletableFuture.completedFuture(profile);
         }
 
         val errorHandler = SkinsClient.getErrorHandler();
 
-        profileTask.thenApplyAsync(profile1 -> {
-            val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
-            val futures = dispatcher.resolveAsync(resolvers, profile1)
-                    // Added error handling in all futures
-                    .map(f -> f.exceptionally(handler));
+        profileFuture.thenApplyAsync(profile1 -> {
+                    val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
+                    val futures = dispatcher.resolveAsync(resolvers, profile1)
+                            // Added error handling in all futures
+                            .map(f -> f.exceptionally(handler));
 
             return dispatcher.fetchTexturesAsync(futures).join();
         }).whenComplete((result, error) -> {

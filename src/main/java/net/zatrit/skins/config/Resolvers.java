@@ -2,6 +2,7 @@ package net.zatrit.skins.config;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import lombok.var;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.zatrit.skins.FallbackResolver;
@@ -13,33 +14,40 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static net.andreinc.aleph.AlephFormatter.str;
 
 @UtilityClass
 public class Resolvers {
+    @SuppressWarnings("unchecked")
     public static @Nullable Resolver resolverFromEntry(
-            @NotNull HostEntry entry) {
+            @NotNull
+            HostEntry entry) {
         val props = entry.getProperties();
-        val config = SkinsClient.getLoaderConfig();
+        val config = SkinsClient.getSkinlibConfig();
 
         try {
             switch (entry.getType()) {
                 case GEYSER:
-                    return new GeyserResolver(
-                            config,
-                            (String) Objects.requireNonNull(
-                                    props.get(
-                                            "floodgate_prefix"))
-                    );
+                    var floodgate_prefix = Collections.singletonList(".");
+                    if (props != null) {
+                        val value = props.get("floodgate_prefix");
+
+                        if (value instanceof List<?>) {
+                            floodgate_prefix = (List<String>) value;
+                        } else if (value instanceof String) {
+                            floodgate_prefix = Collections.singletonList((String) value);
+                        }
+                    }
+
+                    return new GeyserResolver(config, floodgate_prefix);
                 case FALLBACK:
                     return new FallbackResolver(
                             config,
-                            MinecraftClient.getInstance()
-                                    .getSessionService()
+                            MinecraftClient.getInstance().getSessionService()
                     );
                 case MOJANG:
                     return new MojangResolver(config);
@@ -61,7 +69,6 @@ public class Resolvers {
                         case NAMED_HTTP:
                             return new NamedHTTPResolver(config, baseUrl);
                         case DIRECT:
-                            @SuppressWarnings("unchecked")
                             val types = ((List<String>) props.get("types")).stream()
                                     .map(TextureType::valueOf)
                                     .collect(Collectors.toList());
@@ -71,8 +78,7 @@ public class Resolvers {
                     val directoryPattern = (String) props.get("directory");
                     val directory = Paths.get(str(directoryPattern).arg(
                             "configDir",
-                            FabricLoader.getInstance()
-                                    .getConfigDir()
+                            FabricLoader.getInstance().getConfigDir()
                     ).fmt());
 
                     return new LocalResolver(config, directory);

@@ -35,7 +35,7 @@ public final class SkinsClient implements ClientModInitializer {
     @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
     private static @Getter ConfigHolder<SkinsConfig> configHolder;
-    private static @Getter Config loaderConfig;
+    private static @Getter Config skinlibConfig;
     private static @Getter TextureDispatcher dispatcher;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
             false);
@@ -67,11 +67,9 @@ public final class SkinsClient implements ClientModInitializer {
                                  .filter(Objects::nonNull)
                                  .collect(Collectors.toList()));
 
-        val loaderConfig = getLoaderConfig();
-
-        loaderConfig.setCacheProvider(config.isCacheTextures() ?
-                                              new AssetCacheProvider(path) :
-                                              null);
+        skinlibConfig.setCacheProvider(config.isCacheTextures() ?
+                                               new AssetCacheProvider(path) :
+                                               null);
 
         if (config.isRefreshOnConfigSave()) {
             refresh();
@@ -82,8 +80,8 @@ public final class SkinsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        loaderConfig = new Config();
-        dispatcher = new TextureDispatcher(loaderConfig);
+        skinlibConfig = new Config();
+        dispatcher = new TextureDispatcher(skinlibConfig);
 
         configHolder = AutoConfig.register(
                 SkinsConfig.class,
