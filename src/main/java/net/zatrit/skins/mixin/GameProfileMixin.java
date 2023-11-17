@@ -6,6 +6,7 @@ import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
+import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,13 +23,12 @@ import java.util.concurrent.CompletableFuture;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(value = GameProfile.class, remap = false)
-public abstract class GameProfileMixin implements Profile {
+public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     @Shadow
     public abstract PropertyMap getProperties();
 
     @Override
-    @SuppressWarnings("AddedMixinMembersNamePattern")
-    public CompletableFuture<Profile> refreshUuidAsync() {
+    public CompletableFuture<Profile> skins$refreshUuid() {
         return CompletableFuture.supplyAsync(this::apiRequest)
                 .thenApply(request -> SkinsClient.getHttpClient()
                         .sendAsync(

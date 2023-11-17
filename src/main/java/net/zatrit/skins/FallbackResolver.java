@@ -1,6 +1,7 @@
 package net.zatrit.skins;
 
 import com.google.common.base.Verify;
+import com.google.common.base.VerifyException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,8 @@ public class FallbackResolver implements Resolver {
     private final MinecraftSessionService sessionService;
 
     @Override
-    public @NotNull PlayerTextures resolve(Profile profile) {
+    public @NotNull PlayerTextures resolve(Profile profile)
+            throws VerifyException {
         Verify.verify(profile instanceof GameProfile);
 
         val gameProfile = (GameProfile) profile;

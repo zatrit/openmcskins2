@@ -63,11 +63,9 @@ public final class SkinsClient implements ClientModInitializer {
                                  .map(Resolvers::resolverFromEntry)
                                  .filter(Objects::nonNull).toList());
 
-        val loaderConfig = getSkinlibConfig();
-
-        loaderConfig.setCacheProvider(config.isCacheTextures() ?
-                                              new AssetCacheProvider(path) :
-                                              null);
+        skinlibConfig.setCacheProvider(config.isCacheTextures() ?
+                                               new AssetCacheProvider(path) :
+                                               null);
 
         if (config.isRefreshOnConfigSave()) {
             refresh();
@@ -91,9 +89,8 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHolder.getConfig());
 
-        val commands = new SkinsCommands(
-                configHolder,
-                (HasAssetPath) MinecraftClient.getInstance()
+        val commands = new SkinsCommands(configHolder,
+                                         (HasAssetPath) MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);
