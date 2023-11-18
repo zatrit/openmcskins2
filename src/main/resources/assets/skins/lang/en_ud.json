@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "ǝuᴉꞁɟɟo uǝɥM",
   "openmcskins.command.noPreset": "˙punoɟ ʇǝsǝɹd oN",
   "openmcskins.command.invalidFileFormat": "˙ʇɐɯɹoɟ ǝꞁᴉɟ ʇnduᴉ pᴉꞁɐʌuI",
-  "openmcskins.command.unableToRefresh": "˙suᴉʞs ɥsǝɹɟǝɹ oʇ ǝꞁqɐu∩"
+  "openmcskins.command.unableToRefresh": "˙suᴉʞs ɥsǝɹɟǝɹ oʇ ǝꞁqɐu∩",
+  "openmcskins.command.cleanupAlready": "˙ᵷuᴉɹɐǝꞁɔ ʎpɐǝɹꞁɐ sᴉ ǝɥɔɐɔ ǝɥ⟘",
+  "openmcskins.command.cleanupSuccess": "˙pǝɹɐǝꞁɔ ʎꞁꞁnɟssǝɔɔns ǝɥɔɐƆ",
+  "openmcskins.command.cleanupFailed": "%s :ǝɥɔɐɔ ɹɐǝꞁɔ oʇ ǝꞁqɐu∩"
 }
