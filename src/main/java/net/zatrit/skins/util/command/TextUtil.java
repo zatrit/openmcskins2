@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 /**
@@ -49,7 +50,7 @@ public class TextUtil {
         for (val entry : map.entrySet()) {
             val value = entry.getValue();
 
-            if (SKIP_ELEMENTS.stream().anyMatch(value::equals)) {
+            if (SKIP_ELEMENTS.stream().anyMatch(e -> Objects.equals(e, value))) {
                 continue;
             }
 
