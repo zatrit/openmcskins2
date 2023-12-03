@@ -24,8 +24,7 @@ import static net.andreinc.aleph.AlephFormatter.str;
 public class Resolvers {
     @SuppressWarnings("unchecked")
     public static @Nullable Resolver resolverFromEntry(
-            @NotNull
-            HostEntry entry) {
+            @NotNull HostEntry entry) {
         val props = entry.getProperties();
         val config = SkinsClient.getSkinlibConfig();
 
@@ -42,7 +41,6 @@ public class Resolvers {
                             floodgate_prefix = Collections.singletonList((String) value);
                         }
                     }
-
                     return new GeyserResolver(config, floodgate_prefix);
                 case FALLBACK:
                     return new FallbackResolver(
@@ -55,6 +53,10 @@ public class Resolvers {
                     return new MinecraftCapesResolver(config);
                 case FIVEZIG:
                     return new FiveZigResolver(config);
+                case LIQUID_BOUNCE:
+                    return new LiquidBounceResolver(config);
+                case METEOR:
+                    return new MeteorResolver(config);
                 case NAMED_HTTP:
                 case OPTIFINE:
                 case VALHALLA:

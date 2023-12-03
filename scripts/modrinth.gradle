@@ -9,7 +9,7 @@ modrinth {
     projectId = getEnv('modrinth_id', 'openmcskins')
     versionName = "OpenMCSkins $version for $minecraft_version"
     versionNumber = "$version-$minecraft_version"
-    versionType = 'alpha'
+    versionType = 'beta'
     uploadFile = remapJar
     gameVersions = ['1.16.5']
     loaders = ['fabric', 'quilt']
