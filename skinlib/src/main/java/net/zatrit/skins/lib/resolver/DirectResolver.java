@@ -10,7 +10,6 @@ import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.api.Texture;
-import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import net.zatrit.skins.lib.util.IOUtil;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +63,7 @@ public final class DirectResolver implements Resolver {
         val url = new URL(str(this.baseUrl, replaces).arg("type", type).fmt());
         val content = IOUtil.download(url);
         if (content != null) {
-            return new BytesTexture(url.toString(), content, new Metadata());
+            return new BytesTexture(url.toString(), content, null);
         }
         return null;
     }

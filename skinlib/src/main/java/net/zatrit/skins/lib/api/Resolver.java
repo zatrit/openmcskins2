@@ -15,6 +15,11 @@ public interface Resolver {
     }
 
     /**
+     * Refresh all currently cached data.
+     */
+    default void refresh() {}
+
+    /**
      * @return player-specific texture loader.
      */
     @NotNull PlayerTextures resolve(Profile profile) throws Exception;

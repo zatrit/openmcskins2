@@ -8,7 +8,6 @@ import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import net.zatrit.skins.lib.util.IOUtil;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,7 @@ public final class OptifineResolver implements Resolver {
         val texture = new BytesTexture(
                 url.toString(),
                 Objects.requireNonNull(IOUtil.download(url)),
-                new Metadata()
+                null
         );
 
         /* Since you can't check for the existence/change of a

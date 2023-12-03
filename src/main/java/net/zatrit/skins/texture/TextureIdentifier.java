@@ -6,11 +6,12 @@ import lombok.Getter;
 import net.minecraft.util.Identifier;
 import net.zatrit.skins.lib.TextureType;
 
+@Getter
 @EqualsAndHashCode
 @AllArgsConstructor
 public class TextureIdentifier {
-    private @Getter String name;
-    private @Getter TextureType type;
+    private String name;
+    private TextureType type;
 
     public Identifier asId() {
         return new Identifier("skins", name.hashCode() + "_" + type.ordinal());

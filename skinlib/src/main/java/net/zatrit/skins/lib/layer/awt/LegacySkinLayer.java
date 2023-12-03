@@ -11,11 +11,11 @@ import java.awt.image.BufferedImage;
 /**
  * Layer for legacy (64x32) skins to work correctly.
  */
-public class LegacySkinLayer implements Layer<Image> {
+public class LegacySkinLayer implements Layer<BufferedImage> {
     @Override
-    public Image apply(@NotNull Image input) {
-        val size = input.getWidth(null);
-        if (input.getHeight(null) != 32) {
+    public BufferedImage apply(@NotNull BufferedImage input) {
+        val size = input.getWidth();
+        if (input.getHeight() != 32 || input.getHeight() == input.getWidth()) {
             return input;
         }
 

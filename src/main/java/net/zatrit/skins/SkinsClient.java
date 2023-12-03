@@ -46,11 +46,15 @@ public final class SkinsClient implements ClientModInitializer {
             true);
 
     public static boolean refresh() {
+        getResolvers().forEach(Resolver::refresh);
+
         val provider = MinecraftClient.getInstance().getSkinProvider();
+
         if (provider instanceof Refreshable refreshable) {
             refreshable.skins$refresh();
             return true;
         }
+
         return false;
     }
 

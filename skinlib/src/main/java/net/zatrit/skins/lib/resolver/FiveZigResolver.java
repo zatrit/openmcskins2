@@ -9,7 +9,6 @@ import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.texture.BytesTexture;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,13 +35,12 @@ public final class FiveZigResolver implements Resolver {
         val textureData = (String) response.get("d");
 
         if (textureData != null) {
-            val metadata = new Metadata();
             val decoder = Base64.getDecoder();
 
             val texture = new BytesTexture(
                     textureData,
                     decoder.decode(textureData),
-                    metadata
+                    null
             );
 
             textures.put(TextureType.CAPE, texture);

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +24,7 @@ import java.util.function.Predicate;
  */
 @AllArgsConstructor
 public class ImageLayer implements Layer<TypedTexture> {
-    private final Collection<Layer<Image>> sublayers;
+    private final Collection<Layer<BufferedImage>> sublayers;
     private Predicate<TypedTexture> texturePredicate;
 
     @Override

@@ -3,7 +3,6 @@ package net.zatrit.skins.lib.resolver;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
-import lombok.var;
 import net.zatrit.skins.lib.BasePlayerTextures;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureType;
@@ -40,7 +39,7 @@ public final class LocalResolver implements Resolver {
         val texturesDir = this.directory.resolve("textures");
 
         for (val type : TextureType.values()) {
-            var metadata = new Metadata();
+            Metadata metadata = null;
             val typeName = type.toString().toLowerCase();
             val texturesFile = texturesDir.resolve(typeName).resolve(
                     name + ".png").toFile();

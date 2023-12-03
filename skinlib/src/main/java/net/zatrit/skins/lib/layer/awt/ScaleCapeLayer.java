@@ -14,15 +14,19 @@ import java.awt.image.BufferedImage;
  * is greater than the height of the image and creates
  * a new image with a width equal to the two new heights.
  */
-public class ScaleCapeLayer implements Layer<Image> {
+public class ScaleCapeLayer implements Layer<BufferedImage> {
     /**
      * Used to properly render the elytra.
      */
     private @Setter Image elytraTexture;
 
     @Override
-    public BufferedImage apply(@NotNull Image image) {
-        val height = IntMath.ceilingPowerOfTwo(image.getHeight(null));
+    public BufferedImage apply(@NotNull BufferedImage image) {
+        if (image.getHeight() * 2 == image.getWidth()) {
+            return image;
+        }
+
+        val height = IntMath.ceilingPowerOfTwo(image.getHeight());
         val width = height * 2;
 
         val result = new BufferedImage(
@@ -32,7 +36,7 @@ public class ScaleCapeLayer implements Layer<Image> {
         );
 
         val graphics = result.getGraphics();
-        if (this.elytraTexture != null && image.getWidth(null) != width) {
+        if (this.elytraTexture != null && image.getWidth() != width) {
             graphics.drawImage(
                     this.elytraTexture,
                     0,

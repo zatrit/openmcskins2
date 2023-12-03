@@ -48,6 +48,8 @@ public class Resolvers {
                                 .getSessionService()
                 );
                 case FIVEZIG -> new FiveZigResolver(config);
+                case LIQUID_BOUNCE -> new LiquidBounceResolver(config);
+                case METEOR -> new MeteorResolver(config);
                 case MOJANG -> new MojangResolver(config);
                 case MINECRAFT_CAPES -> new MinecraftCapesResolver(config);
                 case NAMED_HTTP, OPTIFINE, VALHALLA, DIRECT -> {

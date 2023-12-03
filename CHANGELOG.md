@@ -1,2 +1,3 @@
-* Improved performance by replacing some lambda-functions with AIC.
-* ``/omcs clean`` now has more feedback and works in a separate thread.
+* Added Meteor and LiquidBounce clients capes support.
+* Improved GeyserMC resolver flexibility.
+* Some performance improvements.
