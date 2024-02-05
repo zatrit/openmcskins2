@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -29,21 +30,21 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     @SneakyThrows
     public CompletableFuture<Profile> skins$refreshUuid() {
         val url = "https://api.mojang.com/users/profiles/minecraft/" +
-                URLEncoder.encode(this.getName(), "UTF8");
+            URLEncoder.encode(this.getName(), StandardCharsets.UTF_8);
 
         return CompletableFuture.supplyAsync(
-                sneaky(() -> new URL(url).openStream()),
-                SkinsClient.getSkinlibConfig().getExecutor()
+            sneaky(() -> new URL(url).openStream()),
+            SkinsClient.getSkinlibConfig().getExecutor()
         ).thenApply(sneaky(stream -> {
             @Cleanup val reader = new InputStreamReader(stream);
             val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
-                    reader,
-                    Map.class
+                reader,
+                Map.class
             );
 
             val id = String.valueOf(map.get("id")).replaceAll(
-                    "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                    "$1-$2-$3-$4-$5"
+                "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                "$1-$2-$3-$4-$5"
             );
 
             val profile = new GameProfile(UUID.fromString(id), this.getName());

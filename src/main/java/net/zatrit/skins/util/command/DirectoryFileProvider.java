@@ -21,7 +21,7 @@ public class DirectoryFileProvider implements FileProvider {
     public Collection<String> listFiles() throws IOException {
         @Cleanup val files = Files.list(this.path);
         return files.map(p -> FilenameUtils.getName(p.toString())).collect(
-                Collectors.toList());
+            Collectors.toList());
     }
 
     @Override

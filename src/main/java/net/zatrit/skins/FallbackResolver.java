@@ -36,21 +36,21 @@ public class FallbackResolver implements Resolver {
             val texture = entry.getValue();
 
             val metadata = new Metadata(
-                    Optional.ofNullable(texture.getMetadata(
-                            "animated")).map(Boolean::valueOf).orElse(false),
-                    texture.getMetadata("model")
+                Optional.ofNullable(texture.getMetadata(
+                    "animated")).map(Boolean::valueOf).orElse(false),
+                texture.getMetadata("model")
             );
 
             newTextures.put(
-                    TextureTypeUtil.fromAuthlibType(entry.getKey()),
-                    new URLTexture(texture.getUrl(), metadata)
+                TextureTypeUtil.fromAuthlibType(entry.getKey()),
+                new URLTexture(texture.getUrl(), metadata)
             );
         }
 
         return new CachedPlayerTextures<>(
-                newTextures,
-                config.getLayers(),
-                config.getCacheProvider()
+            newTextures,
+            config.getLayers(),
+            config.getCacheProvider()
         );
     }
 }

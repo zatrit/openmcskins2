@@ -31,19 +31,19 @@ import java.util.concurrent.CompletableFuture;
 @AllArgsConstructor
 public class FileArgumentType implements ArgumentType<Path> {
     private static final SimpleCommandExceptionType NO_PRESET_EXCEPTION = new SimpleCommandExceptionType(
-            new TranslatableText("openmcskins.command.noPreset"));
+        new TranslatableText("openmcskins.command.noPreset"));
     private final FileProvider[] providers;
     private final @Getter String extension;
     private final Collection<String> files = new HashSet<>();
 
     @Override
     public Path parse(@NotNull StringReader reader)
-            throws CommandSyntaxException {
+        throws CommandSyntaxException {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
             val path = Arrays.stream(this.providers).map(p -> p.getFile(file))
-                    .filter(Optional::isPresent).map(Optional::get)
-                    .findFirst();
+                .filter(Optional::isPresent).map(Optional::get)
+                .findFirst();
 
             if (path.isPresent()) {
                 return path.get();
@@ -55,7 +55,7 @@ public class FileArgumentType implements ArgumentType<Path> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
-            CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
+        CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
         this.files.forEach(builder::suggest);
 
         return builder.buildFuture();
@@ -85,6 +85,6 @@ public class FileArgumentType implements ArgumentType<Path> {
         }).forEach(set::addAll);
 
         set.stream().filter(f -> FilenameUtils.isExtension(f, this.extension))
-                .map(FilenameUtils::removeExtension).forEach(this.files::add);
+            .map(FilenameUtils::removeExtension).forEach(this.files::add);
     }
 }

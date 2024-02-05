@@ -14,10 +14,10 @@ import java.io.IOException;
 @Getter
 @AllArgsConstructor
 public class ElytraTextureFix
-        implements SimpleSynchronousResourceReloadListener {
+    implements SimpleSynchronousResourceReloadListener {
     private final Identifier fabricId = new Identifier(
-            "skins",
-            "elytra_texture_fix"
+        "skins",
+        "elytra_texture_fix"
     );
 
     @Override
@@ -26,7 +26,7 @@ public class ElytraTextureFix
         val elytraId = new Identifier("textures/entity/elytra.png");
 
         try (val stream = manager.getAllResources(elytraId).stream().findFirst()
-                .get().getInputStream()) {
+            .get().getInputStream()) {
             val elytraImage = ImageIO.read(stream);
             SkinsClient.getCapeLayer().setElytraTexture(elytraImage);
         } catch (IOException e) {

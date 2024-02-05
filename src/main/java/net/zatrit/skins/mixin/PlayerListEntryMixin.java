@@ -70,15 +70,15 @@ public abstract class PlayerListEntryMixin implements Refreshable {
                 val client = MinecraftClient.getInstance();
                 val networkHandler = client.getNetworkHandler();
                 refreshUuid = networkHandler != null &&
-                        !networkHandler.getConnection()
-                                .isEncrypted();
+                    !networkHandler.getConnection()
+                        .isEncrypted();
         }
 
         CompletableFuture<Profile> profileFuture;
         if (resolvers.stream().anyMatch(Resolver::requiresUuid) && refreshUuid) {
             profileFuture = ((AsyncUUIDRefresher) profile).skins$refreshUuid()
-                    .exceptionally(SkinsClient.getErrorHandler()
-                                           .andReturn(profile));
+                .exceptionally(SkinsClient.getErrorHandler()
+                                   .andReturn(profile));
         } else {
             profileFuture = CompletableFuture.completedFuture(profile);
         }
@@ -86,10 +86,10 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val errorHandler = SkinsClient.getErrorHandler();
 
         profileFuture.thenApplyAsync(profile1 -> {
-                    val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
-                    val futures = dispatcher.resolveAsync(resolvers, profile1)
-                            // Added error handling in all futures
-                            .map(f -> f.exceptionally(handler));
+            val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
+            val futures = dispatcher.resolveAsync(resolvers, profile1)
+                // Added error handling in all futures
+                .map(f -> f.exceptionally(handler));
 
             return dispatcher.fetchTexturesAsync(futures).join();
         }).whenComplete((result, error) -> {
@@ -117,8 +117,8 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val metadata = texture.getMetadata();
 
         val textureId = new TextureIdentifier(
-                getProfile().getName(),
-                result.getType()
+            getProfile().getName(),
+            result.getType()
         );
 
         TextureLoader.create(texture).getTexture(textureId, id -> {
@@ -132,7 +132,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
     @Unique
     public void applyMetadata(
-            TextureType type, @NotNull Metadata metadata) {
+        TextureType type, @NotNull Metadata metadata) {
         if (type == TextureType.SKIN) {
             this.model = metadata.getModel();
         }

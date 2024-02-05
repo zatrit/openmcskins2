@@ -10,6 +10,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.*;
+import net.zatrit.skins.lib.resolver.capes.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,7 @@ import static net.andreinc.aleph.AlephFormatter.str;
 public class Resolvers {
     @SuppressWarnings("unchecked")
     public static @Nullable Resolver resolverFromEntry(
-            @NotNull HostEntry entry) {
+        @NotNull HostEntry entry) {
         val props = entry.getProperties();
         val config = SkinsClient.getSkinlibConfig();
 
@@ -44,8 +45,8 @@ public class Resolvers {
                     return new GeyserResolver(config, floodgate_prefix);
                 case FALLBACK:
                     return new FallbackResolver(
-                            config,
-                            MinecraftClient.getInstance().getSessionService()
+                        config,
+                        MinecraftClient.getInstance().getSessionService()
                     );
                 case MOJANG:
                     return new MojangResolver(config);
@@ -72,18 +73,20 @@ public class Resolvers {
                             return new NamedHTTPResolver(config, baseUrl);
                         case DIRECT:
                             val types = ((List<String>) props.get("types")).stream()
-                                    .map(TextureType::valueOf)
-                                    .collect(Collectors.toList());
+                                .map(TextureType::valueOf)
+                                .collect(Collectors.toList());
                             return new DirectResolver(config, baseUrl, types);
                     }
                 case LOCAL:
                     val directoryPattern = (String) props.get("directory");
                     val directory = Paths.get(str(directoryPattern).arg(
-                            "configDir",
-                            FabricLoader.getInstance().getConfigDir()
+                        "configDir",
+                        FabricLoader.getInstance().getConfigDir()
                     ).fmt());
 
                     return new LocalResolver(config, directory);
+                case WURST:
+                    return new WurstResolver(config);
             }
         } catch (Exception ex) {
             SkinsClient.getErrorHandler().accept(ex);
