@@ -16,7 +16,7 @@ import java.net.URL;
 @ApiStatus.Internal
 public class IOUtil {
     public static byte @Nullable [] download(@NotNull URL url)
-            throws IOException {
+        throws IOException {
         val connection = url.openConnection();
 
         // An easy way to check that the code means OK (2XX).

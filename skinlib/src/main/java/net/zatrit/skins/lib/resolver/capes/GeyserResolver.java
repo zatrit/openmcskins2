@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.resolver.capes;
 
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
@@ -39,34 +39,34 @@ public final class GeyserResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException, NoSuchElementException {
+        throws IOException, NoSuchElementException {
         var name = profile.getName();
         val prefix = floodgatePrefixes.stream().filter(name::startsWith)
-                .findFirst().orElseThrow(NoSuchElementException::new);
+            .findFirst().orElseThrow(NoSuchElementException::new);
         name = name.substring(prefix.length());
 
         val xuidUrl = new URL(GEYSER_XUID_API + name);
         val xuid = (Integer) config.getGson().fromJson(new InputStreamReader(
-                xuidUrl.openStream()), Map.class).get("xuid");
+            xuidUrl.openStream()), Map.class).get("xuid");
 
         val skinUrl = new URL(GEYSER_SKIN_API + xuid);
         /* value contains literally the same data as properties[0] in the
          Mojang API response, so it can be decoded in the same way */
         val response = (String) config.getGson().fromJson(new InputStreamReader(
-                skinUrl.openStream()), Map.class).get("value");
+            skinUrl.openStream()), Map.class).get("value");
 
         val decoder = Base64.getDecoder();
         val textureData = decoder.decode(response);
         @Cleanup val reader = new InputStreamReader(new ByteArrayInputStream(
-                textureData));
+            textureData));
 
         return new CachedPlayerTextures<>(
-                config.getGson().fromJson(
-                        reader,
-                        MojangTextures.class
-                ).getTextures(),
-                this.config.getLayers(),
-                this.config.getCacheProvider()
+            config.getGson().fromJson(
+                reader,
+                MojangTextures.class
+            ).getTextures(),
+            this.config.getLayers(),
+            this.config.getCacheProvider()
         );
     }
 }

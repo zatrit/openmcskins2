@@ -30,20 +30,20 @@ public class ScaleCapeLayer implements Layer<BufferedImage> {
         val width = height * 2;
 
         val result = new BufferedImage(
-                width,
-                height,
-                BufferedImage.TYPE_INT_ARGB
+            width,
+            height,
+            BufferedImage.TYPE_INT_ARGB
         );
 
         val graphics = result.getGraphics();
         if (this.elytraTexture != null && image.getWidth() != width) {
             graphics.drawImage(
-                    this.elytraTexture,
-                    0,
-                    0,
-                    result.getWidth(),
-                    result.getHeight(),
-                    null
+                this.elytraTexture,
+                0,
+                0,
+                result.getWidth(),
+                result.getHeight(),
+                null
             );
         }
         graphics.drawImage(image, 0, 0, null);

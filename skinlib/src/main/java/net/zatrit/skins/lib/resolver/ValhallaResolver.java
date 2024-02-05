@@ -26,19 +26,16 @@ public final class ValhallaResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val url = this.baseUrl + profile.getId();
         @Cleanup val stream = new URL(url).openStream();
 
         return new CachedPlayerTextures<>(
-                this.config.getGson()
-                        .fromJson(
-                                new InputStreamReader(
-                                        stream),
-                                MojangTextures.class
-                        ).getTextures(),
-                this.config.getLayers(),
-                this.config.getCacheProvider()
+            this.config.getGson()
+                .fromJson(new InputStreamReader(stream), MojangTextures.class)
+                .getTextures(),
+            this.config.getLayers(),
+            this.config.getCacheProvider()
         );
     }
 }

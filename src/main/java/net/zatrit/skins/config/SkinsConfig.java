@@ -16,7 +16,7 @@ public class SkinsConfig {
     @SerialEntry private double loaderTimeout = 2;
     @SerialEntry private UuidMode uuidMode = UuidMode.OFFLINE;
     @SerialEntry private List<HostEntry> hosts = Lists.newArrayList(
-            new HostEntry(HostEntry.HostType.MOJANG),
-            new HostEntry(HostEntry.HostType.FALLBACK)
+        new HostEntry(HostEntry.HostType.MOJANG),
+        new HostEntry(HostEntry.HostType.FALLBACK)
     );
 }

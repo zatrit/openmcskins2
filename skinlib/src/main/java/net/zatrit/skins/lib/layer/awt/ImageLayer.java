@@ -41,7 +41,7 @@ public class ImageLayer implements Layer<TypedTexture> {
 
                 // https://stackoverflow.com/a/44521687/12245612
                 val layers = sublayers.stream().reduce(Layer::andThen)
-                        .orElseThrow(NoSuchElementException::new);
+                    .orElseThrow(NoSuchElementException::new);
 
                 val image = (RenderedImage) layers.apply(ImageIO.read(stream));
 

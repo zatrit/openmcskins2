@@ -19,29 +19,29 @@ import java.util.Arrays;
 @ApiStatus.Internal
 @AllArgsConstructor
 public class AnyCaseEnumDeserializer<T extends Enum<?>>
-        implements JsonDeserializer<T> {
+    implements JsonDeserializer<T> {
     private final T[] enumConstants;
 
     @Override
     public T deserialize(
-            JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
+        JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        throws JsonParseException {
         if (json == null || json.isJsonNull()) {
             return null;
         }
 
         if (!json.isJsonPrimitive() || !json.getAsJsonPrimitive().isString()) {
             throw new JsonParseException(
-                    "Expecting a String JsonPrimitive, getting " + json);
+                "Expecting a String JsonPrimitive, getting " + json);
         }
 
         val asString = json.getAsString().toLowerCase();
         val variant = Arrays.stream(this.enumConstants).filter(v -> v.toString()
-                .toLowerCase().equals(asString)).findFirst();
+            .toLowerCase().equals(asString)).findFirst();
 
         if (!variant.isPresent()) {
             throw new JsonParseException(
-                    "No matching enum variant found for " + asString);
+                "No matching enum variant found for " + asString);
         }
 
         return variant.get();

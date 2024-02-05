@@ -21,14 +21,14 @@ public class PlayerListEntryMixin {
     @Shadow @Final @Mutable private Supplier<SkinTextures> texturesSupplier;
 
     @Redirect(
-            method = "<init>", at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/client/network/PlayerListEntry;texturesSupplier:Ljava/util/function/Supplier;"))
+        method = "<init>", at = @At(
+        value = "FIELD",
+        target = "Lnet/minecraft/client/network/PlayerListEntry;texturesSupplier:Ljava/util/function/Supplier;"))
     private void customTexturesSupplier(
-            PlayerListEntry instance, Supplier<SkinTextures> unused) {
+        PlayerListEntry instance, Supplier<SkinTextures> unused) {
         val provider = MinecraftClient.getInstance().getSkinProvider();
 
         texturesSupplier = () -> provider.fetchSkinTextures(profile).getNow(
-                DefaultSkinHelper.getSkinTextures(profile));
+            DefaultSkinHelper.getSkinTextures(profile));
     }
 }

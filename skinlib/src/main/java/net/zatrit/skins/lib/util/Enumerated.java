@@ -23,9 +23,9 @@ public class Enumerated<T> {
      */
     @ApiStatus.Internal
     public static <T> @NotNull Stream<Enumerated<T>> enumerate(
-            @NotNull List<T> list) {
+        @NotNull List<T> list) {
         return IntStream.range(0, list.size())
-                .mapToObj(index -> new Enumerated<>(index, list.get(index)));
+            .mapToObj(index -> new Enumerated<>(index, list.get(index)));
     }
 
     /**

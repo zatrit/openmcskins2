@@ -1,7 +1,8 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.resolver.capes;
 
 import lombok.val;
 import net.zatrit.skins.lib.Config;
+import net.zatrit.skins.lib.resolver.CapesListResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -13,11 +14,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 public final class MeteorResolver extends CapesListResolver {
-    private Map<String, String> capes;
-
     private static final String BASE_URL = "https://meteorclient.com/api";
     private static final String OWNERS_URL = BASE_URL + "/capeowners";
     private static final String CAPES_URL = BASE_URL + "/capes";
+    private Map<String, String> capes;
 
     public MeteorResolver(Config config) {
         super(config);

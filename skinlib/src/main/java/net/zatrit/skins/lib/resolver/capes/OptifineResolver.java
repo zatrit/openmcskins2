@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.resolver.capes;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -35,19 +35,19 @@ public final class OptifineResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException, NullPointerException {
+        throws IOException, NullPointerException {
         val url = new URL(this.baseUrl + "/capes/" + profile.getName() + ".png");
         val texture = new BytesTexture(
-                url.toString(),
-                Objects.requireNonNull(IOUtil.download(url)),
-                null
+            url.toString(),
+            Objects.requireNonNull(IOUtil.download(url)),
+            null
         );
 
         /* Since you can't check for the existence/change of a
         texture without fetching that texture, it should not be cached. */
         return new BasePlayerTextures<>(Collections.singletonMap(
-                TextureType.CAPE,
-                texture
+            TextureType.CAPE,
+            texture
         ), this.config.getLayers());
     }
 }

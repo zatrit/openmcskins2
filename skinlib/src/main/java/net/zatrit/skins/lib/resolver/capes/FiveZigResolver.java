@@ -1,4 +1,4 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.resolver.capes;
 
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
@@ -26,7 +26,7 @@ public final class FiveZigResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val url = FIVEZIG_API + profile.getId();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
         val response = this.config.getGson().fromJson(reader, Map.class);
@@ -38,9 +38,9 @@ public final class FiveZigResolver implements Resolver {
             val decoder = Base64.getDecoder();
 
             val texture = new BytesTexture(
-                    textureData,
-                    decoder.decode(textureData),
-                    null
+                textureData,
+                decoder.decode(textureData),
+                null
             );
 
             textures.put(TextureType.CAPE, texture);

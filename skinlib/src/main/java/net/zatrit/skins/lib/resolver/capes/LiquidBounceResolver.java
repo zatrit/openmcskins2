@@ -1,14 +1,14 @@
-package net.zatrit.skins.lib.resolver;
+package net.zatrit.skins.lib.resolver.capes;
 
 import lombok.val;
 import net.zatrit.skins.lib.Config;
+import net.zatrit.skins.lib.resolver.CapesListResolver;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +24,8 @@ public final class LiquidBounceResolver extends CapesListResolver {
     @Override
     protected @NotNull Map<String, String> fetchList() throws IOException {
         val owners = this.config.getGson().fromJson(
-                new InputStreamReader(new URL(CARRIERS_URL).openStream()),
-                String[][].class
+            new InputStreamReader(new URL(CARRIERS_URL).openStream()),
+            String[][].class
         );
         val uuidOwners = new HashMap<String, String>();
 

@@ -29,30 +29,30 @@ public final class MojangResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val gson = this.config.getGson();
         val url = MOJANG_SKIN_API + profile.getShortId();
 
         @Cleanup val stream = new URL(url).openStream();
         val response = gson.fromJson(
-                new InputStreamReader(stream),
-                MojangResponse.class
+            new InputStreamReader(stream),
+            MojangResponse.class
         );
 
         val decoder = Base64.getDecoder();
         val textureData = decoder.decode(response.getProperties().get(0)
-                                                 .getValue());
+                                             .getValue());
         @Cleanup
         val bytesReader = new InputStreamReader(new ByteArrayInputStream(
-                textureData));
+            textureData));
 
         return new CachedPlayerTextures<>(
-                gson.fromJson(
-                        bytesReader,
-                        MojangTextures.class
-                ).getTextures(),
-                this.config.getLayers(),
-                this.config.getCacheProvider()
+            gson.fromJson(
+                bytesReader,
+                MojangTextures.class
+            ).getTextures(),
+            this.config.getLayers(),
+            this.config.getCacheProvider()
         );
     }
 }

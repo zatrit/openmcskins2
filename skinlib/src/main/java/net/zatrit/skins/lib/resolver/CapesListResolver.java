@@ -10,15 +10,17 @@ import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public abstract class CapesListResolver implements Resolver {
     protected final Config config;
-    private Map<String, String> owners;
+    protected @Nullable Map<String, String> owners;
 
     protected abstract Map<String, String> fetchList() throws IOException;
 
@@ -29,29 +31,33 @@ public abstract class CapesListResolver implements Resolver {
         this.owners = null;
     }
 
+    protected @Nullable String getCapeName(@NotNull Profile profile) {
+        return Objects.requireNonNull(this.owners).get(profile.getShortId());
+    }
+
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws Exception {
+        throws Exception {
         synchronized (this) {
             if (this.owners == null) {
                 this.owners = this.fetchList();
             }
         }
 
-        val capeName = this.owners.get(profile.getShortId());
+        val capeName = getCapeName(profile);
         val textures = new EnumMap<TextureType, URLTexture>(TextureType.class);
 
         if (capeName != null) {
             textures.put(
-                    TextureType.CAPE,
-                    new URLTexture(this.getUrl(capeName), null)
+                TextureType.CAPE,
+                new URLTexture(this.getUrl(capeName), null)
             );
         }
 
         return new CachedPlayerTextures<>(
-                textures,
-                this.config.getLayers(),
-                this.config.getCacheProvider()
+            textures,
+            this.config.getLayers(),
+            this.config.getCacheProvider()
         );
     }
 }

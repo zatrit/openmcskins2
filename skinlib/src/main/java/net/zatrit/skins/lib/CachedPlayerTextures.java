@@ -22,13 +22,13 @@ import java.util.Map;
  * @see PlayerTextures
  */
 public class CachedPlayerTextures<T extends Texture>
-        extends BasePlayerTextures<T> {
+    extends BasePlayerTextures<T> {
     private final @Nullable Cache cache;
 
     public CachedPlayerTextures(
-            @NotNull Map<TextureType, T> map,
-            @NotNull Collection<Layer<TypedTexture>> layers,
-            @Nullable CacheProvider cacheProvider) {
+        @NotNull Map<TextureType, T> map,
+        @NotNull Collection<Layer<TypedTexture>> layers,
+        @Nullable CacheProvider cacheProvider) {
         super(map, layers);
         this.cache = cacheProvider != null ? cacheProvider.getSkinCache() : null;
     }

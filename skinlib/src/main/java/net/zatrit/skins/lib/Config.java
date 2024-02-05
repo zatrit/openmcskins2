@@ -25,8 +25,8 @@ public final class Config {
     private @NotNull Collection<Layer<TypedTexture>> layers = Collections.emptyList();
     // Very cool Gson that parses TextureType ignoring case
     private @NotNull Gson gson = new GsonBuilder().registerTypeAdapter(
-            TextureType.class,
-            new AnyCaseEnumDeserializer<>(TextureType.values())
+        TextureType.class,
+        new AnyCaseEnumDeserializer<>(TextureType.values())
     ).create();
     private @NotNull Executor executor = Executors.newCachedThreadPool();
 }

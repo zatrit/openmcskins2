@@ -35,12 +35,12 @@ public final class MinecraftCapesResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val url = MINECRAFTCAPES_API + profile.getShortId();
         @Cleanup val reader = new InputStreamReader(new URL(url).openStream());
         val response = this.config.getGson().fromJson(
-                reader,
-                MCCapesResponse.class
+            reader,
+            MCCapesResponse.class
         );
         val textures = new EnumMap<TextureType, Texture>(TextureType.class);
 
@@ -60,9 +60,9 @@ public final class MinecraftCapesResolver implements Resolver {
             }
 
             val texture = new BytesTexture(
-                    textureData,
-                    decoder.decode(textureData),
-                    metadata
+                textureData,
+                decoder.decode(textureData),
+                metadata
             );
 
             textures.put(type, texture);

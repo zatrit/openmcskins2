@@ -32,12 +32,12 @@ public final class DirectResolver implements Resolver {
     @Override
     public boolean requiresUuid() {
         return this.baseUrl.contains("{id}") ||
-                this.baseUrl.contains("{shortId}");
+            this.baseUrl.contains("{shortId}");
     }
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val textures = new EnumMap<TextureType, Texture>(TextureType.class);
         val replaces = new HashMap<String, Object>(3, 1);
         replaces.put("id", profile.getId());
@@ -45,11 +45,11 @@ public final class DirectResolver implements Resolver {
         replaces.put("shortId", profile.getShortId());
 
         types.parallelStream().forEach(type -> textures.put(
-                type,
-                downloadTexture(
-                        replaces,
-                        type
-                )
+            type,
+            downloadTexture(
+                replaces,
+                type
+            )
         ));
 
         /* Since you can't check for the existence/change of a
@@ -59,7 +59,7 @@ public final class DirectResolver implements Resolver {
 
     @SneakyThrows
     private @Nullable Texture downloadTexture(
-            HashMap<String, Object> replaces, TextureType type) {
+        HashMap<String, Object> replaces, TextureType type) {
         val url = new URL(str(this.baseUrl, replaces).arg("type", type).fmt());
         val content = IOUtil.download(url);
         if (content != null) {

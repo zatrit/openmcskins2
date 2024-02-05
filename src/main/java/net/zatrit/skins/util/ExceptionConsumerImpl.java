@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class ExceptionConsumerImpl implements ExceptionConsumer<Void> {
     private static final LoggerPrintStream printStream = new LoggerPrintStream(
-            "OMCS",
-            System.out
+        "OMCS",
+        System.out
     );
     private boolean verbose;
 

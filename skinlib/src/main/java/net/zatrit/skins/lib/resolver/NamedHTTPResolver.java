@@ -38,21 +38,21 @@ public final class NamedHTTPResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val url = new URL(this.baseUrl + profile.getName());
         @Cleanup val reader = new InputStreamReader(url.openStream());
 
         // Type for EnumMap<TextureType, URLTexture>
         val type = TypeToken.getParameterized(
-                EnumMap.class,
-                TextureType.class,
-                URLTexture.class
+            EnumMap.class,
+            TextureType.class,
+            URLTexture.class
         ).getType();
 
         return new CachedPlayerTextures<>(
-                this.config.getGson().fromJson(reader, type),
-                this.config.getLayers(),
-                this.config.getCacheProvider()
+            this.config.getGson().fromJson(reader, type),
+            this.config.getLayers(),
+            this.config.getCacheProvider()
         );
     }
 }

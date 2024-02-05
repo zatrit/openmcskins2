@@ -41,7 +41,7 @@ public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
 
         // https://stackoverflow.com/a/44521687/12245612
         val layers = this.layers.stream().reduce(Layer::andThen).orElseThrow(
-                NullPointerException::new);
+            NullPointerException::new);
 
         return layers.apply(new TypedTexture(texture, type));
     }

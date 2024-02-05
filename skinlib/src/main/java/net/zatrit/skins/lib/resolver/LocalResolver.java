@@ -31,7 +31,7 @@ public final class LocalResolver implements Resolver {
 
     @Override
     public @NotNull PlayerTextures resolve(@NotNull Profile profile)
-            throws IOException {
+        throws IOException {
         val name = profile.getName();
         val textures = new EnumMap<TextureType, Texture>(TextureType.class);
 
@@ -42,7 +42,7 @@ public final class LocalResolver implements Resolver {
             Metadata metadata = null;
             val typeName = type.toString().toLowerCase();
             val texturesFile = texturesDir.resolve(typeName).resolve(
-                    name + ".png").toFile();
+                name + ".png").toFile();
 
             if (!texturesFile.isFile()) {
                 continue;
@@ -50,14 +50,14 @@ public final class LocalResolver implements Resolver {
 
             val url = texturesFile.toURI().toURL().toString();
             val metadataFile = metadataDir.resolve(typeName).resolve(
-                    name + ".json");
+                name + ".json");
 
             if (metadataFile.toFile().isFile()) {
                 @Cleanup val reader = Files.newBufferedReader(metadataFile);
 
                 metadata = this.config.getGson().fromJson(
-                        reader,
-                        Metadata.class
+                    reader,
+                    Metadata.class
                 );
             }
 
@@ -65,8 +65,8 @@ public final class LocalResolver implements Resolver {
         }
 
         return new BasePlayerTextures<>(
-                textures,
-                this.config.getLayers()
+            textures,
+            this.config.getLayers()
         );
     }
 }
