@@ -9,6 +9,7 @@ import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Resolver;
 import net.zatrit.skins.lib.resolver.*;
+import net.zatrit.skins.lib.resolver.capes.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,6 +81,7 @@ public final class Resolvers {
 
                     yield new LocalResolver(config, directory);
                 }
+                case WURST -> new WurstResolver(config);
             };
         } catch (Exception ex) {
             SkinsClient.getErrorHandler().accept(ex);
