@@ -18,8 +18,8 @@ import java.util.Arrays;
  */
 @ApiStatus.Internal
 @AllArgsConstructor
-public class AnyCaseEnumDeserializer<T extends Enum<?>> implements
-        JsonDeserializer<T> {
+public class AnyCaseEnumDeserializer<T extends Enum<?>>
+        implements JsonDeserializer<T> {
     private final T[] enumConstants;
 
     @Override
@@ -36,10 +36,8 @@ public class AnyCaseEnumDeserializer<T extends Enum<?>> implements
         }
 
         val asString = json.getAsString().toLowerCase();
-        val variant = Arrays.stream(this.enumConstants)
-                .filter(v -> v.toString().toLowerCase()
-                        .equals(asString))
-                .findFirst();
+        val variant = Arrays.stream(this.enumConstants).filter(v -> v.toString()
+                .toLowerCase().equals(asString)).findFirst();
 
         if (!variant.isPresent()) {
             throw new JsonParseException(
