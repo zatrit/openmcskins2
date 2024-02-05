@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "Na offline serveru",
   "openmcskins.command.noPreset": "Nema pronađenih postavki.",
   "openmcskins.command.invalidFileFormat": "Neispravan unosni format.",
-  "openmcskins.command.unableToRefresh": "Nemoguće osvježavanje skinova."
+  "openmcskins.command.unableToRefresh": "Nemoguće osvježavanje skinova.",
+  "openmcskins.command.cleanupAlready": "Predmemorija se već čisti.",
+  "openmcskins.command.cleanupSuccess": "Predmemorija je uspješno očiščena.",
+  "openmcskins.command.cleanupFailed": "Nije moguće očistiti predmemoriju: %s"
 }
