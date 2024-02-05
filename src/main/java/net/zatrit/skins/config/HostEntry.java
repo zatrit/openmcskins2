@@ -46,5 +46,6 @@ public class HostEntry implements TextUtil.ToText {
         NAMED_HTTP,
         OPTIFINE,
         VALHALLA,
+        WURST,
     }
 }
