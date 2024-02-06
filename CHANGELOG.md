@@ -1,3 +1,2 @@
-* Added Meteor and LiquidBounce clients capes support.
-* Improved GeyserMC resolver flexibility.
-* Some performance improvements.
+* Bumped Toml4J to 0.7.3
+* Added Wurst capes support
