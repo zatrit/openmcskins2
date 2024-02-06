@@ -38,21 +38,21 @@ public class AnimatedTexture extends AbstractTexture {
 
         for (int i = 0; i < this.framesCount; i++) {
             TextureUtil.prepareImage(
-                    this.ids[i],
-                    this.image.getWidth(),
-                    frameHeight
+                this.ids[i],
+                this.image.getWidth(),
+                frameHeight
             );
 
             this.image.upload(
-                    0,
-                    0,
-                    0,
-                    0,
-                    frameHeight * i,
-                    this.image.getWidth(),
-                    frameHeight,
-                    false,
-                    false
+                0,
+                0,
+                0,
+                0,
+                frameHeight * i,
+                this.image.getWidth(),
+                frameHeight,
+                false,
+                false
             );
         }
     }

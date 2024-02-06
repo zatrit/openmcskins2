@@ -28,9 +28,9 @@ import java.util.function.UnaryOperator;
 @UtilityClass
 public class TextUtil {
     private static final List<?> SKIP_ELEMENTS = Lists.newArrayList(
-            null,
-            Collections.emptyMap(),
-            Collections.emptyList()
+        null,
+        Collections.emptyMap(),
+        Collections.emptyList()
     );
 
     /**
@@ -38,9 +38,9 @@ public class TextUtil {
      */
     @SuppressWarnings("unchecked")
     public static void mapToText(
-            @NotNull MutableText text, @NotNull Map<String, ?> map) {
+        @NotNull MutableText text, @NotNull Map<String, ?> map) {
         val specialStyle = (UnaryOperator<net.minecraft.text.Style>) style -> style.withFormatting(
-                Formatting.GRAY);
+            Formatting.GRAY);
 
         text.append(Text.literal("{").styled(specialStyle));
 
@@ -58,7 +58,7 @@ public class TextUtil {
             first = false;
 
             text.append(Text.literal(entry.getKey())
-                                .styled(style -> style.withFormatting(Formatting.RESET)));
+                            .styled(style -> style.withFormatting(Formatting.RESET)));
             text.append(Text.literal(" = ").styled(specialStyle));
 
             if (value instanceof Number numberValue) {
@@ -70,16 +70,16 @@ public class TextUtil {
             } else {
                 val stringValue = value.toString();
                 var mutableText = Text.literal(stringValue)
-                        .styled(style -> style.withFormatting(
-                                Formatting.GREEN));
+                    .styled(style -> style.withFormatting(
+                        Formatting.GREEN));
 
                 if (isURL(stringValue)) {
                     val clickAction = new ClickEvent(
-                            ClickEvent.Action.OPEN_URL,
-                            stringValue
+                        ClickEvent.Action.OPEN_URL,
+                        stringValue
                     );
                     mutableText = mutableText.styled(s -> s.withFormatting(
-                            Formatting.UNDERLINE).withClickEvent(clickAction));
+                        Formatting.UNDERLINE).withClickEvent(clickAction));
                 }
 
                 text.append(mutableText);

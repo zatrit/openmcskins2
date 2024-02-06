@@ -20,7 +20,7 @@ import java.util.function.Consumer;
  * TOML implementation for {@link ConfigInstance} and {@link ConfigHolder}.
  */
 public class TomlConfigHolder<T> extends ConfigInstance<T>
-        implements ConfigHolder<T> {
+    implements ConfigHolder<T> {
     private final Collection<Consumer<T>> listeners = new ArrayList<>();
     private final @Getter Path file;
     private final @Getter T defaults;

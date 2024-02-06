@@ -23,7 +23,7 @@ public class ModMenuIntegration implements ModMenuApi {
             val instance = SkinsClient.getConfigHolder();
 
             return YetAnotherConfigLib.create(instance, this::initConfig)
-                    .generateScreen(parent);
+                .generateScreen(parent);
         };
     }
 
@@ -31,78 +31,78 @@ public class ModMenuIntegration implements ModMenuApi {
      * Initializes OpenMCSkins config for ConfigInstance.
      */
     private YetAnotherConfigLib.Builder initConfig(
-            @NotNull SkinsConfig defaults,
-            @NotNull SkinsConfig config,
-            YetAnotherConfigLib.@NotNull Builder builder) {
+        @NotNull SkinsConfig defaults,
+        @NotNull SkinsConfig config,
+        YetAnotherConfigLib.@NotNull Builder builder) {
         return builder.title(translatable("openmcskins.options.title"))
-                .category(initializeGeneralCategory(
-                        defaults,
-                        config,
-                        ConfigCategory.createBuilder()
-                ).build());
+            .category(initializeGeneralCategory(
+                defaults,
+                config,
+                ConfigCategory.createBuilder()
+            ).build());
     }
 
     /**
      * Adds general category options.
      */
     private ConfigCategory.Builder initializeGeneralCategory(
-            @NotNull SkinsConfig defaults,
-            @NotNull SkinsConfig config,
-            ConfigCategory.@NotNull Builder category) {
+        @NotNull SkinsConfig defaults,
+        @NotNull SkinsConfig config,
+        ConfigCategory.@NotNull Builder category) {
         return category.name(translatable("openmcskins.category.general"))
-                .option(Option.<Boolean>createBuilder()
-                                .controller(BooleanControllerBuilder::create)
-                                .binding(
-                                        defaults.isCacheTextures(),
-                                        config::isCacheTextures,
-                                        config::setCacheTextures
-                                ).name(translatable(
-                                "openmcskins.option.cacheTextures"))
-                                .build())
-                .option(Option.<Boolean>createBuilder()
-                                .controller(BooleanControllerBuilder::create)
-                                .binding(
-                                        defaults.isVerboseLogs(),
-                                        config::isVerboseLogs,
-                                        config::setVerboseLogs
-                                ).name(translatable(
-                                "openmcskins.option.verboseLogs"))
-                                .build())
-                .option(Option.<Boolean>createBuilder()
-                                .controller(BooleanControllerBuilder::create)
-                                .binding(
-                                        defaults.isRefreshOnConfigSave(),
-                                        config::isRefreshOnConfigSave,
-                                        config::setRefreshOnConfigSave
-                                ).name(translatable(
-                                "openmcskins.option.refreshOnConfigSave"))
-                                .build())
-                .option(Option.<Float>createBuilder()
-                                .controller(option -> FloatSliderControllerBuilder.create(
-                                                option).range(0.5f, 60f)
-                                        .step(0.5f))
-                                .binding(
-                                        defaults.getLoaderTimeout(),
-                                        config::getLoaderTimeout,
-                                        config::setLoaderTimeout
-                                ).name(translatable(
-                                "openmcskins.option.loaderTimeout"))
-                                .build())
-                .option(Option.<UuidMode>createBuilder()
-                                .controller(option -> EnumControllerBuilder.create(
-                                                option).enumClass(UuidMode.class)
-                                        .valueFormatter(
-                                                this::formatMode))
-                                .binding(
-                                        defaults.getUuidMode(),
-                                        config::getUuidMode,
-                                        config::setUuidMode
-                                ).name(translatable(
-                                "openmcskins.option.uuidMode")).build());
+            .option(Option.<Boolean>createBuilder()
+                        .controller(BooleanControllerBuilder::create)
+                        .binding(
+                            defaults.isCacheTextures(),
+                            config::isCacheTextures,
+                            config::setCacheTextures
+                        ).name(translatable(
+                    "openmcskins.option.cacheTextures"))
+                        .build())
+            .option(Option.<Boolean>createBuilder()
+                        .controller(BooleanControllerBuilder::create)
+                        .binding(
+                            defaults.isVerboseLogs(),
+                            config::isVerboseLogs,
+                            config::setVerboseLogs
+                        ).name(translatable(
+                    "openmcskins.option.verboseLogs"))
+                        .build())
+            .option(Option.<Boolean>createBuilder()
+                        .controller(BooleanControllerBuilder::create)
+                        .binding(
+                            defaults.isRefreshOnConfigSave(),
+                            config::isRefreshOnConfigSave,
+                            config::setRefreshOnConfigSave
+                        ).name(translatable(
+                    "openmcskins.option.refreshOnConfigSave"))
+                        .build())
+            .option(Option.<Float>createBuilder()
+                        .controller(option -> FloatSliderControllerBuilder.create(
+                                option).range(0.5f, 60f)
+                            .step(0.5f))
+                        .binding(
+                            defaults.getLoaderTimeout(),
+                            config::getLoaderTimeout,
+                            config::setLoaderTimeout
+                        ).name(translatable(
+                    "openmcskins.option.loaderTimeout"))
+                        .build())
+            .option(Option.<UuidMode>createBuilder()
+                        .controller(option -> EnumControllerBuilder.create(
+                                option).enumClass(UuidMode.class)
+                            .valueFormatter(
+                                this::formatMode))
+                        .binding(
+                            defaults.getUuidMode(),
+                            config::getUuidMode,
+                            config::setUuidMode
+                        ).name(translatable(
+                    "openmcskins.option.uuidMode")).build());
     }
 
     private @NotNull Text formatMode(@NotNull UuidMode mode) {
         return translatable("openmcskins.option.uuidMode." +
-                                    mode.toString().toLowerCase());
+                                mode.toString().toLowerCase());
     }
 }

@@ -42,7 +42,7 @@ public final class SkinsClient implements ClientModInitializer {
     private static @Getter TextureDispatcher dispatcher;
     private static @Getter HttpClient httpClient;
     private static @Getter ExceptionConsumer<Void> errorHandler = new ExceptionConsumerImpl(
-            false);
+        false);
 
     public static boolean refresh() {
         getResolvers().forEach(Resolver::refresh);
@@ -68,12 +68,12 @@ public final class SkinsClient implements ClientModInitializer {
 
         resolvers.clear();
         resolvers.addAll(config.getHosts().parallelStream()
-                                 .map(Resolvers::resolverFromEntry)
-                                 .filter(Objects::nonNull).toList());
+                             .map(Resolvers::resolverFromEntry)
+                             .filter(Objects::nonNull).toList());
 
         skinlibConfig.setCacheProvider(config.isCacheTextures() ?
-                                               new AssetCacheProvider(path) :
-                                               null);
+                                           new AssetCacheProvider(path) :
+                                           null);
 
         if (config.isRefreshOnConfigSave()) {
             refresh();
@@ -86,43 +86,43 @@ public final class SkinsClient implements ClientModInitializer {
         dispatcher = new TextureDispatcher(skinlibConfig);
 
         skinlibConfig.setLayers(List.of(new ImageLayer(
-                Collections.singleton(capeLayer),
-                // Applies only to static cape textures.
-                texture -> {
-                    val metadata = texture.getTexture().getMetadata();
-                    val cape = texture.getType() == TextureType.CAPE;
+            Collections.singleton(capeLayer),
+            // Applies only to static cape textures.
+            texture -> {
+                val metadata = texture.getTexture().getMetadata();
+                val cape = texture.getType() == TextureType.CAPE;
 
-                    if (metadata == null) {
-                        return cape;
-                    }
-
-                    return cape && !metadata.isAnimated();
+                if (metadata == null) {
+                    return cape;
                 }
+
+                return cape && !metadata.isAnimated();
+            }
         ), new ImageLayer(
-                Collections.singleton(new LegacySkinLayer()),
-                texture -> texture.getType() == TextureType.SKIN
+            Collections.singleton(new LegacySkinLayer()),
+            texture -> texture.getType() == TextureType.SKIN
         )));
 
         val configPath = FabricLoader.getInstance().getConfigDir().resolve(
-                "openmcskins.toml");
+            "openmcskins.toml");
 
         configHolder = new TomlConfigHolder<>(configPath, new SkinsConfig());
         configHolder.addSaveListener(this::applyConfig);
         configHolder.load();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
-                .registerReloadListener(new ElytraTextureFix());
+            .registerReloadListener(new ElytraTextureFix());
 
         this.applyConfig(configHolder.getConfig());
 
         val commands = new SkinsCommands(
-                configHolder,
-                (HasAssetPath) MinecraftClient.getInstance()
+            configHolder,
+            (HasAssetPath) MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);
 
         httpClient = HttpClient.newBuilder()
-                .executor(skinlibConfig.getExecutor()).build();
+            .executor(skinlibConfig.getExecutor()).build();
     }
 }

@@ -14,24 +14,24 @@ import org.jetbrains.annotations.NotNull;
 public class CommandUtil {
     @Contract(value = "_ -> new", pure = true)
     public static @NotNull LiteralArgumentBuilder<FabricClientCommandSource> literal(
-            final String name) {
+        final String name) {
         return LiteralArgumentBuilder.<FabricClientCommandSource>literal(name)
-                .executes(CommandUtil::noArguments);
+            .executes(CommandUtil::noArguments);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(
-            final String name, final ArgumentType<T> type) {
+        final String name, final ArgumentType<T> type) {
         return RequiredArgumentBuilder.<FabricClientCommandSource, T>argument(
-                name,
-                type
+            name,
+            type
         ).executes(CommandUtil::noArguments);
     }
 
     public static int noArguments(
-            @NotNull CommandContext<FabricClientCommandSource> context) {
+        @NotNull CommandContext<FabricClientCommandSource> context) {
         context.getSource().sendError(Text.translatable(
-                "command.unknown.argument"));
+            "command.unknown.argument"));
         return -1;
     }
 }
