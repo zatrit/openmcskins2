@@ -5,13 +5,12 @@ plugins {
     id 'maven-publish'
 }
 
-archivesBaseName project.archives_base_name
 version project.mod_version
 group project.maven_group
 
 var localProps = new Properties()
 var localPropsFile = file("$projectDir/local.properties")
-if (localPropsFile.exists()) localProps.load(localPropsFile.newInputStream())
+if (localPropsFile.exists()) localProps.load localPropsFile.newInputStream()
 ext.localProps = localProps
 
 apply from: 'scripts/modrinth.gradle'
@@ -110,7 +109,7 @@ shadowJar {
     }
 
     configurations = [project.configurations.shadow]
-    archiveBaseName = archives_base_name
+    archiveBaseName = archive_base_name
     archiveClassifier = 'dev'
     archiveAppendix = project.minecraft_version
 }
