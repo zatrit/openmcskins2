@@ -28,7 +28,7 @@ public class HostEntry implements TextUtil.ToText {
         map.put("properties", this.getProperties());
 
         text.append(new LiteralText("HostEntry")
-                            .styled(style -> style.withFormatting(Formatting.RESET)));
+                        .styled(style -> style.withFormatting(Formatting.RESET)));
 
         TextUtil.mapToText(text, map);
     }

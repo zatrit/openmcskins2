@@ -19,49 +19,49 @@ public class ModMenuIntegration implements ModMenuApi {
             val config = instance.getConfig();
 
             val builder = ConfigBuilder.create().setParentScreen(parent)
-                    .setTitle(new TranslatableText(
-                            "openmcskins.options.title"))
-                    .setSavingRunnable(instance::save);
+                .setTitle(new TranslatableText(
+                    "openmcskins.options.title"))
+                .setSavingRunnable(instance::save);
             val entryBuilder = builder.entryBuilder();
 
             builder.getOrCreateCategory(new TranslatableText(
-                            "openmcskins.category.general"))
-                    .addEntry(entryBuilder.startBooleanToggle(
-                                    new TranslatableText(
-                                            "openmcskins.option.cacheTextures"),
-                                    config.isCacheTextures()
-                            ).setDefaultValue(defaults::isCacheTextures)
-                                      .setSaveConsumer(config::setCacheTextures)
-                                      .build())
-                    .addEntry(entryBuilder.startBooleanToggle(
-                                    new TranslatableText("openmcskins.option.verboseLogs"),
-                                    config.isVerboseLogs()
-                            ).setDefaultValue(defaults::isVerboseLogs)
-                                      .setSaveConsumer(config::setVerboseLogs)
-                                      .build())
-                    .addEntry(entryBuilder.startBooleanToggle(
-                                    new TranslatableText(
-                                            "openmcskins.option.refreshOnConfigSave"),
-                                    config.isRefreshOnConfigSave()
-                            ).setDefaultValue(defaults::isRefreshOnConfigSave)
-                                      .setSaveConsumer(config::setRefreshOnConfigSave)
-                                      .build())
-                    .addEntry(entryBuilder.startFloatField(
-                                    new TranslatableText(
-                                            "openmcskins.option.loaderTimeout"),
-                                    config.getLoaderTimeout()
-                            ).setMax(60f).setMin(0.5f)
-                                      .setDefaultValue(defaults::getLoaderTimeout)
-                                      .setSaveConsumer(config::setLoaderTimeout)
-                                      .build())
-                    .addEntry(entryBuilder.startEnumSelector(
-                                    new TranslatableText("openmcskins.option.uuidMode"),
-                                    UuidMode.class,
-                                    config.getUuidMode()
-                            ).setSaveConsumer(config::setUuidMode)
-                                      .setDefaultValue(config::getUuidMode)
-                                      .setEnumNameProvider(mode -> formatMode((UuidMode) mode))
-                                      .build());
+                    "openmcskins.category.general"))
+                .addEntry(entryBuilder.startBooleanToggle(
+                        new TranslatableText(
+                            "openmcskins.option.cacheTextures"),
+                        config.isCacheTextures()
+                    ).setDefaultValue(defaults::isCacheTextures)
+                              .setSaveConsumer(config::setCacheTextures)
+                              .build())
+                .addEntry(entryBuilder.startBooleanToggle(
+                        new TranslatableText("openmcskins.option.verboseLogs"),
+                        config.isVerboseLogs()
+                    ).setDefaultValue(defaults::isVerboseLogs)
+                              .setSaveConsumer(config::setVerboseLogs)
+                              .build())
+                .addEntry(entryBuilder.startBooleanToggle(
+                        new TranslatableText(
+                            "openmcskins.option.refreshOnConfigSave"),
+                        config.isRefreshOnConfigSave()
+                    ).setDefaultValue(defaults::isRefreshOnConfigSave)
+                              .setSaveConsumer(config::setRefreshOnConfigSave)
+                              .build())
+                .addEntry(entryBuilder.startFloatField(
+                        new TranslatableText(
+                            "openmcskins.option.loaderTimeout"),
+                        config.getLoaderTimeout()
+                    ).setMax(60f).setMin(0.5f)
+                              .setDefaultValue(defaults::getLoaderTimeout)
+                              .setSaveConsumer(config::setLoaderTimeout)
+                              .build())
+                .addEntry(entryBuilder.startEnumSelector(
+                        new TranslatableText("openmcskins.option.uuidMode"),
+                        UuidMode.class,
+                        config.getUuidMode()
+                    ).setSaveConsumer(config::setUuidMode)
+                              .setDefaultValue(config::getUuidMode)
+                              .setEnumNameProvider(mode -> formatMode((UuidMode) mode))
+                              .build());
 
             return builder.build();
         };
@@ -69,6 +69,6 @@ public class ModMenuIntegration implements ModMenuApi {
 
     private @NotNull Text formatMode(@NotNull UuidMode mode) {
         return new TranslatableText(
-                "openmcskins.option.uuidMode." + mode.toString().toLowerCase());
+            "openmcskins.option.uuidMode." + mode.toString().toLowerCase());
     }
 }

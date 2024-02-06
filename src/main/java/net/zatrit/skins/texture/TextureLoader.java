@@ -37,8 +37,8 @@ public class TextureLoader {
     }
 
     public void getTexture(
-            @NotNull TextureIdentifier identifier,
-            @NotNull Consumer<Identifier> callback) throws IOException {
+        @NotNull TextureIdentifier identifier,
+        @NotNull Consumer<Identifier> callback) throws IOException {
         val id = identifier.asId();
 
         @Cleanup val stream = new ByteArrayInputStream(this.texture.getBytes());
@@ -50,7 +50,7 @@ public class TextureLoader {
             texture = new AnimatedTexture(image, 100);
         } else if (this.animated) {
             throw new NotImplementedException(
-                    "Only animated capes are supported.");
+                "Only animated capes are supported.");
         } else {
             texture = new NativeImageBackedTexture(image);
         }

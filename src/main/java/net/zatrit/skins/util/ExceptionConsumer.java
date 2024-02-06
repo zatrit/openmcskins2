@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 @FunctionalInterface
 public interface ExceptionConsumer<R>
-        extends Consumer<Throwable>, Function<Throwable, R> {
+    extends Consumer<Throwable>, Function<Throwable, R> {
     default <T> ExceptionConsumer<T> andReturn(T value) {
         return error -> {
             this.accept(error);

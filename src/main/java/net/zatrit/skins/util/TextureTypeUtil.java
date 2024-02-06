@@ -13,7 +13,7 @@ public class TextureTypeUtil {
      * to {@link MinecraftProfileTexture.Type}.
      */
     public static MinecraftProfileTexture.@Nullable Type toAuthlibType(
-            @NotNull TextureType type) {
+        @NotNull TextureType type) {
         return switch (type) {
             case SKIN -> MinecraftProfileTexture.Type.SKIN;
             case CAPE -> MinecraftProfileTexture.Type.CAPE;
@@ -26,7 +26,7 @@ public class TextureTypeUtil {
      * to {@link TextureType}.
      */
     public static TextureType fromAuthlibType(
-            MinecraftProfileTexture.@NotNull Type type) {
+        MinecraftProfileTexture.@NotNull Type type) {
         return switch (type) {
             case SKIN -> TextureType.SKIN;
             case CAPE -> TextureType.CAPE;

@@ -23,7 +23,7 @@ import static net.andreinc.aleph.AlephFormatter.str;
 public final class Resolvers {
     @SuppressWarnings("unchecked")
     public static @Nullable Resolver resolverFromEntry(
-            @NotNull HostEntry entry) {
+        @NotNull HostEntry entry) {
         val props = entry.getProperties();
         val config = SkinsClient.getSkinlibConfig();
 
@@ -44,9 +44,9 @@ public final class Resolvers {
                     yield new GeyserResolver(config, floodgate_prefix);
                 }
                 case FALLBACK -> new FallbackResolver(
-                        config,
-                        MinecraftClient.getInstance()
-                                .getSessionService()
+                    config,
+                    MinecraftClient.getInstance()
+                        .getSessionService()
                 );
                 case FIVEZIG -> new FiveZigResolver(config);
                 case LIQUID_BOUNCE -> new LiquidBounceResolver(config);
@@ -60,12 +60,12 @@ public final class Resolvers {
                         case OPTIFINE -> new OptifineResolver(config, baseUrl);
                         case VALHALLA -> new ValhallaResolver(config, baseUrl);
                         case NAMED_HTTP -> new NamedHTTPResolver(
-                                config,
-                                baseUrl
+                            config,
+                            baseUrl
                         );
                         case DIRECT -> {
                             val types = ((List<String>) props.get("types")).stream()
-                                    .map(TextureType::valueOf).toList();
+                                .map(TextureType::valueOf).toList();
                             yield new DirectResolver(config, baseUrl, types);
                         }
                         default -> null;
@@ -74,9 +74,9 @@ public final class Resolvers {
                 case LOCAL -> {
                     val directoryPattern = (String) props.get("directory");
                     val directory = Path.of(str(directoryPattern).arg(
-                            "configDir",
-                            FabricLoader.getInstance()
-                                    .getConfigDir()
+                        "configDir",
+                        FabricLoader.getInstance()
+                            .getConfigDir()
                     ).fmt());
 
                     yield new LocalResolver(config, directory);
