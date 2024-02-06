@@ -126,7 +126,7 @@ public class SkinsCommands {
         @NotNull CommandContext<FabricClientCommandSource> context) {
         val entries = this.configHolder.getConfig().getHosts().stream().map(
             TextUtil.ToText::toText).toArray(Text[]::new);
-        var result = new TranslatableText("openmcskins.command.list");
+        val result = new TranslatableText("openmcskins.command.list");
 
         for (int i = 0; i < entries.length; i++) {
             result.append(new LiteralText("\n").append(new TranslatableText(

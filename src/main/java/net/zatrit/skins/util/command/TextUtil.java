@@ -103,7 +103,7 @@ public class TextUtil {
     // https://stackoverflow.com/a/41268655/12245612
     private static boolean isURL(String string) {
         try {
-            var url = new URL(string);
+            val url = new URL(string);
             url.toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
