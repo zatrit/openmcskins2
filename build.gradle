@@ -60,7 +60,7 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${project.lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 
-    shadow "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
+    shadow "io.hotmoka:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_version}"
 
     shadow(project(':skinlib')) { transitive false }
