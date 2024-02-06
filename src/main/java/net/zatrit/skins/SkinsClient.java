@@ -39,8 +39,8 @@ public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
     @SuppressWarnings("UnstableApiUsage")
     private static final @Getter HashFunction hashFunction = Hashing.murmur3_128();
-    private static @Getter ConfigHolder<SkinsConfig> configHolder;
     private static final @Getter ScaleCapeLayer capeLayer = new ScaleCapeLayer();
+    private static @Getter ConfigHolder<SkinsConfig> configHolder;
     private static @Getter Config skinlibConfig;
     private static @Getter TextureDispatcher dispatcher;
     private static @Getter HttpClient httpClient;
