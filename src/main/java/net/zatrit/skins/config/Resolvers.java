@@ -32,17 +32,17 @@ public class Resolvers {
         try {
             switch (entry.getType()) {
                 case GEYSER:
-                    var floodgate_prefix = Collections.singletonList(".");
+                    var floodgatePrefix = Collections.singletonList(".");
                     if (props != null) {
                         val value = props.get("floodgate_prefix");
 
                         if (value instanceof List<?>) {
-                            floodgate_prefix = (List<String>) value;
+                            floodgatePrefix = (List<String>) value;
                         } else if (value instanceof String) {
-                            floodgate_prefix = Collections.singletonList((String) value);
+                            floodgatePrefix = Collections.singletonList((String) value);
                         }
                     }
-                    return new GeyserResolver(config, floodgate_prefix);
+                    return new GeyserResolver(config, floodgatePrefix);
                 case FALLBACK:
                     return new FallbackResolver(
                         config,
