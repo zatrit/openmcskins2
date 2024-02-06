@@ -9,4 +9,5 @@ pluginManagement {
     }
 }
 
-include 'skinlib'
+rootProject.name = 'openmcskins'
+include ':skinlib'
