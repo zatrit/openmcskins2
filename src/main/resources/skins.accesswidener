@@ -1,5 +1,4 @@
 accessWidener v2 named
-accessible class net/minecraft/client/texture/PlayerSkinProvider$Textures
 accessible class net/minecraft/client/texture/PlayerSkinProvider$Key
 
 accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry ()Lnet/minecraft/client/network/PlayerListEntry;
