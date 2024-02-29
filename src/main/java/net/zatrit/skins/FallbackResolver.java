@@ -3,6 +3,7 @@ package net.zatrit.skins;
 import com.google.common.base.Verify;
 import com.google.common.base.VerifyException;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -31,11 +32,19 @@ public class FallbackResolver implements Resolver {
         Verify.verify(profile instanceof GameProfile);
 
         val gameProfile = (GameProfile) profile;
-        val textures = this.sessionService.getTextures(gameProfile, false);
+        val textures = this.sessionService.getTextures(gameProfile);
         val newTextures = new EnumMap<TextureType, URLTexture>(TextureType.class);
 
-        for (val entry : textures.entrySet()) {
-            val texture = entry.getValue();
+        for (val type : MinecraftProfileTexture.Type.values()) {
+            val texture = switch (type) {
+                case SKIN -> textures.skin();
+                case CAPE -> textures.cape();
+                default -> null;
+            };
+
+            if (texture == null) {
+                continue;
+            }
 
             val metadata = new Metadata(
                 Optional.ofNullable(texture.getMetadata(
@@ -44,7 +53,7 @@ public class FallbackResolver implements Resolver {
             );
 
             newTextures.put(
-                TextureTypeUtil.fromAuthlibType(entry.getKey()),
+                TextureTypeUtil.fromAuthlibType(type),
                 new URLTexture(texture.getUrl(), metadata)
             );
         }

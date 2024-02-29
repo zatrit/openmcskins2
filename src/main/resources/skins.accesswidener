@@ -1,6 +1,7 @@
 accessWidener v2 named
 accessible class net/minecraft/client/texture/PlayerSkinProvider$Key
 
+accessible method net/minecraft/client/texture/PlayerSkinProvider$Key <init> (Ljava/util/UUID;Lcom/mojang/authlib/properties/Property;)V
 accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry ()Lnet/minecraft/client/network/PlayerListEntry;
 
 accessible field net/minecraft/client/util/SkinTextures texture Lnet/minecraft/util/Identifier;
