@@ -38,12 +38,17 @@ public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
         }
 
         val texture = this.wrapTexture(this.map.get(type));
+        val typedTexture = new TypedTexture(texture, type);
+
+        if (this.layers.isEmpty()) {
+            return typedTexture;
+        }
 
         // https://stackoverflow.com/a/44521687/12245612
         val layers = this.layers.stream().reduce(Layer::andThen).orElseThrow(
             NullPointerException::new);
 
-        return layers.apply(new TypedTexture(texture, type));
+        return layers.apply(typedTexture);
     }
 
     @Contract(pure = true)
