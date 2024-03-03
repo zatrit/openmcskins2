@@ -11,6 +11,7 @@ import net.zatrit.skins.lib.api.cache.CacheProvider;
  */
 @Getter
 public class AssetCacheProvider implements CacheProvider {
+    public static final String CACHE_DIR = "omcs";
     private final Cache skinCache;
 
     public AssetCacheProvider(HasAssetPath path) {
