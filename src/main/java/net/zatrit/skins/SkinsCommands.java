@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
+import static net.zatrit.skins.cache.AssetCacheProvider.CACHE_DIR;
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
@@ -200,7 +201,7 @@ public class SkinsCommands {
         }
 
         cleanupFuture = CompletableFuture.<Void>supplyAsync(sneaky(() -> {
-            Files.list(Paths.get(assetPath.getAssetPath()).resolve("skins")).map(
+            Files.list(Paths.get(assetPath.getAssetPath()).resolve(CACHE_DIR)).map(
                 Path::toFile).parallel().forEach(directory -> {
                 try {
                     FileUtils.deleteDirectory(directory);
