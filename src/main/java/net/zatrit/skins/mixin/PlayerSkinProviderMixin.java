@@ -34,8 +34,6 @@ public class PlayerSkinProviderMixin implements Refreshable {
     @Shadow @Final
     private LoadingCache<PlayerSkinProvider.Key, CompletableFuture<SkinTextures>> cache;
 
-    @Shadow @Final static Logger LOGGER;
-
     @SneakyThrows
     @Inject(
         at = @At("HEAD"),
