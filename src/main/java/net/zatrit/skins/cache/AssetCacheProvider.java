@@ -14,6 +14,6 @@ public class AssetCacheProvider implements CacheProvider {
     private final Cache skinCache;
 
     public AssetCacheProvider(HasAssetPath path) {
-        this.skinCache = new AssetCache(path, "skins");
+        this.skinCache = new AssetCache(path, "omcs");
     }
 }
