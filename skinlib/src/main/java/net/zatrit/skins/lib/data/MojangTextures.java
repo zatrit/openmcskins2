@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.zatrit.skins.lib.JsonData;
 import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.texture.URLTexture;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,7 +19,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiStatus.Internal
-@JsonData
 public class MojangTextures {
     private Map<TextureType, URLTexture> textures = new EnumMap<>(TextureType.class);
 }

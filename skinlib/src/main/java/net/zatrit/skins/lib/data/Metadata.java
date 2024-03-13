@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.zatrit.skins.lib.JsonData;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonData
 public class Metadata {
     private boolean animated = false;
     private @Nullable String model;

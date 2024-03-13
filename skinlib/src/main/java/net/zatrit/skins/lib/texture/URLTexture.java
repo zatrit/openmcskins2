@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.val;
-import net.zatrit.skins.lib.JsonData;
 import net.zatrit.skins.lib.api.Texture;
 import net.zatrit.skins.lib.data.Metadata;
 
@@ -16,7 +15,6 @@ import java.net.URL;
  * A texture that loads its content at a given {@link URL}.
  */
 @AllArgsConstructor
-@JsonData
 public class URLTexture implements Texture {
     private final String url;
     private final @Getter Metadata metadata;
