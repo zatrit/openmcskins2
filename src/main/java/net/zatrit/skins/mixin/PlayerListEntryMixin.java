@@ -54,7 +54,6 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.texturesLoaded = true;
         this.textures.clear();
-        this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) this.getProfile();
         val dispatcher = SkinsClient.getDispatcher();
