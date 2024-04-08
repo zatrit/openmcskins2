@@ -14,7 +14,6 @@ import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.lib.util.Enumerated;
 import net.zatrit.skins.texture.TextureIdentifier;
@@ -55,7 +54,6 @@ public abstract class PlayerListEntryMixin implements Refreshable {
 
         this.texturesLoaded = true;
         this.textures.clear();
-        this.applyMetadata(TextureType.SKIN, new Metadata());
 
         val profile = (Profile) this.getProfile();
         val dispatcher = SkinsClient.getDispatcher();
@@ -126,18 +124,12 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         TextureLoader.create(texture).getTexture(textureId, id -> {
             this.textures.put(type, id);
 
-            if (metadata != null) {
-                this.applyMetadata(result.getType(), metadata);
+            if (metadata != null && metadata.getModel() != null) {
+                this.model = metadata.getModel();
+            } else if (result.getType() == TextureType.SKIN) {
+                this.model = "default";
             }
         });
-    }
-
-    @Unique
-    public void applyMetadata(
-        TextureType type, @NotNull Metadata metadata) {
-        if (type == TextureType.SKIN) {
-            this.model = metadata.getModel();
-        }
     }
 
     @Override
