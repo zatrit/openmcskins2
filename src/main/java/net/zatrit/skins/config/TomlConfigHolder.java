@@ -5,6 +5,7 @@ import com.moandjiezana.toml.TomlWriter;
 import dev.isxander.yacl3.config.ConfigInstance;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +52,9 @@ public class TomlConfigHolder<T> extends ConfigInstance<T>
             SkinsClient.getErrorHandler().accept(e);
         }
 
-        this.listeners.forEach(listener -> listener.accept(config));
+        for (val listener : this.listeners) {
+            listener.accept(config);
+        }
     }
 
     @Override
