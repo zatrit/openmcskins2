@@ -17,7 +17,6 @@ import net.zatrit.skins.lib.data.TypedTexture;
 import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -122,8 +121,10 @@ public class PlayerSkinProviderMixin implements Refreshable {
                 case SKIN -> {
                     textures.texture = id;
 
-                    if (metadata != null) {
+                    if (metadata != null && metadata.getModel() != null) {
                         textures.model = SkinTextures.Model.fromName(metadata.getModel());
+                    } else {
+                        textures.model = SkinTextures.Model.WIDE;
                     }
                 }
                 case CAPE -> textures.capeTexture = id;
