@@ -125,17 +125,11 @@ public abstract class PlayerListEntryMixin implements Refreshable {
             this.textures.put(type, id);
 
             if (metadata != null) {
-                this.applyMetadata(result.getType(), metadata);
+                this.model = metadata.getModel();
+            } else if (type == Type.SKIN) {
+                this.model = "default";
             }
         });
-    }
-
-    @Unique
-    public void applyMetadata(
-        TextureType type, @NotNull Metadata metadata) {
-        if (type == TextureType.SKIN) {
-            this.model = metadata.getModel();
-        }
     }
 
     @Override
