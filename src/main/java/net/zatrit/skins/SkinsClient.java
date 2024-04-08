@@ -32,7 +32,6 @@ import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
@@ -46,7 +45,9 @@ public final class SkinsClient implements ClientModInitializer {
         true);
 
     public static boolean refresh() {
-        getResolvers().forEach(Resolver::refresh);
+        for (Resolver resolver : getResolvers()) {
+            resolver.refresh();
+        }
 
         val provider = MinecraftClient.getInstance().getSkinProvider();
 
@@ -64,9 +65,12 @@ public final class SkinsClient implements ClientModInitializer {
         errorHandler = new ExceptionConsumerImpl(config.isVerboseLogs());
 
         resolvers.clear();
-        resolvers.addAll(config.getHosts().parallelStream()
-                             .map(Resolvers::resolverFromEntry)
-                             .filter(Objects::nonNull).toList());
+        for (val hostEntry : config.getHosts()) {
+            val resolver = Resolvers.resolverFromEntry(hostEntry);
+            if (resolver != null) {
+                resolvers.add(resolver);
+            }
+        }
 
         skinlibConfig.setCacheProvider(config.isCacheTextures() ?
                                            new AssetCacheProvider(path) :
@@ -95,19 +99,17 @@ public final class SkinsClient implements ClientModInitializer {
 
                 return cape && !metadata.isAnimated();
             }
-        ), new ImageLayer(
-            Collections.singleton(new LegacySkinLayer()),
-            texture -> texture.getType() == TextureType.SKIN
+        ), new ImageLayer(Collections.singleton(new LegacySkinLayer()),
+                          texture -> texture.getType() == TextureType.SKIN
         )));
 
         configHandler = ConfigClassHandler.createBuilder(SkinsConfig.class)
             .serializer(handler1 -> {
-                val serializer = new TomlConfigSerializer<>(
-                    FabricLoader.getInstance()
-                        .getConfigDir()
-                        .resolve(
-                            "openmcskins.toml"),
-                    handler1
+                val serializer = new TomlConfigSerializer<>(FabricLoader.getInstance()
+                                                                .getConfigDir()
+                                                                .resolve(
+                                                                    "openmcskins.toml"),
+                                                            handler1
                 );
                 serializer.addSaveListener(this::applyConfig);
                 return serializer;
@@ -119,9 +121,8 @@ public final class SkinsClient implements ClientModInitializer {
 
         this.applyConfig(configHandler.instance());
 
-        val commands = new SkinsCommands(
-            configHandler,
-            (HasAssetPath) MinecraftClient.getInstance()
+        val commands = new SkinsCommands(configHandler,
+                                         (HasAssetPath) MinecraftClient.getInstance()
         );
 
         ClientCommandRegistrationCallback.EVENT.register(commands);

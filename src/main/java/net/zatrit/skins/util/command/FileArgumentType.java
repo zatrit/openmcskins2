@@ -17,7 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -55,7 +58,9 @@ public class FileArgumentType implements ArgumentType<Path> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
         CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
-        this.files.forEach(builder::suggest);
+        for (String file : this.files) {
+            builder.suggest(file);
+        }
 
         return builder.buildFuture();
     }
@@ -74,16 +79,18 @@ public class FileArgumentType implements ArgumentType<Path> {
 
         val set = new HashSet<String>();
 
-        Arrays.stream(this.providers).map(fileProvider -> {
+        for (val provider : this.providers) {
             try {
-                return fileProvider.listFiles();
+                set.addAll(provider.listFiles());
             } catch (IOException e) {
                 SkinsClient.getErrorHandler().accept(e);
-                return Collections.<String>emptySet();
             }
-        }).forEach(set::addAll);
+        }
 
-        set.stream().filter(f -> FilenameUtils.isExtension(f, this.extension))
-            .map(FilenameUtils::removeExtension).forEach(this.files::add);
+        for (val name : set) {
+            if (FilenameUtils.isExtension(name, this.extension)) {
+                this.files.add(FilenameUtils.removeExtension(name));
+            }
+        }
     }
 }

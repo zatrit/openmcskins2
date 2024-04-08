@@ -8,6 +8,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigSerializer;
 import dev.isxander.yacl3.config.v2.api.FieldAccess;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import org.jetbrains.annotations.NotNull;
@@ -50,29 +51,26 @@ public class TomlConfigSerializer<T> extends ConfigSerializer<T> {
             SkinsClient.getErrorHandler().accept(e);
         }
 
-        this.listeners.forEach(listener -> listener.accept(config));
+        for (val listener : this.listeners) {
+            listener.accept(config);
+        }
     }
 
     @SuppressWarnings("unchecked")
+    @SneakyThrows
     @Override
     public LoadResult loadSafely(
         @NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
-        try {
-            // TODO: Rewrite without using reflection
-            @Cleanup val stream = Files.newInputStream(file);
-            val configClass = this.config.configClass();
-            val instance = new Toml().read(stream).to(configClass);
+        @Cleanup val stream = Files.newInputStream(file);
+        val configClass = this.config.configClass();
+        val instance = new Toml().read(stream).to(configClass);
 
-            for (val access : bufferAccessMap.values()) {
-                val field = configClass.getDeclaredField(access.name());
-                val fieldAccess = ((FieldAccess<Object>) access);
-                field.setAccessible(true);
+        for (val access : bufferAccessMap.values()) {
+            val field = configClass.getDeclaredField(access.name());
+            val fieldAccess = ((FieldAccess<Object>) access);
+            field.setAccessible(true);
 
-                fieldAccess.set(field.get(instance));
-            }
-        } catch (IOException | ReflectiveOperationException e) {
-            SkinsClient.getErrorHandler().accept(e);
-            return LoadResult.FAILURE;
+            fieldAccess.set(field.get(instance));
         }
 
         return LoadResult.SUCCESS;
