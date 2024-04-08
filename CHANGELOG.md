@@ -1,1 +1,1 @@
-* Fixed ``/omcs clean`` bug
+* Fixed wrong model bug
