@@ -33,7 +33,6 @@ import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public final class SkinsClient implements ClientModInitializer {
     private static final @Getter List<Resolver> resolvers = new ArrayList<>();
@@ -48,7 +47,9 @@ public final class SkinsClient implements ClientModInitializer {
         false);
 
     public static boolean refresh() {
-        getResolvers().forEach(Resolver::refresh);
+        for (Resolver resolver : getResolvers()) {
+            resolver.refresh();
+        }
 
         val client = MinecraftClient.getInstance();
         if (client.world != null) {
@@ -71,9 +72,12 @@ public final class SkinsClient implements ClientModInitializer {
         errorHandler = new ExceptionConsumerImpl(config.isVerboseLogs());
 
         resolvers.clear();
-        resolvers.addAll(config.getHosts().parallelStream()
-                             .map(Resolvers::resolverFromEntry)
-                             .filter(Objects::nonNull).toList());
+        for (val hostEntry : config.getHosts()) {
+            val resolver = Resolvers.resolverFromEntry(hostEntry);
+            if (resolver != null) {
+                resolvers.add(resolver);
+            }
+        }
 
         skinlibConfig.setCacheProvider(config.isCacheTextures() ?
                                            new AssetCacheProvider(path) :
@@ -104,9 +108,8 @@ public final class SkinsClient implements ClientModInitializer {
 
                 return cape && !metadata.isAnimated();
             }
-        ), new ImageLayer(
-            Collections.singleton(new LegacySkinLayer()),
-            texture -> texture.getType() == TextureType.SKIN
+        ), new ImageLayer(Collections.singleton(new LegacySkinLayer()),
+                          texture -> texture.getType() == TextureType.SKIN
         )));
 
         configHolder = AutoConfig.register(

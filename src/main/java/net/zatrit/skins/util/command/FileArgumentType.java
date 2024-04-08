@@ -17,7 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -41,9 +43,16 @@ public class FileArgumentType implements ArgumentType<Path> {
         throws CommandSyntaxException {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
-            val path = Arrays.stream(this.providers).map(p -> p.getFile(file))
-                .filter(Optional::isPresent).map(Optional::get)
-                .findFirst();
+            var path = Optional.<Path>empty();
+
+            for (FileProvider provider : this.providers) {
+                var optionalPath = provider.getFile(file);
+
+                if (optionalPath.isPresent()) {
+                    path = optionalPath;
+                    break;
+                }
+            }
 
             if (path.isPresent()) {
                 return path.get();
@@ -56,7 +65,9 @@ public class FileArgumentType implements ArgumentType<Path> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
         CommandContext<S> context, @NotNull SuggestionsBuilder builder) {
-        this.files.forEach(builder::suggest);
+        for (String file : this.files) {
+            builder.suggest(file);
+        }
 
         return builder.buildFuture();
     }
@@ -75,16 +86,18 @@ public class FileArgumentType implements ArgumentType<Path> {
 
         val set = new HashSet<String>();
 
-        Arrays.stream(this.providers).map(fileProvider -> {
+        for (val provider : this.providers) {
             try {
-                return fileProvider.listFiles();
+                set.addAll(provider.listFiles());
             } catch (IOException e) {
                 SkinsClient.getErrorHandler().accept(e);
-                return Collections.<String>emptySet();
             }
-        }).forEach(set::addAll);
+        }
 
-        set.stream().filter(f -> FilenameUtils.isExtension(f, this.extension))
-            .map(FilenameUtils::removeExtension).forEach(this.files::add);
+        for (val name : set) {
+            if (FilenameUtils.isExtension(name, this.extension)) {
+                this.files.add(FilenameUtils.removeExtension(name));
+            }
+        }
     }
 }
