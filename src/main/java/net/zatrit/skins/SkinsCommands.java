@@ -58,18 +58,18 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             .then(literal("refresh").executes(this::refresh))
             // omcs clean
             .then(literal("clean").executes(this::clean))
-            // omcs add (preset (e.g. mojang)) [id]
+            // omcs add (preset (e.g. mojang)) [pos]
             .then(literal("add").then(argument(
                 "preset",
                 presetsType
             ).executes(this::addHost).then(argument(
-                "id",
+                "pos",
                 integer(0)
             ).executes(this::addHost))))
             // omcs list
             .then(literal("list").executes(this::listHosts))
-            // omcs remove (id)
-            .then(literal("remove").then(argument("id", integer(0)).executes(
+            // omcs remove (pos)
+            .then(literal("remove").then(argument("pos", integer(0)).executes(
                 this::removeHost)))
             // omcs move (from) (to)
             .then(literal("move").then(argument("from", integer(0)).then(
@@ -97,9 +97,9 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             "preset",
             Path.class
         ));
-        int id = 0;
+        int pos = 0;
         try {
-            id = context.getArgument("id", Integer.class);
+            pos = context.getArgument("pos", Integer.class);
         } catch (IllegalArgumentException ignored) {
         }
 
@@ -112,7 +112,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        this.configHolder.getConfig().getHosts().add(id, entry);
+        this.configHolder.getConfig().getHosts().add(pos, entry);
         this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
@@ -144,10 +144,10 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
 
     private int removeHost(
         @NotNull CommandContext<FabricClientCommandSource> context) {
-        val id = context.getArgument("id", Integer.class);
+        val pos = context.getArgument("pos", Integer.class);
 
         val config = this.configHolder.getConfig();
-        val entry = config.getHosts().remove(id.intValue());
+        val entry = config.getHosts().remove(pos.intValue());
         this.configHolder.save();
 
         context.getSource().sendFeedback(Text.translatable(
