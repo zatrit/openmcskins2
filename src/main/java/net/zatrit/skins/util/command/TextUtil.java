@@ -70,8 +70,7 @@ public class TextUtil {
             } else {
                 val stringValue = value.toString();
                 var mutableText = Text.literal(stringValue)
-                    .styled(style -> style.withFormatting(
-                        Formatting.GREEN));
+                    .formatted(Formatting.GREEN);
 
                 if (isURL(stringValue)) {
                     val clickAction = new ClickEvent(
