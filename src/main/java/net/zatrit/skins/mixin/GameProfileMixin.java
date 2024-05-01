@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -29,8 +28,9 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     @Override
     @SneakyThrows
     public CompletableFuture<Profile> skins$refreshUuid() {
-        val url = "https://api.mojang.com/users/profiles/minecraft/" +
-            URLEncoder.encode(this.getName(), StandardCharsets.UTF_8);
+        @SuppressWarnings("deprecation") val url =
+            "https://api.mojang.com/users/profiles/minecraft/" +
+                URLEncoder.encode(this.getName());
 
         return CompletableFuture.supplyAsync(
             sneaky(() -> new URL(url).openStream()),

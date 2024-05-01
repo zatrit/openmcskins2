@@ -9,8 +9,4 @@ import java.util.function.UnaryOperator;
 @FunctionalInterface
 public interface Layer<T> {
     T apply(T input);
-
-    default Layer<T> andThen(Layer<T> layer) {
-        return t -> layer.apply(apply(t));
-    }
 }

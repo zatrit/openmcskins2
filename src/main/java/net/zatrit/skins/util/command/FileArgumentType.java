@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -45,8 +45,7 @@ public class FileArgumentType implements ArgumentType<Path> {
         if (reader.canRead() && reader.peek() != ' ') {
             val file = reader.readString() + "." + this.extension;
             val path = Arrays.stream(this.providers).map(p -> p.getFile(file))
-                .filter(Optional::isPresent).map(Optional::get)
-                .findFirst();
+                .filter(Objects::nonNull).findFirst();
 
             if (path.isPresent()) {
                 return path.get();

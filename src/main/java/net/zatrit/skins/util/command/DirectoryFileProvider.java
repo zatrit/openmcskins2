@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.val;
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,8 +25,8 @@ public class DirectoryFileProvider implements FileProvider {
     }
 
     @Override
-    public @NotNull Optional<Path> getFile(String name) {
+    public @Nullable Path getFile(String name) {
         val path = this.path.resolve(name);
-        return Files.isRegularFile(path) ? Optional.of(path) : Optional.empty();
+        return Files.isRegularFile(path) ? Optional.of(path).get() : null;
     }
 }

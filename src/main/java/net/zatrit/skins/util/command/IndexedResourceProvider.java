@@ -5,11 +5,12 @@ import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -42,8 +43,13 @@ public class IndexedResourceProvider implements FileProvider {
 
     @Override
     @SneakyThrows
-    public @NotNull Optional<Path> getFile(String name) {
+    public @Nullable Path getFile(String name) {
         val url = classLoader.getResource(this.path + "/" + name);
-        return Optional.ofNullable(url).map(sneaky(u -> Path.of(u.toURI())));
+
+        if (url != null) {
+            return Paths.get(url.toURI());
+        } else {
+            return null;
+        }
     }
 }
