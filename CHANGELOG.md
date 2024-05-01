@@ -1,1 +1,1 @@
-* Fixed wrong model bug
+* Some minor optimizations

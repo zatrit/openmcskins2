@@ -1,7 +1,9 @@
 package net.zatrit.skins.lib.layer.awt;
 
 import lombok.val;
+import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Layer;
+import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.awt.image.BufferedImage;
 /**
  * Layer for legacy (64x32) skins to work correctly.
  */
-public class LegacySkinLayer implements Layer<BufferedImage> {
+public class LegacySkinLayer extends ImageLayer {
     @Override
     public BufferedImage apply(@NotNull BufferedImage input) {
         val size = input.getWidth();
@@ -50,5 +52,10 @@ public class LegacySkinLayer implements Layer<BufferedImage> {
             new AffineTransform(-1, 0, 0, 1, dx + w, dy),
             null
         );
+    }
+
+    @Override
+    protected boolean accepts(@NotNull TypedTexture input) {
+        return input.getType() == TextureType.SKIN;
     }
 }

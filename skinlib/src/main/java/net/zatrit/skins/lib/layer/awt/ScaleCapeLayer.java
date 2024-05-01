@@ -3,7 +3,9 @@ package net.zatrit.skins.lib.layer.awt;
 import com.google.common.math.IntMath;
 import lombok.Setter;
 import lombok.val;
+import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Layer;
+import net.zatrit.skins.lib.data.TypedTexture;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -14,11 +16,12 @@ import java.awt.image.BufferedImage;
  * is greater than the height of the image and creates
  * a new image with a width equal to the two new heights.
  */
-public class ScaleCapeLayer implements Layer<BufferedImage> {
+@Setter
+public class ScaleCapeLayer extends ImageLayer {
     /**
      * Used to properly render the elytra.
      */
-    private @Setter Image elytraTexture;
+    private Image elytraTexture;
 
     @Override
     public BufferedImage apply(@NotNull BufferedImage image) {
@@ -49,5 +52,17 @@ public class ScaleCapeLayer implements Layer<BufferedImage> {
         graphics.drawImage(image, 0, 0, null);
 
         return result;
+    }
+
+    @Override
+    protected boolean accepts(@NotNull TypedTexture input) {
+        val metadata = input.getTexture().getMetadata();
+        val cape = input.getType() == TextureType.CAPE;
+
+        if (metadata == null) {
+            return cape;
+        }
+
+        return cape && !metadata.isAnimated();
     }
 }

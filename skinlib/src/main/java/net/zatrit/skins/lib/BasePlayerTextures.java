@@ -2,6 +2,7 @@ package net.zatrit.skins.lib;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
+import lombok.var;
 import net.zatrit.skins.lib.api.Layer;
 import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Texture;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import java.util.Collection;
 import java.util.Map;
 
@@ -38,17 +40,13 @@ public class BasePlayerTextures<T extends Texture> implements PlayerTextures {
         }
 
         val texture = this.wrapTexture(this.map.get(type));
-        val typedTexture = new TypedTexture(texture, type);
+        var typedTexture = new TypedTexture(texture, type);
 
-        if (this.layers.isEmpty()) {
-            return typedTexture;
+        for (val layer : layers) {
+            typedTexture = layer.apply(typedTexture);
         }
 
-        // https://stackoverflow.com/a/44521687/12245612
-        val layers = this.layers.stream().reduce(Layer::andThen).orElseThrow(
-            NullPointerException::new);
-
-        return layers.apply(typedTexture);
+        return typedTexture;
     }
 
     @Contract(pure = true)
