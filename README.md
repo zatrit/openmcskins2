@@ -1,5 +1,7 @@
 # OpenMCSkins 2
 
+# 1.18 backport isn't maintained anymore!
+
 [![Crowdin](https://badges.crowdin.net/openmcskins/localized.svg)](https://crowdin.com/project/openmcskins)
 
 ## [Official Discord server](https://discord.gg/P4SX2uEspy)
