@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "Коли не в мережі",
   "openmcskins.command.noPreset": "Шаблонів не знайдено.",
   "openmcskins.command.invalidFileFormat": "Невірний формат файлу.",
-  "openmcskins.command.unableToRefresh": "Не вдалося оновити скіни."
+  "openmcskins.command.unableToRefresh": "Не вдалося оновити скіни.",
+  "openmcskins.command.cleanupAlready": "Кеш вже очищується.",
+  "openmcskins.command.cleanupSuccess": "Кеш успішно очищено.",
+  "openmcskins.command.cleanupFailed": "Не вдалося очистити кеш: %s"
 }
