@@ -63,7 +63,7 @@ dependencies {
     shadow "io.hotmoka:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_version}"
 
-    shadow(project(':skinlib')) { transitive false }
+    shadow("com.github.zatrit:skinlib:main-SNAPSHOT") { transitive false }
 
     // It is necessary to run the game client, because otherwise
     // all dependencies of shadow type will not be loaded.
@@ -136,14 +136,6 @@ allprojects {
                 //noinspection GroovyAssignabilityCheck
                 from components.java
             }
-        }
-    }
-
-    if (project.hasProperty('no-debug-info'))
-    {
-        // Disabling all debugging information
-        compileJava {
-            options.compilerArgs << '-g:none'
         }
     }
 }
