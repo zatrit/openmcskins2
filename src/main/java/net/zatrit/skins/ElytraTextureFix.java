@@ -15,12 +15,12 @@ public class ElytraTextureFix
     implements SimpleSynchronousResourceReloadListener {
     @Override
     public Identifier getFabricId() {
-        return new Identifier("skins", "elytra_texture_fix");
+        return Identifier.of("skins", "elytra_texture_fix");
     }
 
     @Override
     public void reload(@NotNull ResourceManager manager) {
-        val elytraId = new Identifier("textures/entity/elytra.png");
+        val elytraId = Identifier.of(Identifier.DEFAULT_NAMESPACE, "textures/entity/elytra.png");
         try (val stream = manager.open(elytraId)) {
             val elytraImage = ImageIO.read(stream);
             SkinsClient.getCapeLayer().setElytraTexture(elytraImage);

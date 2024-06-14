@@ -14,6 +14,6 @@ public class TextureIdentifier {
     private TextureType type;
 
     public Identifier asId() {
-        return new Identifier("skins", name.hashCode() + "_" + type.ordinal());
+        return Identifier.of("skins", name.hashCode() + "_" + type.ordinal());
     }
 }
