@@ -10,13 +10,10 @@ import net.minecraft.util.Identifier;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.accessor.Refreshable;
-import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.PlayerTextures;
 import net.zatrit.skins.lib.api.Profile;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Metadata;
 import net.zatrit.skins.lib.data.TypedTexture;
-import net.zatrit.skins.lib.util.Enumerated;
 import net.zatrit.skins.texture.TextureIdentifier;
 import net.zatrit.skins.texture.TextureLoader;
 import net.zatrit.skins.util.TextureTypeUtil;
@@ -85,7 +82,7 @@ public abstract class PlayerListEntryMixin implements Refreshable {
         val errorHandler = SkinsClient.getErrorHandler();
 
         profileFuture.thenApplyAsync(profile1 -> {
-            val handler = errorHandler.<Enumerated<PlayerTextures>>andReturn(null);
+            val handler = errorHandler.<PlayerTextures>andReturn(null);
             val futures = dispatcher.resolveAsync(resolvers, profile1)
                 // Added error handling in all futures
                 .map(f -> f.exceptionally(handler));

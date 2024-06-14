@@ -21,9 +21,7 @@ import net.zatrit.skins.config.Resolvers;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.lib.Config;
 import net.zatrit.skins.lib.TextureDispatcher;
-import net.zatrit.skins.lib.TextureType;
 import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.layer.awt.ImageLayer;
 import net.zatrit.skins.lib.layer.awt.LegacySkinLayer;
 import net.zatrit.skins.lib.layer.awt.ScaleCapeLayer;
 import net.zatrit.skins.util.ExceptionConsumer;
@@ -31,7 +29,6 @@ import net.zatrit.skins.util.ExceptionConsumerImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class SkinsClient implements ClientModInitializer {
@@ -95,23 +92,7 @@ public final class SkinsClient implements ClientModInitializer {
         skinlibConfig = new Config();
         dispatcher = new TextureDispatcher(skinlibConfig);
 
-        skinlibConfig.setLayers(Lists.newArrayList(new ImageLayer(
-            Collections.singleton(capeLayer),
-            // Applies only to static cape textures.
-            texture -> {
-                val metadata = texture.getTexture().getMetadata();
-                val cape = texture.getType() == TextureType.CAPE;
-
-                if (metadata == null) {
-                    return cape;
-                }
-
-                return cape && !metadata.isAnimated();
-            }
-        ), new ImageLayer(
-            Collections.singleton(new LegacySkinLayer()),
-            texture -> texture.getType() == TextureType.SKIN
-        )));
+        skinlibConfig.setLayers(List.of(capeLayer, new LegacySkinLayer()));
 
         configHolder = AutoConfig.register(
             SkinsConfig.class,
