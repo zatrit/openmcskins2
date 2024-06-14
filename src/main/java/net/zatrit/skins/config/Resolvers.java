@@ -73,10 +73,13 @@ public final class Resolvers {
                 }
                 case LOCAL -> {
                     val directoryPattern = (String) props.get("directory");
+                    val instance = FabricLoader.getInstance();
                     val directory = Path.of(str(directoryPattern).arg(
                         "configDir",
-                        FabricLoader.getInstance()
-                            .getConfigDir()
+                        instance.getConfigDir()
+                    ).arg(
+                        "gameDir",
+                        instance.getGameDir()
                     ).fmt());
 
                     yield new LocalResolver(config, directory);

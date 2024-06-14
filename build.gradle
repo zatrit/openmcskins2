@@ -57,7 +57,7 @@ dependencies {
 
     shadow "io.hotmoka:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_version}"
-    shadow("com.github.zatrit:skinlib:main-SNAPSHOT") { transitive false }
+    shadow("com.github.zatrit:skinlib:${project.skinlib_version}") { transitive false }
 
     // It is necessary to run the game client, because otherwise
     // all dependencies of shadow type will not be loaded.
