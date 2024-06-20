@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 import net.zatrit.skins.accessor.HasAssetPath;
 import net.zatrit.skins.accessor.Refreshable;
 import net.zatrit.skins.cache.AssetCacheProvider;
@@ -86,6 +87,7 @@ public final class SkinsClient implements ClientModInitializer {
         skinlibConfig.setLayers(List.of(capeLayer, new LegacySkinLayer()));
 
         configHandler = ConfigClassHandler.createBuilder(SkinsConfig.class)
+            .id(Identifier.of("openmcskins", "config"))
             .serializer(handler1 -> {
                 val serializer = new TomlConfigSerializer<>(
                     FabricLoader.getInstance()

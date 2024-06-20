@@ -2,21 +2,30 @@ package net.zatrit.skins.config;
 
 import com.google.common.collect.Lists;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SkinsConfig {
-    @SerialEntry private boolean cacheTextures = true;
-    @SerialEntry private boolean verboseLogs = false;
-    @SerialEntry private boolean refreshOnConfigSave = true;
-    @SerialEntry private double loaderTimeout = 2;
-    @SerialEntry private UuidMode uuidMode = UuidMode.OFFLINE;
-    @SerialEntry private List<HostEntry> hosts = Lists.newArrayList(
+    @SerialEntry boolean cacheTextures = true;
+    @SerialEntry boolean verboseLogs = false;
+    @SerialEntry boolean refreshOnConfigSave = true;
+    @SerialEntry double loaderTimeout = 2;
+    @SerialEntry UuidMode uuidMode = UuidMode.OFFLINE;
+    @SerialEntry List<HostEntry> hosts = Lists.newArrayList(
         new HostEntry(HostEntry.HostType.MOJANG),
         new HostEntry(HostEntry.HostType.FALLBACK)
     );
+
+    @SerialEntry FilterMode filterMode = FilterMode.NONE;
+    @SerialEntry Set<String> whitelist = new HashSet<>();
+    @SerialEntry Set<String> blacklist = new HashSet<>();
 }

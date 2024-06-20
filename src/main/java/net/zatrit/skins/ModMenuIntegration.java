@@ -10,6 +10,7 @@ import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import lombok.val;
 import net.minecraft.text.Text;
+import net.zatrit.skins.config.FilterMode;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.config.UuidMode;
 import org.jetbrains.annotations.NotNull;
@@ -85,18 +86,32 @@ public class ModMenuIntegration implements ModMenuApi {
             .option(Option.<UuidMode>createBuilder()
                         .controller(option -> EnumControllerBuilder.create(
                                 option).enumClass(UuidMode.class)
-                            .formatValue(
-                                this::formatMode))
+                            .formatValue(this::formatUuidMode))
                         .binding(
                             defaults.getUuidMode(),
                             config::getUuidMode,
                             config::setUuidMode
                         ).name(translatable(
-                    "openmcskins.option.uuidMode")).build());
+                    "openmcskins.option.uuidMode")).build())
+            .option(Option.<FilterMode>createBuilder()
+                        .controller(option -> EnumControllerBuilder.create(
+                                option).enumClass(FilterMode.class)
+                            .formatValue(this::formatFilterMode))
+                        .binding(
+                            defaults.getFilterMode(),
+                            config::getFilterMode,
+                            config::setFilterMode
+                        ).name(translatable(
+                    "openmcskins.option.filterMode")).build());
     }
 
-    private @NotNull Text formatMode(@NotNull UuidMode mode) {
+    private @NotNull Text formatUuidMode(@NotNull UuidMode mode) {
         return translatable(
             "openmcskins.option.uuidMode." + mode.toString().toLowerCase());
+    }
+
+    private @NotNull Text formatFilterMode(@NotNull FilterMode mode) {
+        return translatable(
+            "openmcskins.option.filterMode." + mode.toString().toLowerCase());
     }
 }

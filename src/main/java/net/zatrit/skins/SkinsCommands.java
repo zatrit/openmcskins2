@@ -2,6 +2,7 @@ package net.zatrit.skins;
 
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import lombok.Cleanup;
@@ -18,12 +19,14 @@ import net.zatrit.skins.config.HostEntry;
 import net.zatrit.skins.config.SkinsConfig;
 import net.zatrit.skins.util.command.*;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
@@ -73,7 +76,16 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             .then(literal("move").then(argument(
                 "from",
                 integer(0)
-            ).then(argument("to", integer(0)).executes(this::moveHost))));
+            ).then(argument(
+                "to",
+                integer(0)
+            ).executes(this::moveHost))))
+            // omcs (blacklist | whitelist) ->
+            //  add (name | uuid)
+            //  remove (name | uuid)
+            //  clear
+            .then(filterListArgument("blacklist", List.of()))
+            .then(filterListArgument("whitelist", List.of()));
 
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
@@ -213,5 +225,11 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
         });
 
         return 0;
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    private @NotNull LiteralArgumentBuilder<FabricClientCommandSource> filterListArgument(
+        @NotNull String name, @NotNull List<String> list) {
+        return literal(name);
     }
 }

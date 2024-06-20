@@ -15,5 +15,5 @@ public enum UuidMode {
     /**
      * Refresh UUID in offline mode only.
      */
-    OFFLINE
+    OFFLINE,
 }

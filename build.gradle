@@ -1,7 +1,7 @@
 plugins {
     id "com.modrinth.minotaur" version "2.+"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -50,8 +50,7 @@ dependencies {
     }
 
     // https://github.com/isXander/YetAnotherConfigLib/issues/111
-    modApi("dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}") {
-        exclude group: 'org.quiltmc.parsers'
+    modApi("dev.isxander:yet-another-config-lib:${project.yacl_version}") {
         exclude group: 'com.twelvemonkeys.common'
         exclude group: 'com.twelvemonkeys.imageio'
     }

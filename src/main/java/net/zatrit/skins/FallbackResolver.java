@@ -47,8 +47,7 @@ public class FallbackResolver implements Resolver {
             }
 
             val metadata = new Metadata(
-                Optional.ofNullable(texture.getMetadata(
-                    "animated")).map(Boolean::valueOf).orElse(false),
+                Boolean.parseBoolean(texture.getMetadata("animated")),
                 texture.getMetadata("model")
             );
 
