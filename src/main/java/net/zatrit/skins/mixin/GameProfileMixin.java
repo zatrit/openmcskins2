@@ -10,15 +10,14 @@ import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
@@ -26,17 +25,9 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     public abstract PropertyMap getProperties();
 
     @Override
-    @SneakyThrows
     public CompletableFuture<Profile> skins$refreshUuid() {
-        @SuppressWarnings("deprecation") val url =
-            "https://api.mojang.com/users/profiles/minecraft/" +
-                URLEncoder.encode(this.getName());
-
-        return CompletableFuture.supplyAsync(
-            sneaky(() -> new URL(url).openStream()),
-            SkinsClient.getSkinlibConfig().getExecutor()
-        ).thenApply(sneaky(stream -> {
-            @Cleanup val reader = new InputStreamReader(stream);
+        return CompletableFuture.supplyAsync(() -> {
+            @Cleanup val reader = new InputStreamReader(apiRequest());
             val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
                 reader,
                 Map.class
@@ -51,7 +42,14 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
             profile.getProperties().putAll(this.getProperties());
 
             return (Profile) profile;
-        }));
+        });
+    }
+
+    @Unique
+    @SneakyThrows
+    private InputStream apiRequest() {
+        return new URL("https://api.mojang.com/users/profiles/minecraft/" +
+                           this.getName()).openStream();
     }
 }
 
