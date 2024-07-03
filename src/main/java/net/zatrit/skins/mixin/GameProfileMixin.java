@@ -14,9 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -50,14 +48,8 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     @Unique
     @SneakyThrows
     private InputStream apiRequest() {
-        val request = HttpRequest.newBuilder().uri(new URI(
-                "https://api.mojang.com/users/profiles/minecraft/" + this.getName()))
-            .build();
-
-        return SkinsClient.getHttpClient().sendAsync(
-            request,
-            HttpResponse.BodyHandlers.ofInputStream()
-        ).join().body();
+        return new URL("https://api.mojang.com/users/profiles/minecraft/" +
+                           this.getName()).openStream();
     }
 }
 
