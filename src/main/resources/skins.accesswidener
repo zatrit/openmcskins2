@@ -10,5 +10,3 @@ accessible field net/minecraft/client/util/SkinTextures model Lnet/minecraft/cli
 mutable field net/minecraft/client/util/SkinTextures texture Lnet/minecraft/util/Identifier;
 mutable field net/minecraft/client/util/SkinTextures capeTexture Lnet/minecraft/util/Identifier;
 mutable field net/minecraft/client/util/SkinTextures model Lnet/minecraft/client/util/SkinTextures$Model;
-
-accessible method net/minecraft/command/argument/EnumArgumentType <init> (Lcom/mojang/serialization/Codec;Ljava/util/function/Supplier;)V
