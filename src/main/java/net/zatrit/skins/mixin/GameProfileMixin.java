@@ -28,12 +28,14 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     public CompletableFuture<Profile> skins$refreshUuid() {
         return CompletableFuture.supplyAsync(() -> {
             @Cleanup val reader = new InputStreamReader(apiRequest());
-            val map = SkinsClient.getSkinlibConfig().getGson().fromJson(reader,
-                                                                        Map.class
+            val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
+                reader,
+                Map.class
             );
 
-            val id = String.valueOf(map.get("id")).replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                                                              "$1-$2-$3-$4-$5"
+            val id = String.valueOf(map.get("id")).replaceAll(
+                "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                "$1-$2-$3-$4-$5"
             );
 
             val profile = new GameProfile(UUID.fromString(id), this.getName());
