@@ -13,5 +13,8 @@
   "openmcskins.option.uuidMode.offline": "Cuando este sin conexion",
   "openmcskins.command.noPreset": "No hay presets disponibles.",
   "openmcskins.command.invalidFileFormat": "Formato de archivo de imagen invalido.",
-  "openmcskins.command.unableToRefresh": "No se pueden actualizar las skins."
+  "openmcskins.command.unableToRefresh": "No se pueden actualizar las skins.",
+  "openmcskins.command.cleanupAlready": "La caché ya se está borrando.",
+  "openmcskins.command.cleanupSuccess": "La caché ha sido borrada correctamente.",
+  "openmcskins.command.cleanupFailed": "Incapaz de borrar la caché: %s"
 }
