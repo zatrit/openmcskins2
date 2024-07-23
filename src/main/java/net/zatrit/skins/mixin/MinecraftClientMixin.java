@@ -11,13 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.nio.file.Path;
+
 @Getter
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin implements HasAssetPath {
-    private @Unique String assetPath;
+    private @Unique Path assetPath;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(@NotNull RunArgs args, CallbackInfo ci) {
-        this.assetPath = args.directories.assetDir.getPath();
+        this.assetPath = args.directories.assetDir.toPath();
     }
 }

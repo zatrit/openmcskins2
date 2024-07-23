@@ -28,10 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.zatrit.skins.cache.AssetCacheProvider.CACHE_DIR;
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
 
@@ -84,8 +84,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             //  add (name | uuid)
             //  remove (name | uuid)
             //  clear
-            .then(filterListArgument("blacklist", List.of()))
-            .then(filterListArgument("whitelist", List.of()));
+            .then(filterListArgument("blacklist", List.of())).then(
+                filterListArgument("whitelist", List.of()));
 
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
@@ -201,18 +201,22 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        cleanupFuture = CompletableFuture.<Void>supplyAsync(sneaky(() -> {
-            Files.list(Path.of(assetPath.getAssetPath()).resolve(CACHE_DIR)).map(
-                Path::toFile).parallel().forEach(directory -> {
-                try {
-                    FileUtils.deleteDirectory(directory);
-                } catch (IOException e) {
-                    SkinsClient.getErrorHandler().accept(e);
-                }
-            });
+        cleanupFuture = CompletableFuture.supplyAsync(new Supplier<Void>() {
+            @Override
+            @SneakyThrows
+            public Void get() {
+                Files.list(assetPath.getAssetPath().resolve(CACHE_DIR))
+                    .map(Path::toFile).parallel().forEach(directory -> {
+                        try {
+                            FileUtils.deleteDirectory(directory);
+                        } catch (IOException e) {
+                            SkinsClient.getErrorHandler().accept(e);
+                        }
+                    });
 
-            return null;
-        })).whenComplete((r, e) -> {
+                return null;
+            }
+        }).whenComplete((r, e) -> {
             if (e == null) {
                 context.getSource().sendFeedback(Text.translatable(
                     "openmcskins.command.cleanupSuccess"));

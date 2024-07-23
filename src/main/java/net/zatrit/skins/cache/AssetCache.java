@@ -20,7 +20,7 @@ public class AssetCache implements Cache {
     @SneakyThrows
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public byte[] getOrLoad(String id, LoadFunction load) {
-        val path = Paths.get(this.pathProvider.getAssetPath(), type);
+        val path = this.pathProvider.getAssetPath().resolve(type);
         val function = SkinsClient.getHashFunction();
         val hash = function.hashUnencodedChars(id).toString();
 
