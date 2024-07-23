@@ -15,8 +15,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
-
 /**
  * A FileProvider implementation that reads a specific resource
  * file with the .index extension and uses it to get a list of

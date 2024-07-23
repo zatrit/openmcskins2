@@ -27,11 +27,9 @@ public class TextureLoader {
         val metadata = texture.getMetadata();
         val config = new TextureLoader(texture);
 
-        if (metadata == null) {
-            return config;
+        if (metadata != null) {
+            config.animated = metadata.isAnimated();
         }
-
-        config.animated = metadata.isAnimated();
 
         return config;
     }
@@ -46,14 +44,13 @@ public class TextureLoader {
         val manager = MinecraftClient.getInstance().getTextureManager();
 
         AbstractTexture texture;
-        if (this.animated && identifier.getType() == TextureType.CAPE) {
-            texture = new AnimatedTexture(image, 100);
-        } else if (this.animated) {
-            throw new NotImplementedException(
-                "Only animated capes are supported.");
-        } else {
-            texture = new NativeImageBackedTexture(image);
-        }
+
+        if (this.animated) {
+            if (identifier.getType() == TextureType.CAPE) {
+                texture = new AnimatedTexture(image, 100);
+            } else throw new NotImplementedException(
+                "Only animated capes are supported");
+        } else texture = new NativeImageBackedTexture(image);
 
         RenderSystem.recordRenderCall(() -> {
             manager.registerTexture(id, texture);

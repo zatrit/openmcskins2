@@ -21,7 +21,7 @@ public class AssetCache implements Cache {
      */
     @Override
     @SneakyThrows
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "UnstableApiUsage"})
     public byte[] getOrLoad(String id, LoadFunction load) {
         val path = Paths.get(this.pathProvider.getAssetPath(), type);
         val function = SkinsClient.getHashFunction();
