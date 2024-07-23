@@ -1,5 +1,7 @@
 package net.zatrit.skins.accessor;
 
+import java.nio.file.Path;
+
 public interface HasAssetPath {
     /**
      * Used to cache skins.
@@ -8,5 +10,5 @@ public interface HasAssetPath {
      * @see net.zatrit.skins.mixin.MinecraftClientMixin
      * @see net.zatrit.skins.cache.AssetCache
      */
-    String getAssetPath();
+    Path getAssetPath();
 }

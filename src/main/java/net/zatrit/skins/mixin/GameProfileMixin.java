@@ -10,14 +10,13 @@ import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.lib.api.Profile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
@@ -26,30 +25,35 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
 
     @Override
     public CompletableFuture<Profile> skins$refreshUuid() {
-        return CompletableFuture.supplyAsync(() -> {
-            @Cleanup val reader = new InputStreamReader(apiRequest());
-            val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
-                reader,
-                Map.class
-            );
+        return CompletableFuture.supplyAsync(new Supplier<Profile>() {
+            @Override
+            @SneakyThrows
+            public Profile get() {
+                val url = new URL(
+                    "https://api.mojang.com/users/profiles/minecraft/" +
+                        GameProfileMixin.this.getName());
 
-            val id = String.valueOf(map.get("id")).replaceAll(
-                "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
-                "$1-$2-$3-$4-$5"
-            );
+                @Cleanup val reader = new InputStreamReader(url.openStream());
+                val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
+                    reader,
+                    Map.class
+                );
 
-            val profile = new GameProfile(UUID.fromString(id), this.getName());
-            profile.getProperties().putAll(this.getProperties());
+                val id = String.valueOf(map.get("id")).replaceAll(
+                    "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                    "$1-$2-$3-$4-$5"
+                );
 
-            return (Profile) profile;
+                val profile = new GameProfile(
+                    UUID.fromString(id),
+                    GameProfileMixin.this.getName()
+                );
+                profile.getProperties()
+                    .putAll(GameProfileMixin.this.getProperties());
+
+                return (Profile) profile;
+            }
         });
-    }
-
-    @Unique
-    @SneakyThrows
-    private InputStream apiRequest() {
-        return new URL("https://api.mojang.com/users/profiles/minecraft/" +
-                           this.getName()).openStream();
     }
 }
 

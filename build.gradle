@@ -1,7 +1,7 @@
 plugins {
     id "com.modrinth.minotaur" version "2.+"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
 }
 
 version project.mod_version

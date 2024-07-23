@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -47,16 +46,14 @@ public class SkinsCommands {
             "openmcskins");
 
         val presetsType = new FileArgumentType(new FileProvider[]{
-            new IndexedResourceProvider(
-                "presets",
-                getClass().getClassLoader()
+            new IndexedResourceProvider("presets",
+                                        getClass().getClassLoader()
             ), new DirectoryFileProvider(presetsPath)
         }, "toml");
         presetsType.refresh();
 
-        dispatcher.register(registerCommand(
-            presetsType,
-            literal("openmcskins")
+        dispatcher.register(registerCommand(presetsType,
+                                            literal("openmcskins")
         ));
         dispatcher.register(registerCommand(presetsType, literal("omcs")));
     }
@@ -72,25 +69,19 @@ public class SkinsCommands {
             .then(literal("clean").executes(this::clean))
             // omcs add (preset (e.g. mojang)) [id]
             .then(literal("add").then(argument("preset", presetsType).executes(
-                this::addHost).then(argument(
-                "id",
-                integer(0)
+                this::addHost).then(argument("id",
+                                             integer(0)
             ).executes(this::addHost))))
             // omcs list
             .then(literal("list").executes(this::listHosts))
             // omcs remove (id)
-            .then(literal("remove").then(argument(
-                "id",
-                integer(0)
+            .then(literal("remove").then(argument("id",
+                                                  integer(0)
             ).executes(this::removeHost)))
             // omcs move (from) (to)
-            .then(literal("move").then(argument(
-                "from",
-                integer(0)
-            ).then(argument(
-                "to",
-                integer(0)
-            ).executes(this::moveHost))));
+            .then(literal("move").then(argument("from",
+                                                integer(0)
+            ).then(argument("to", integer(0)).executes(this::moveHost))));
 
         return literal;
     }
@@ -109,9 +100,8 @@ public class SkinsCommands {
     @SneakyThrows
     public int addHost(
         @NotNull CommandContext<FabricClientCommandSource> context) {
-        @Cleanup val stream = Files.newInputStream(context.getArgument(
-            "preset",
-            Path.class
+        @Cleanup val stream = Files.newInputStream(context.getArgument("preset",
+                                                                       Path.class
         ));
         int id = 0;
 
@@ -133,9 +123,8 @@ public class SkinsCommands {
         config.getHosts().add(id, entry);
         this.configHolder.save();
 
-        context.getSource().sendFeedback(new TranslatableText(
-            "openmcskins.command.added",
-            entry.toText()
+        context.getSource().sendFeedback(new TranslatableText("openmcskins.command.added",
+                                                              entry.toText()
         ));
 
         return 0;
@@ -168,9 +157,8 @@ public class SkinsCommands {
         val entry = config.getHosts().remove(id.intValue());
         this.configHolder.save();
 
-        context.getSource().sendFeedback(new TranslatableText(
-            "openmcskins.command.removed",
-            entry.toText()
+        context.getSource().sendFeedback(new TranslatableText("openmcskins.command.removed",
+                                                              entry.toText()
         ));
 
         return 0;
@@ -209,9 +197,8 @@ public class SkinsCommands {
             @Override
             @SneakyThrows
             public Void get() {
-                Files.list(Paths.get(assetPath.getAssetPath())
-                               .resolve(CACHE_DIR)).map(Path::toFile).parallel()
-                    .forEach(directory -> {
+                Files.list(assetPath.getAssetPath().resolve(CACHE_DIR))
+                    .map(Path::toFile).parallel().forEach(directory -> {
                         try {
                             FileUtils.deleteDirectory(directory);
                         } catch (IOException e) {
@@ -226,9 +213,8 @@ public class SkinsCommands {
                 context.getSource().sendFeedback(new TranslatableText(
                     "openmcskins.command.cleanupSuccess"));
             } else {
-                context.getSource().sendError(new TranslatableText(
-                    "openmcskins.command.cleanupFailed",
-                    e.getMessage()
+                context.getSource().sendError(new TranslatableText("openmcskins.command.cleanupFailed",
+                                                                   e.getMessage()
                 ));
             }
         });
