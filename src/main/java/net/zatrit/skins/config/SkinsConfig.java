@@ -12,7 +12,7 @@ public class SkinsConfig {
     private boolean cacheTextures = true;
     private boolean verboseLogs = false;
     private boolean refreshOnConfigSave = true;
-    private float loaderTimeout = 2f;
+    private float loaderTimeout = 5f;
     private UuidMode uuidMode = UuidMode.OFFLINE;
     private List<HostEntry> hosts = Lists.newArrayList(
         new HostEntry(HostEntry.HostType.MOJANG),

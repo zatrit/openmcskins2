@@ -3,7 +3,6 @@ package net.zatrit.skins;
 import com.moandjiezana.toml.Toml;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -25,10 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
 import static net.zatrit.skins.cache.AssetCacheProvider.CACHE_DIR;
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
 
@@ -59,10 +58,8 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             // omcs clean
             .then(literal("clean").executes(this::clean))
             // omcs add (preset (e.g. mojang)) [pos]
-            .then(literal("add").then(argument(
-                "preset",
-                presetsType
-            ).executes(this::addHost).then(argument(
+            .then(literal("add").then(argument("preset", presetsType).executes(
+                this::addHost).then(argument(
                 "pos",
                 integer(0)
             ).executes(this::addHost))))
@@ -72,8 +69,10 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             .then(literal("remove").then(argument("pos", integer(0)).executes(
                 this::removeHost)))
             // omcs move (from) (to)
-            .then(literal("move").then(argument("from", integer(0)).then(
-                argument("to", integer(0)).executes(this::moveHost))));
+            .then(literal("move").then(argument(
+                "from",
+                integer(0)
+            ).then(argument("to", integer(0)).executes(this::moveHost))));
 
         dispatcher.register(command);
         dispatcher.register(literal("omcs").redirect(command.build()));
@@ -93,7 +92,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     @SneakyThrows
     public int addHost(
         @NotNull CommandContext<FabricClientCommandSource> context) {
-        @Cleanup val stream = Files.newInputStream(context.getArgument(
+        val stream = Files.newInputStream(context.getArgument(
             "preset",
             Path.class
         ));
@@ -186,18 +185,22 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             return -1;
         }
 
-        cleanupFuture = CompletableFuture.<Void>supplyAsync(sneaky(() -> {
-            Files.list(Path.of(assetPath.getAssetPath()).resolve(CACHE_DIR)).map(
-                Path::toFile).parallel().forEach(directory -> {
-                try {
-                    FileUtils.deleteDirectory(directory);
-                } catch (IOException e) {
-                    SkinsClient.getErrorHandler().accept(e);
-                }
-            });
+        cleanupFuture = CompletableFuture.supplyAsync(new Supplier<Void>() {
+            @Override
+            @SneakyThrows
+            public Void get() {
+                Files.list(Path.of(assetPath.getAssetPath()).resolve(CACHE_DIR))
+                    .map(Path::toFile).parallel().forEach(directory -> {
+                        try {
+                            FileUtils.deleteDirectory(directory);
+                        } catch (IOException e) {
+                            SkinsClient.getErrorHandler().accept(e);
+                        }
+                    });
 
-            return null;
-        })).whenComplete((r, e) -> {
+                return null;
+            }
+        }).whenComplete((r, e) -> {
             if (e == null) {
                 context.getSource().sendFeedback(Text.translatable(
                     "openmcskins.command.cleanupSuccess"));

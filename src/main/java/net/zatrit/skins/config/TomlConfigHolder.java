@@ -62,7 +62,7 @@ public class TomlConfigHolder<T> extends ConfigInstance<T>
         val toml = new Toml();
 
         try {
-            @Cleanup val stream = Files.newInputStream(this.file);
+            val stream = Files.newInputStream(this.file);
             val config = toml.read(stream).to(this.getConfigClass());
             this.setConfig(config);
         } catch (Exception e) {

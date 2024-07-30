@@ -8,17 +8,21 @@ import lombok.val;
 import net.zatrit.skins.SkinsClient;
 import net.zatrit.skins.accessor.AsyncUUIDRefresher;
 import net.zatrit.skins.lib.api.Profile;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
 
@@ -29,14 +33,15 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
 
     @Override
     public CompletableFuture<Profile> skins$refreshUuid() {
-        return CompletableFuture.supplyAsync(this::apiRequest)
-            .thenApply(request -> SkinsClient.getHttpClient()
-                .sendAsync(
-                    request,
-                    HttpResponse.BodyHandlers.ofInputStream()
-                ).join()).thenApply(
-                HttpResponse::body).thenApply(sneaky(stream -> {
-                @Cleanup val reader = new InputStreamReader(stream);
+        return CompletableFuture.supplyAsync(new Supplier<Profile>() {
+            @Override
+            @SneakyThrows
+            public Profile get() {
+                val url = new URL(
+                    "https://api.mojang.com/users/profiles/minecraft/" +
+                        GameProfileMixin.this.getName());
+
+                @Cleanup val reader = new InputStreamReader(url.openStream());
                 val map = SkinsClient.getSkinlibConfig().getGson().fromJson(
                     reader,
                     Map.class
@@ -49,20 +54,14 @@ public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
 
                 val profile = new GameProfile(
                     UUID.fromString(id),
-                    this.getName()
+                    GameProfileMixin.this.getName()
                 );
-                profile.getProperties().putAll(this.getProperties());
+                profile.getProperties()
+                    .putAll(GameProfileMixin.this.getProperties());
 
                 return (Profile) profile;
-            }));
-    }
-
-    @Unique
-    @SneakyThrows
-    private HttpRequest apiRequest() {
-        return HttpRequest.newBuilder().uri(new URI(
-            "https://api.mojang.com/users/profiles/minecraft/" +
-                this.getName())).build();
+            }
+        });
     }
 }
 
