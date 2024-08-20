@@ -24,8 +24,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-import static net.zatrit.skins.lib.util.SneakyLambda.sneaky;
-
 @Mixin(value = GameProfile.class, remap = false)
 public abstract class GameProfileMixin implements Profile, AsyncUUIDRefresher {
     @Shadow

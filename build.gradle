@@ -1,3 +1,15 @@
+import zatrit.nodebug.NoDebugTransformer
+
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath 'com.github.zatrit:no-debug:4cfe28849f'
+    }
+}
+
 plugins {
     id "com.modrinth.minotaur" version "2.+"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
@@ -104,6 +116,9 @@ shadowJar {
         rename { 'META-INF/NOTICE.txt' }
     }
 
+    if (project.hasProperty('no-debug-info'))
+        transform new NoDebugTransformer()
+
     configurations = [project.configurations.shadow]
     archiveBaseName = archive_base_name
     archiveClassifier = 'dev'
@@ -117,19 +132,4 @@ java {
 
 loom {
     accessWidenerPath = file("src/main/resources/skins.accesswidener")
-}
-
-allprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
-
-    publishing {
-        publications {
-            //noinspection GroovyAssignabilityCheck
-            java(MavenPublication) {
-                //noinspection GroovyAssignabilityCheck
-                from components.java
-            }
-        }
-    }
 }
