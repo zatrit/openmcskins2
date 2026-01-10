@@ -6,10 +6,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.zatrit.skins.FallbackResolver;
 import net.zatrit.skins.SkinsClient;
-import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.resolver.*;
-import net.zatrit.skins.lib.resolver.capes.*;
+import zatrit.skins.lib.TextureType;
+import zatrit.skins.lib.api.Resolver;
+import zatrit.skins.lib.resolver.*;
+import zatrit.skins.lib.resolver.capes.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

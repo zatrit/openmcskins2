@@ -9,12 +9,11 @@ import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.Texture;
+import zatrit.skins.lib.TextureType;
+import zatrit.skins.lib.api.Texture;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -41,7 +40,7 @@ public class TextureLoader {
         @NotNull Consumer<Identifier> callback) throws IOException {
         val id = identifier.asId();
 
-        @Cleanup val stream = new ByteArrayInputStream(this.texture.getBytes());
+        @Cleanup val stream = this.texture.getInputStream();
         val image = NativeImage.read(stream);
         val manager = MinecraftClient.getInstance().getTextureManager();
 

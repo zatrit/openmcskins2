@@ -7,14 +7,14 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import net.zatrit.skins.lib.CachedPlayerTextures;
-import net.zatrit.skins.lib.Config;
-import net.zatrit.skins.lib.TextureType;
-import net.zatrit.skins.lib.api.PlayerTextures;
-import net.zatrit.skins.lib.api.Profile;
-import net.zatrit.skins.lib.api.Resolver;
-import net.zatrit.skins.lib.data.Metadata;
-import net.zatrit.skins.lib.texture.URLTexture;
+import zatrit.skins.lib.CachedPlayerTextures;
+import zatrit.skins.lib.Config;
+import zatrit.skins.lib.TextureType;
+import zatrit.skins.lib.api.PlayerTextures;
+import zatrit.skins.lib.api.Profile;
+import zatrit.skins.lib.api.Resolver;
+import zatrit.skins.lib.data.Metadata;
+import zatrit.skins.lib.texture.URLTexture;
 import net.zatrit.skins.util.TextureTypeUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ public class FallbackResolver implements Resolver {
         return new CachedPlayerTextures<>(
             newTextures,
             config.getLayers(),
-            config.getCacheProvider()
+            config.getCache()
         );
     }
 }

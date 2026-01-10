@@ -1,6 +1,6 @@
 package net.zatrit.skins.accessor;
 
-import net.zatrit.skins.lib.api.Profile;
+import zatrit.skins.lib.api.Profile;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.minecraft.util.Identifier;
-import net.zatrit.skins.lib.TextureType;
+import zatrit.skins.lib.TextureType;
 
 @Getter
 @EqualsAndHashCode

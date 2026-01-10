@@ -31,9 +31,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static net.zatrit.skins.cache.AssetCacheProvider.CACHE_DIR;
 import static net.zatrit.skins.util.command.CommandUtil.argument;
 import static net.zatrit.skins.util.command.CommandUtil.literal;
+import static net.zatrit.skins.cache.AssetCache.CACHE_ID;
 
 @RequiredArgsConstructor
 public class SkinsCommands implements ClientCommandRegistrationCallback {
@@ -192,7 +192,6 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
     }
 
     @SneakyThrows
-    @SuppressWarnings("resource")
     private int clean(
         @NotNull CommandContext<FabricClientCommandSource> context) {
         if (cleanupFuture != null && !cleanupFuture.isDone()) {
@@ -205,7 +204,7 @@ public class SkinsCommands implements ClientCommandRegistrationCallback {
             @Override
             @SneakyThrows
             public Void get() {
-                Files.list(assetPath.getAssetPath().resolve(CACHE_DIR))
+                Files.list(assetPath.getAssetPath().resolve(CACHE_ID))
                     .map(Path::toFile).parallel().forEach(directory -> {
                         try {
                             FileUtils.deleteDirectory(directory);

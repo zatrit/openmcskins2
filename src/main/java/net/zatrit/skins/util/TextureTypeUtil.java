@@ -2,7 +2,7 @@ package net.zatrit.skins.util;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import lombok.experimental.UtilityClass;
-import net.zatrit.skins.lib.TextureType;
+import zatrit.skins.lib.TextureType;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
