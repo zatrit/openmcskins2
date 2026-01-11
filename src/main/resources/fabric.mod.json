@@ -18,10 +18,10 @@
   "accessWidener" : "skins.accesswidener",
   "entrypoints": {
     "client": [
-      "net.zatrit.skins.SkinsClient"
+      "zatrit.skins.SkinsClient"
     ],
     "modmenu": [
-      "net.zatrit.skins.ModMenuIntegration"
+      "zatrit.skins.ModMenuIntegration"
     ]
   },
   "mixins": [

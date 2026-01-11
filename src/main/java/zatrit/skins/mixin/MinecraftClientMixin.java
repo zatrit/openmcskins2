@@ -1,0 +1,25 @@
+package zatrit.skins.mixin;
+
+import lombok.Getter;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
+import zatrit.skins.accessor.HasAssetPath;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.nio.file.Path;
+
+@Getter
+@Mixin(MinecraftClient.class)
+public class MinecraftClientMixin implements HasAssetPath {
+    private @Unique Path assetPath;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    public void init(@NotNull RunArgs args, CallbackInfo ci) {
+        this.assetPath = args.directories.assetDir.toPath();
+    }
+}
