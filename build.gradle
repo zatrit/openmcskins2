@@ -5,8 +5,8 @@ plugins {
     id 'maven-publish'
 }
 
-version project.mod_version
-group project.maven_group
+version = project.mod_version
+group = project.maven_group
 
 var localProps = new Properties()
 var localPropsFile = file("$projectDir/local.properties")
@@ -21,9 +21,9 @@ publishMod.dependsOn tasks.named('modrinth')
 processResources.dependsOn createIndex
 
 repositories {
-    maven { url 'https://maven.terraformersmc.com/releases/' }
-    maven { url 'https://maven.isxander.dev/releases' }
-    maven { url 'https://jitpack.io' }
+    maven { url = 'https://maven.terraformersmc.com/releases/' }
+    maven { url = 'https://maven.isxander.dev/releases' }
+    maven { url = 'https://jitpack.io' }
 }
 
 configurations.modApi {
@@ -62,7 +62,7 @@ dependencies {
     shadow "io.hotmoka:toml4j:${project.toml4j_version}"
     shadow "net.andreinc:aleph:${project.aleph_version}"
 
-    shadow("com.github.zatrit:skinlib:${project.skinlib_version}") { transitive false }
+    shadow("com.github.zatrit:skinlib:${project.skinlib_version}") { transitive = false }
 
     // It is necessary to run the game client, because otherwise
     // all dependencies of shadow type will not be loaded.
@@ -116,8 +116,8 @@ shadowJar {
 }
 
 java {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 loom {

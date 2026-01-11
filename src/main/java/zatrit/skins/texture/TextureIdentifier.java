@@ -10,10 +10,10 @@ import zatrit.skins.lib.TextureType;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class TextureIdentifier {
-    private String name;
-    private TextureType type;
+  private String name;
+  private TextureType type;
 
-    public Identifier asId() {
-        return Identifier.of("skins", name.hashCode() + "_" + type.ordinal());
-    }
+  public Identifier asId() {
+    return Identifier.of("skins", name.hashCode() + "_" + type.ordinal());
+  }
 }

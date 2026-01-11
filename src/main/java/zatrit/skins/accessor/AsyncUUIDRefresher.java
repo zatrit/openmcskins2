@@ -1,12 +1,9 @@
 package zatrit.skins.accessor;
 
+import java.util.concurrent.CompletableFuture;
 import zatrit.skins.lib.api.Profile;
 
-import java.util.concurrent.CompletableFuture;
-
 public interface AsyncUUIDRefresher {
-    /**
-     * Asynchronously refreshes UUID from Mojang API or other API.
-     */
-    CompletableFuture<Profile> skins$refreshUuid();
+  /** Asynchronously refreshes UUID from Mojang API or other API. */
+  CompletableFuture<Profile> skins$refreshUuid();
 }

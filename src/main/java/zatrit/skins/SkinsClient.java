@@ -15,20 +15,20 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import zatrit.skins.accessor.HasAssetPath;
 import zatrit.skins.accessor.Refreshable;
 import zatrit.skins.cache.AssetCache;
 import zatrit.skins.config.Resolvers;
 import zatrit.skins.config.SkinsConfig;
 import zatrit.skins.config.TomlConfigSerializer;
-import zatrit.skins.util.ExceptionConsumer;
-import zatrit.skins.util.ExceptionConsumerImpl;
-import org.jetbrains.annotations.NotNull;
 import zatrit.skins.lib.Config;
 import zatrit.skins.lib.TextureDispatcher;
 import zatrit.skins.lib.api.Resolver;
 import zatrit.skins.lib.layer.awt.LegacySkinLayer;
 import zatrit.skins.lib.layer.awt.ScaleCapeLayer;
+import zatrit.skins.util.ExceptionConsumer;
+import zatrit.skins.util.ExceptionConsumerImpl;
 
 public final class SkinsClient implements ClientModInitializer {
   private static final @Getter List<Resolver> resolvers = new ArrayList<>();

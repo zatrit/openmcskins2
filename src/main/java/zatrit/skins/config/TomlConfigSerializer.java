@@ -6,13 +6,6 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.ConfigField;
 import dev.isxander.yacl3.config.v2.api.ConfigSerializer;
 import dev.isxander.yacl3.config.v2.api.FieldAccess;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.SneakyThrows;
-import lombok.val;
-import zatrit.skins.SkinsClient;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,63 +13,65 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.SneakyThrows;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import zatrit.skins.SkinsClient;
 
-/**
- * TOML implementation for {@link ConfigSerializer}.
- */
+/** TOML implementation for {@link ConfigSerializer}. */
 public class TomlConfigSerializer<T> extends ConfigSerializer<T> {
-    private final Collection<Consumer<T>> listeners = new ArrayList<>();
-    private final @Getter Path file;
+  private final Collection<Consumer<T>> listeners = new ArrayList<>();
+  private final @Getter Path file;
 
-    public TomlConfigSerializer(Path file, ConfigClassHandler<T> config) {
-        super(config);
-        this.file = file;
+  public TomlConfigSerializer(Path file, ConfigClassHandler<T> config) {
+    super(config);
+    this.file = file;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>This implementation saves a config of type T to a file stored in {@link #file}.
+   */
+  @Override
+  public void save() {
+    val tomlWriter = new TomlWriter();
+    val config = this.config.instance();
+
+    try {
+      @Cleanup val stream = Files.newOutputStream(file);
+      tomlWriter.write(config, stream);
+    } catch (IOException e) {
+      SkinsClient.getErrorHandler().accept(e);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * This implementation saves a config of
-     * type T to a file stored in {@link #file}.
-     */
-    @Override
-    public void save() {
-        val tomlWriter = new TomlWriter();
-        val config = this.config.instance();
+    for (val listener : this.listeners) {
+      listener.accept(config);
+    }
+  }
 
-        try {
-            @Cleanup val stream = Files.newOutputStream(file);
-            tomlWriter.write(config, stream);
-        } catch (IOException e) {
-            SkinsClient.getErrorHandler().accept(e);
-        }
+  @SuppressWarnings("unchecked")
+  @SneakyThrows
+  @Override
+  public LoadResult loadSafely(@NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
+    @Cleanup val stream = Files.newInputStream(file);
+    val configClass = this.config.configClass();
+    val instance = new Toml().read(stream).to(configClass);
 
-        for (val listener : this.listeners) {
-            listener.accept(config);
-        }
+    for (val access : bufferAccessMap.values()) {
+      val field = configClass.getDeclaredField(access.name());
+      val fieldAccess = ((FieldAccess<Object>) access);
+      field.setAccessible(true);
+
+      fieldAccess.set(field.get(instance));
     }
 
-    @SuppressWarnings("unchecked")
-    @SneakyThrows
-    @Override
-    public LoadResult loadSafely(
-        @NotNull Map<ConfigField<?>, FieldAccess<?>> bufferAccessMap) {
-        @Cleanup val stream = Files.newInputStream(file);
-        val configClass = this.config.configClass();
-        val instance = new Toml().read(stream).to(configClass);
+    return LoadResult.SUCCESS;
+  }
 
-        for (val access : bufferAccessMap.values()) {
-            val field = configClass.getDeclaredField(access.name());
-            val fieldAccess = ((FieldAccess<Object>) access);
-            field.setAccessible(true);
-
-            fieldAccess.set(field.get(instance));
-        }
-
-        return LoadResult.SUCCESS;
-    }
-
-    public void addSaveListener(Consumer<T> listener) {
-        this.listeners.add(listener);
-    }
+  public void addSaveListener(Consumer<T> listener) {
+    this.listeners.add(listener);
+  }
 }
